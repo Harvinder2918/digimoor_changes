@@ -1,0 +1,4784 @@
+
+@model Reports.MooringRopeInspection
+@{ ViewBag.Title = "addlineinspection";
+    Layout = "~/Views/Shared/_LayoutVessel7.cshtml"; }
+
+<style>
+    th {
+        font-size: 12px !important;
+        width: 70px !important;
+    }
+
+    span.select2-results {
+        font-size: 12px !important;
+    }
+
+    .freeze-side1 .form-control, .single-line {
+        min-width: 30px !important;
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 3px !important;
+    }
+
+    td {
+        font-size: 12px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-left: 0px !important;
+        font-size: 10px !important;
+    }
+
+    table#tbl1 {
+        background: white;
+    }
+
+    .dz-default.dz-message {
+        font-size: 10px !important;
+        padding: 6px !important;
+    }
+
+    @@media only screen and (max-width: 1756px) {
+        .table > thead > tr > th {
+            padding: 2px !important;
+            font-size: 11px !important;
+        }
+
+        .table > thead > tr > td {
+            padding: 2px !important;
+            font-size: 11px !important;
+        }
+
+        .dz-default.dz-message {
+            font-size: 9px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 1603px) {
+        th {
+            font-size: 10px;
+            padding: 1px !important;
+        }
+
+        td {
+            padding: 1px !important;
+            font-size: 9px;
+        }
+
+        .dz-default.dz-message {
+            font-size: 8px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 1603px) {
+        th {
+            font-size: 9px;
+            padding: 1px !important;
+        }
+
+        td {
+            padding: 1px !important;
+            font-size: 9px;
+        }
+
+        .dz-default.dz-message {
+            font-size: 8px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 1473px) {
+        th {
+            font-size: 10px;
+            padding: 1px !important;
+        }
+
+        td {
+            padding: 1px !important;
+            font-size: 9px;
+        }
+    }
+
+    img#imgNameIns {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .freeze-side1 .dropzone .dz-preview .dz-image, #Mydiv .dropzone .dz-preview .dz-image {
+        width: 30px !important;
+        object-fit: cover !important;
+        float: left !important;
+        transform: translate(16px,2px ) !important;
+        height: 30px !important;
+        box-shadow: 0px 0px 5px 0px #333 !important;
+    }
+
+    svg {
+        display: none !important;
+    }
+
+    table#tbl1 thead {
+        position: sticky !important;
+        top:0px !important;
+        z-index: 999 !important;
+    }
+
+    @@media only screen and (max-width: 1469px) {
+        tbody td {
+            position: relative;
+        }
+
+
+
+        table#tbl1 thead tr th:nth-child(2) {
+            position: sticky !important;
+            left: -10px !important;
+            z-index: 99 !important;
+        }
+
+        table#tbl1 thead tr th:nth-child(3) {
+            position: sticky;
+            left: 25px !important;
+            z-index: 9999 !important;
+        }
+
+        table#tbl1 thead tr th:nth-child(4) {
+            position: sticky !important;
+            left: 77px !important;
+            z-index: 9999 !important;
+        }
+
+        table#tbl1 thead tr th:nth-child(5) {
+            position: sticky !important;
+            left: 135px !important;
+            z-index: 9999 !important;
+        }
+
+        table#tbl1 thead tr th:nth-child(6) {
+            position: sticky !important;
+            left: 215px !important;
+            z-index: 9999 !important;
+        }
+
+        table#tbl1 thead tr th:nth-child(7) {
+            position: sticky !important;
+            left: 253px !important;
+            z-index: 999 !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(1) {
+            position: sticky !important;
+            left: -10px !important;
+            background-color: white !important;
+            z-index: 99 !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(5) {
+            position: sticky;
+            left: 25px !important;
+            background-color: white !important;
+            z-index: 99 !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(6) {
+            position: sticky !important;
+            left: 77px !important;
+            z-index: 99 !important;
+            background-color: white !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(7) {
+            position: sticky !important;
+            left: 135px !important;
+            z-index: 99 !important;
+            background-color: white !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(8) {
+            position: sticky !important;
+            left: 215px !important;
+            z-index: 99 !important;
+            background-color: white !important;
+        }
+
+        table#tbl1 tbody tr td:nth-child(9) {
+            position: sticky !important;
+            left: 253px !important;
+            z-index: 99 !important;
+            background-color: white !important;
+        }
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 12px !important;
+    }
+
+    .left-sec ul li {
+        display: inline-block;
+        list-style: none;
+    }
+
+    .right-sec ul li {
+        display: inline-block;
+        list-style: none;
+    }
+
+    .right-sec ul {
+        padding-left: 0px !important
+    }
+
+    .left-sec ul {
+        padding-left: 0px !important;
+        display: flex;
+        align-items: center;
+        transform: translate(-11px, 24px);
+    }
+
+    .right-sec {
+        text-align: right;
+    }
+
+    input#Import {
+        transform: translate(106px, -1px);
+    }
+
+    .left-sec {
+        transform: translate(10px, 27px);
+    }
+
+    .right-sec {
+        transform: translate(9px, 0px);
+        background: #ffffff;
+        padding: 11px;
+        box-shadow: 0px 0px 1px -6px rgb(0 0 0 / 21%);
+        border-radius: 10px;
+        border-radius: 6px;
+        height: 114px;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+
+        .btn-info:hover {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+
+    .left-sec {
+        transform: translate(-11px, 1px);
+        background: #ffffff;
+        padding: 19px;
+        box-shadow: 0px 0px 1px -6px rgb(0 0 0 / 21%);
+        border-radius: 6px;
+        height: 134px;
+    }
+
+    .wrapper-content {
+        padding: 14px 10px 40px
+    }
+</style>
+
+
+
+@*<style>
+        .row.form-group {
+            background: white !important;
+            border: 2px solid #d9e2ea;
+            transform: translate(0px, -13px);
+        }
+
+        #cover-spin {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(100,88,124,0.42);
+            z-index: 9999;
+            display: none;
+        }
+
+        @@-webkit-keyframes spin {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #cover-spin::after {
+            content: 'fgffffff';
+            display: block;
+            position: absolute;
+            left: 48%;
+            top: 40%;
+            width: 40px;
+            height: 40px;
+            border-style: solid;
+            border-color: black;
+            border-top-color: transparent;
+            border-width: 4px;
+            border-radius: 50%;
+            -webkit-animation: spin .8s linear infinite;
+            animation: spin .8s linear infinite;
+        }
+
+        .table-responsive.freeze-side1 {
+            max-height: 758px !important;
+           
+        }
+
+        #cover-spin {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(100,88,124,0.42);
+            z-index: 9999;
+            display: none;
+        }
+
+        .form-control {
+            padding: 0px !important;
+            padding-left: 2px !important;
+        }
+
+        .btn-width {
+            width: auto !important;
+        }
+
+        .dynamic-image {
+            width: 80px;
+            height: 50px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        body {
+            height: 100%;
+            overflow-y: hidden;
+        }
+
+    
+        table#tbl1 thead {
+            position: sticky !important;
+            top: 0px !important;
+            z-index: 999 !important;
+        }
+
+        span#messageInsdt {
+            position: absolute !important;
+            bottom: -6px !important;
+            right: 139px !important;
+        }
+
+        @@media only screen and (max-width: 1335px) {
+            .row.form-group .col-md-6 {
+                width: 100%;
+            }
+
+            .right-sec {
+                text-align: left;
+                transform: translate(0px, 0px) !important;
+            }
+
+            .left-sec {
+                transform: translate(0px, 1px);
+            }
+        }
+
+        @@media only screen and (max-width: 1000px) {
+            .panel.panel-default.mb-4 {
+                height: auto !important;
+            }
+
+            input#Import {
+                transform: translate(145px, -22px);
+            }
+        }
+
+        .excellent {
+            color: black;
+        }
+
+        .safe1 {
+            color: #004b00;
+        }
+
+        .safe {
+            color: green;
+        }
+
+        .good {
+            color: limegreen;
+        }
+
+        .low {
+            color: limegreen;
+        }
+
+        .mediocre {
+            color: orange;
+        }
+
+        .middle {
+            color: orange;
+        }
+
+        .poor {
+            color: orangered;
+        }
+
+        .high {
+            color: orangered;
+        }
+
+        .extr-poor {
+            color: red;
+        }
+
+        .very-high {
+            color: red;
+        }
+
+        .Satisfactory {
+            color: #d27300;
+        }
+    </style>*@
+
+<style>
+    .row.form-group {
+        background: white !important;
+        border: 2px solid #d9e2ea;
+        transform: translate(0px, -13px);
+    }
+
+    #cover-spin {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: rgba(100, 88, 124, 0.42);
+        z-index: 9999;
+        display: none; /* Hide by default */
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #cover-spin1 {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: rgba(100, 88, 124, 0.42);
+        z-index: 9999;
+        display: none; /* Hide by default */
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+        #cover-spin1::after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 48%;
+            top: 40%;
+            width: 40px;
+            height: 40px;
+            border-style: solid;
+            border-color: black;
+            border-top-color: transparent;
+            border-width: 4px;
+            border-radius: 50%;
+            -webkit-animation: spin .8s linear infinite;
+            animation: spin .8s linear infinite;
+        }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin 0.8s linear infinite;
+        animation: spin 0.8s linear infinite;
+    }
+
+    .progress-container {
+        width: 80%;
+        max-width: 400px;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    #progress-bar {
+        height: 25px;
+        background-color: #4caf50;
+        width: 0%;
+        transition: width 0.4s;
+        position: relative;
+    }
+
+    #progress-text {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #000;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 52%;
+        z-index: 11;
+    }
+
+    /*#progress-bar {
+        height: 15px;*/ /* Height of the progress bar */
+    /*background-color: #4caf50;
+        width: 0%;
+        transition: width 0.4s;
+        position: relative;*/ /* To position the percentage text inside */
+    /*}
+
+    #progress-text {
+        position: absolute;
+        top: 50%;*/ /* Center the text vertically */
+    /*left: 50%;*/ /* Center the text horizontally */
+    /*transform: translate(-50%, -50%);*/ /* Adjust the centering */
+    /*font-size: 12px;*/ /* Adjust the text size as needed */
+    /*color: white;*/ /* Make the text color white for contrast */
+    /*font-weight: bold;*/ /* Bold text */
+    /*}*/
+
+    .table-responsive.freeze-side1 {
+        max-height:758px !important;
+        position: relative;
+    }
+
+    .form-control {
+        padding: 0px !important;
+        padding-left: 2px !important;
+    }
+
+    .btn-width {
+        width: auto !important;
+    }
+
+    .dynamic-image {
+        width: 80px;
+        height: 50px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    body {
+        height: 100%;
+        overflow-y: hidden;
+    }
+
+   
+    table#tbl1 thead {
+        position: sticky !important;
+        top: 0px !important;
+        z-index: 999 !important;
+    }
+
+    span#messageInsdt {
+        position: absolute !important;
+        bottom: -6px !important;
+        right: 139px !important;
+    }
+
+    @@media only screen and (max-width: 1335px) {
+        .row.form-group .col-md-6 {
+            width: 100%;
+        }
+
+        .right-sec {
+            text-align: left;
+            transform: translate(0px, 0px) !important;
+        }
+
+        .left-sec {
+            transform: translate(0px, 1px);
+        }
+    }
+
+    @@media only screen and (max-width: 1000px) {
+        .panel.panel-default.mb-4 {
+            height: auto !important;
+        }
+
+        input#Import {
+            transform: translate(145px, -22px);
+        }
+    }
+
+    .excellent {
+        color: black;
+    }
+
+    .safe1 {
+        color: #004b00;
+    }
+
+    .safe {
+        color: green;
+    }
+
+    .good {
+        color: limegreen;
+    }
+
+    .low {
+        color: limegreen;
+    }
+
+    .mediocre {
+        color: orange;
+    }
+
+    .middle {
+        color: orange;
+    }
+
+    .poor {
+        color: orangered;
+    }
+
+    .high {
+        color: orangered;
+    }
+
+    .extr-poor {
+        color: red;
+    }
+
+    .very-high {
+        color: red;
+    }
+
+    .Satisfactory {
+        color: #d27300;
+    }
+</style>
+
+
+<style>
+
+    .image-container {
+        display: inline-block;
+        position: relative;
+        margin: 10px;
+        overflow: hidden;
+        width: 100px;
+        height: 57px;
+    }
+
+        .image-container.blur .dropzone {
+            filter: blur(5px);
+        }
+
+    .count-overlay {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 7px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10;
+        font-weight: bold;
+        font-size: 16px;
+        display: none;
+    }
+
+
+
+    .image-container.blur .count-overlay {
+        display: block;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        padding: 20px; /* Adjusted padding */
+        border: 1px solid #888;
+        max-width: 90% !important; /* Responsive max width */
+        max-height: 80% !important; /* Responsive max height */
+        overflow-y: auto; /* Allow scrolling if content is too large */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        animation: modalopen 0.5s;
+    }
+
+    .instruction-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-instruction {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+    .close {
+        top: 05px !important;
+        right: 10px !important;
+    }
+
+    .demo-images img {
+        max-width: 400px;
+        max-height: 400px;
+        margin: 0 10px;
+        border: 1px solid #ccc;
+    }
+
+    .modal-content ul li {
+        font-size: 18px;
+    }
+
+    .modal-content p {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    #continueButton {
+        font-size: 20px;
+        padding: 15px 30px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+
+    .demo-images {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .demo-images img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+    .freeze-side1 .dropzone .dz-preview .dz-image, #Mydiv .dropzone .dz-preview .dz-image {
+        transform: translate(60px, 2px) !important;
+    }
+</style>
+
+
+
+<style>
+
+
+    #myModal.modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    #myModal_1.modal-content {
+        position: relative;
+        background-color: #fefefe;
+        padding: 30px; /* Adjusted padding */
+        border: 1px solid #888;
+        max-width: 90%; /* Responsive max width */
+        max-height: 80%; /* Responsive max height */
+        overflow-y: auto; /* Allow scrolling if content is too large */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        animation: modalopen 0.5s;
+    }
+
+    .uploaded-images {
+        display: grid; /* Use grid layout */
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        gap: 10px; /* Space between images */
+        justify-items: center; /* Center images */
+    }
+
+        .uploaded-images img {
+            width: 100%; /* Make images responsive */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 100%; /* Ensure images don't exceed container */
+            border-radius: 5px; /* Optional: add some rounding to images */
+        }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    #continueButton {
+        background-color: #337ab7 !important;
+        color: white !important;
+        border: none !important;
+        padding: 30px 80px !important;
+        cursor: pointer !important;
+        font-size: 18px !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+        background: transparent;
+        background-color: transparent !important;
+        color: #080809 !important;
+        border: 1px dashed #474747 !important;
+    }
+
+    .demo-images {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        width: 50%;
+        float: left;
+    }
+
+    .modal-content p {
+        background: #1f517f;
+        padding: 19px;
+        color: white;
+        font-weight: 600;
+        font-size: 19px;
+    }
+
+    .demo-images img {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        border-radius: 5px;
+        /* max-height: 300px; */
+    }
+</style>
+
+
+
+<script>
+
+
+    function calculateLoaderTiming(formData) {
+        debugger
+        const baseTime = 1000;
+        const numEntries = Array.from(formData.entries()).length;
+        if (numEntries < 5) {
+            return Math.min(50, baseTime * numEntries);
+        }
+        if (numEntries < 10) {
+            return Math.min(200, baseTime * numEntries);
+        }
+        if (numEntries < 20) {
+            return Math.min(400, baseTime * numEntries);
+        }
+        if (numEntries < 30) {
+            return Math.min(600, baseTime * numEntries);
+        }
+        if (numEntries < 40) {
+            return Math.min(800, baseTime * numEntries);
+        }
+        else if (numEntries < 50) {
+            return Math.min(1000, baseTime * numEntries);
+        }
+        else if (numEntries < 80) {
+            return Math.min(1500, baseTime * numEntries);
+        }
+        else if (numEntries < 120) {
+            return Math.min(1800, baseTime * numEntries);
+        }
+        else if (numEntries < 140) {
+            return Math.min(2000, baseTime * numEntries);
+        }
+        else if (numEntries > 140) {
+            return Math.min(2200, baseTime * numEntries);
+        }
+    }
+
+
+    function showSpinner() {
+        document.getElementById('cover-spin').style.display = 'flex';
+    }
+
+    function hideSpinner() {
+        //  $('#cover-spin').hide();
+        document.getElementById('cover-spin').style.display = 'none';
+    }
+
+    function showSpinnerwithoutBar() {
+        document.getElementById('cover-spin1').style.display = 'flex';
+    }
+
+    function hideSpinnerwithoutBar() {
+        //  $('#cover-spin').hide();
+        document.getElementById('cover-spin1').style.display = 'none';
+    }
+
+    var bar = 0;
+
+    function updateProgressBar(percentage) {
+        debugger
+        document.getElementById('progress-bar').style.width = percentage + '%';
+        document.getElementById('progress-text').innerText = percentage + '%';
+        bar = percentage;
+
+    }
+
+
+    async function simulateServerProcessing(loaderTime) {
+        return new Promise((resolve) => {
+            let progress = bar;
+            const interval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 1;
+                    bar = progress;
+                    if (progress > 100) progress = 100;
+                    updateProgressBar(Math.round(progress));
+                } else {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, loaderTime); // Use dynamic loader time here
+        });
+    }
+
+    function simulateProgress(loaderTime) {
+        let simulatedProgress = bar;
+        simulatedProgressInterval = setInterval(() => {
+            if (simulatedProgress < 99) {
+                simulatedProgress += 1;
+                bar = simulatedProgress;
+                updateProgressBar(simulatedProgress);
+            }
+        }, loaderTime); // Use dynamic loader time here
+    }
+
+
+</script>
+
+
+
+@*<script>
+
+
+
+        //alert(window.location.origin);
+        //<img src="~/images/CIP_Launch-banner.png" />
+        // var userImageLink = "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200714180638/CIP_Launch-banner.png";
+        var userImageLink = window.location.origin + "/images/CIP_Launch-banner.png";
+
+        var time_start, end_time;
+
+        // The size in bytes
+        var downloadSize = 5616998;
+        var downloadImgSrc = new Image();
+
+        downloadImgSrc.onload = function () {
+            end_time = new Date().getTime();
+            displaySpeed();
+        };
+        time_start = new Date().getTime();
+        downloadImgSrc.src = userImageLink;
+        //document.write("time start: " + time_start);
+        //document.write("<br>");
+
+        function displaySpeed() {
+            var timeDuration = (end_time - time_start) / 1000;
+            var loadedBits = downloadSize * 8;
+
+            /* Converts a number into string
+               using toFixed(2) rounding to 2 */
+            var bps = (loadedBits / timeDuration).toFixed(2);
+            var speedInKbps = (bps / 1024).toFixed(2);
+            var speedInMbps = (speedInKbps / 1024).toFixed(2);
+
+            if (speedInMbps < 10) {
+                alert("Your internet connection speed is very low, so form might not be submit.");
+            }
+            //alert("Your internet connection speed is: \n"
+            //    + bps + " bps\n" + speedInKbps
+            //    + " kbps\n" + speedInMbps + " Mbps\n");
+        }
+    </script>*@
+
+
+<script type="text/javascript">
+    $('.datepicker').datepicker();
+</script>
+
+<style>
+    iframe {
+        height: 500px;
+        width: 500px;
+    }
+</style>
+
+<script type='text/javascript'>
+
+    window.onload = function () {
+
+        GetVesselSessionID();
+
+        if (!window.location.hash) {
+            sleep(1000);
+            window.location = window.location + '#loaded';
+            window.location.reload(true);
+
+
+        }
+
+        //TabFunction();
+
+        const dbName = "DraftMooringDB";
+
+        indexedDB.databases().then(databases => {
+            const databaseExists = databases.some(db => db.name === dbName);
+            if (databaseExists) {
+                console.log(`Database ${dbName} exists in IndexedDB`);
+                LoadDataIndexDB();
+
+            } else {
+                console.log(`Database ${dbName} does not exist in IndexedDB`);
+            }
+        }).catch(error => {
+            console.error(`Error while checking for database ${dbName}`, error);
+        });
+
+        TabFunction();
+
+    }
+
+</script>
+
+
+
+<script>
+
+    function GetVesselSessionID() {
+        var Vesselid = localStorage.getItem('VesselSessionID');
+        //alert('ajax call')
+        // Use AJAX to send this to the server
+        $.ajax({
+            url: '/LineInspection/SetVesselSessionID', // Your server endpoint to set the session ID
+            type: 'POST',
+            data: { VesselSessionID: Vesselid },
+            success: function (response) {
+                console.log('Session ID set on server:', response);
+            },
+            error: function (error) {
+                console.log('Error setting Session ID on server:', error);
+            }
+        });
+    }
+
+</script>
+
+
+@*<script type="text/javascript">
+    @if (ViewBag.GetVesselSessionID != null)
+    {
+                @Html.Raw(ViewBag.GetVesselSessionID)
+
+    }
+
+    </script>*@
+
+
+
+<script>
+    function DeleteDBfromIndexDB() {
+        const dbName = "DraftMooringDB";
+
+        indexedDB.databases().then(databases => {
+            const databaseExists = databases.some(db => db.name === dbName);
+            if (databaseExists) {
+                indexedDB.deleteDatabase(dbName);
+                //alert("Draft has been deleted successfully.");
+                console.log(`Database ${dbName} has been deleted from IndexedDB`);
+                //setTimeout("location.reload(true);", 1000);
+                window.location.href = '@Url.Action("addlineinspection", "LineInspection")';
+            } else {
+                console.log(`Database ${dbName} does not exist in IndexedDB`);
+                //alert("There is no record found as draft.");
+                //setTimeout("location.reload(true);", 1000);
+                 window.location.href = '@Url.Action("addlineinspection", "LineInspection")';
+            }
+        }).catch(error => {
+            console.error(`Error while checking for database ${dbName}`, error);
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function onUploadControlFileUploadComplete(s, e) {
+        if (e.isValid)
+            $("#uploadedImage").attr("src", e.callbackData);
+        setElementVisible("uploadedImage", e.isValid);
+    }
+    function onImageLoad() {
+        var externalDropZone = $("#externalDropZone");
+        var uploadedImage = $("#uploadedImage");
+        uploadedImage.css({
+            left: (externalDropZone.width() - uploadedImage.width()) / 2,
+            top: (externalDropZone.height() - uploadedImage.height()) / 2
+        });
+        setElementVisible("dragZone", false);
+    }
+    function setElementVisible(elementId, visible) {
+        var el = $("#" + elementId);
+        if (visible)
+            el.show();
+        else
+            el.hide();
+    }
+</script>
+
+<script>
+    function selectall(source) {
+        checkboxes = document.getElementsByName('case1');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+
+<script>
+    function showpdf(param) {
+        // var imgSrc = $(param).attr("src");
+        //alert(param);
+
+        // /images/AttachFiles / _49 Web Street, Grey Box Web Application Vulnerability Assessment Report3798.pdf
+        var omyFrame = document.getElementById("myFrame");
+        omyFrame.style.display = "block";
+        omyFrame.src = param;
+        // omyFrame.load();
+        // $('#ifrID').attr('src', param);
+        $('#PdfModal').modal('show');
+    }
+</script>
+
+@*<div id="cover-spin"></div>*@
+<div id="cover-spin">
+    <div class="spinner"></div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+        <div id="progress-text">0%</div>
+    </div>
+</div>
+
+<div id="cover-spin1">
+    <div class="spinner1"></div>
+</div>
+
+<div class="page-heading page-header-flex">
+    <div>
+        <h1 class="page-title">
+            Mooring Line Inspection Add
+        </h1>
+        @*<ol class="breadcrumb">
+                <li><a href="">Home</a></li>
+                <li><a href="">Form</a></li>
+                <li><a>Create</a></li>
+            </ol>*@
+
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <p class="alert alert-danger" id="errorMessage">@TempData["Error"]</p>
+        TempData["Error"] = null;
+    }
+    @if (TempData["Success"] != null)
+    {
+        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        TempData["Success"] = null;
+    }
+
+    <div>
+
+        <div class="form-actions">
+            <a name="back" id="btnBack" href="@Url.Action("Index", "LineInspection", new { area = "MooringLine" })" class="btn btn-primary btn-width"> Go Back</a>
+            <button name="Draft" type="button" id="Draft" onclick="DeleteDBfromIndexDB()" class="btn btn-danger btn-width"><i class="uil uil-redo mr-2"></i>Reset</button>
+
+            @*<button type="button" id="btnSubmitOnline" onclick="SaveDataOnline1()" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Submit</button>*@
+
+            <button type="button" id="btnSubmitOfflineIndex" onclick="SaveDataOnlineIndexDB()" style="background: #00b8ef; border: 1px solid #00b8ef;" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Save as Draft</button>
+            @*<button type="button" id="btnSubmitOnline" onclick="showSpinner(); sync_SaveDataOnline(); hideSpinner();" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Submit</button>*@
+            <button type="button" id="btnSubmitOnline" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Submit</button>
+            @*<button name="Reset" type="reset" id="btnReset" class="btn btn-danger btn-width"><i class="uil uil-redo mr-2"></i>Reset</button>*@
+
+            <button type="button" id="btnSubmit" onclick="chkInternetStatus()" style="display:none" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Submit</button>
+
+
+            <div id="MsgbtnSumbit" class="error"></div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="panel panel-default mb-4" style="height: 125px;background:transparent;border:none!important;">
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <div class="left-sec">
+                                <ul>
+                                    <li><button type="button" onclick="location.href='@Url.Action("DownloadExcelSheet", "LineInspection")'" class="btn btn-info StopOnline" style="height: 40px"><i class="uil uil-import mr-2"></i>Download Inspection Template</button></li>
+                                    <li>
+                                        <span style="transform: translate(17px, -5px);display: block;font-size: 15px;font-family: 'Source Sans Pro', sans-serif;color: #3e4b59;
+    font-weight: 500;">Upload Inspection Template Excel here</span> <div class="download-btn text-center ">
+                                            @using (Html.BeginForm("addlineinspection", "LineInspection", FormMethod.Post, new { area = "MooringLine", enctype = "multipart/form-data" }))
+                                            {<div class="col-md-offset-3 col-md-1" style="margin-left: 0px!important">
+
+
+                                                    @*<label for="photo"  class="uil uil-import mr-2"   style="color:Gray;border:1px solid gray;padding:4px"> Browse </label>*@
+                                                    <input class="StopOnline" type="file" name="photo" id="photo" style="text-align:center" multiple />
+                                                </div>
+
+                                                <input name="submit" type="submit" value="Import Template" id="Import" class="uil uil-import mr-2 StopOnline" />}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="right-sec">
+                                <ul>
+                                    <li>
+                                        <button type="button" style="height:40px;" class="btn btn-info StopOnline">
+                                            <a class="StopOnline" style="color: white;" onclick="showpdf(this.id)" id="~/images/InspectionImages/MOORING ROPES INSPECTION GUIDE.pdf"><i class="uil uil-import mr-2"></i>Inspection Guidance</a>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <div class="myform">
+                                            <label class="col-form-label mt-0 mt-sm-3">
+                                                <label class="control-label">Inspection Date<sup>*</sup></label>
+                                            </label>
+                                            <div class="innerform-her ml-2">
+                                                @Html.TextBoxFor(x => x.InspectDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker", @autocomplete = "Off", @readOnly = "true", @required = "true", @placeholder = "yyyy-mm-dd", @onchange = "handleDateChange()" })
+                                                <span id="messageInsdt"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="myform">
+                                            <label class="col-form-label mt-0 mt-sm-3">
+                                                <label class="control-label">Inspection by<sup>*</sup></label>
+                                            </label>
+                                            <div class="innerform-her1 ml-2">
+                                                @Html.EditorFor(model => model.InspectBy, new { htmlAttributes = new { @class = "form-control", @maxlength = 70, @required = "true", @onchange = "handleInspectBy()" } })
+                                                <span id="messageInsby"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row pb-4">
+            <div div class="col-md-8">
+
+                <span class="excellent">Evaluation-Risk: </span>
+                <span> 1</span>
+                <span class="safe1">Brand New</span>
+                <span>| 2</span>
+                <span class="safe">Excellent-Safe</span>
+                <span>| 3</span>
+                <span class="good">Good-Low</span>
+                <span>| 4</span>
+                <span class="Satisfactory">Satisfactory-Acceptable </span>
+                <span>| 5</span>
+                <span class="mediocre">Mediocre–Middle</span>
+                <span>| 6</span>
+                <span class="poor">Poor–High</span>
+                <span>| 7</span>
+                <span class="extr-poor">Extr Poor-Very High</span>
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+        <div id="Mydiv" class="">
+            @{ int count = 1; }
+            <div class="table-responsive freeze-side1">
+            <table id="tbl1" class="table table-bordered" height="50">
+                <thead style="top: 0px !important;">
+                    <tr class="table-mark">
+                        <th style="background:white;border-color: white;" class="emptynew1"></th>
+                        <th colspan="5" style="background:white;border-color: white;" class="emptynew2"></th>
+                        <th colspan="7" style="background: #033b6f;height: 60px;border-color: white;" class="bg-primary" style="z-index:0;"><label>ZONE A - Chock/Fairlead Hardware Contact Zone</label></th>
+                        <th colspan="7" style="background: #00b8ef;height: 60px;border-color: white;" class="bg-info" style="z-index:0;"><label>Zone B - Tension Drum Contact Zone</label></th>
+                        <th colspan="4" style="background:white;" style="z-index:0;"></th>
+
+                    </tr>
+                    <tr>
+
+
+                        <th style="display:none">Id</th>
+                        @*<th>
+                                <input type="checkbox" id="selectall" onClick="selectall(this)" />
+                                <span class="ml-2">Winch no.</span>
+                            </th>*@
+
+                        <th><input type="checkbox" class="ml-2" id="selectall" onClick="selectall(this)" /><br>Select <br>All</th>
+                        <th>Winch<br> #</th>
+                        <th>Line Position</th>
+                        <th>Line Type</th>
+                        <th>Unique ID</th>
+                        <th>Certificate Number</th>
+
+
+                        <th>External Abrasion<br>(Rating)</th>
+                        <th>Internal Abrasion<br>(Rating)</th>
+                        <th>Average<br>(Rating)</th>
+                        <th>Length of Abrasion<br>(Rating)</th>
+                        <th>Distance from outboard<br> eye(meters)</th>
+                        <th>Cut Yarn Count(#)</th>
+                        <th>Length of <br>Glazing<br>(meters)</th>
+
+                        <th>External Abrasion<br>(Rating)2</th>
+                        <th>Internal Abrasion<br>(Rating)2</th>
+                        <th>Average<br> (Rating)2</th>
+                        <th>Length of Abrasion<br>(Rating)2</th>
+                        <th>Distance from outboard <br>eye(meters)2</th>
+                        <th>Cut Yarn<br> Count(#)2</th>
+                        <th>Length of Glazing<br>(meters)2</th>
+
+                        <th>Chafe Guard</th>
+                        <th>Twist per<br>(meter)</th>
+                        @*<th style="width:70px!important;">Photo1</th>
+                            <th style="width:70px!important">Photo2</th>*@
+                        <th>Images</th>
+                        <th style="display:none">S.No</th>
+
+
+
+
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        int i = 1;
+                    }
+                    @foreach (var item in Model.AddInspectionList)
+                    {
+                        Model.AverageRating_A = item.AverageRating_A;
+                        Model.AverageRating_B = item.AverageRating_B;
+                        Model.LengthOFAbrasion_A = item.LengthOFAbrasion_A;
+                        Model.DistanceOutboard_A = item.DistanceOutboard_A;
+                        Model.CutYarnCount_A = item.CutYarnCount_A;
+                        Model.LengthOFGlazing_A = item.LengthOFGlazing_A;
+
+                        Model.LengthOFAbrasion_B = item.LengthOFAbrasion_B;
+                        Model.DistanceOutboard_B = item.DistanceOutboard_B;
+                        Model.CutYarnCount_B = item.CutYarnCount_B;
+                        Model.LengthOFGlazing_B = item.LengthOFGlazing_B;
+                        Model.Twist = item.Twist;
+
+                        <tr>
+
+                            <td><input class="ml-2" name="case1" type="checkbox" id="@string.Format("chk_{0}", i)" checked="@item.IsCheck" />    &nbsp; </td>
+                            <td style="display:none"> @Html.DisplayFor(modelItem => item.Id)</td>
+                            <td style="display:none"> @Html.DisplayFor(modelItem => item.RopeId)</td>
+                            <td style="display:none"> @Html.DisplayFor(modelItem => item.WinchId)</td>
+
+                            @*<td>
+                                    <input type="checkbox"><span class="ml-2">@item.AssignedNumber</span>
+                                </td>*@
+
+                            <td> @Html.DisplayFor(modelItem => item.AssignedNumber)</td>
+                            <td> @Html.DisplayFor(modelItem => item.Location)</td>
+                            <td>@Html.DisplayFor(modelItem => item.RopeType)</td>
+                            <td> @Html.DisplayFor(modelItem => item.UniqueId)</td>
+                            <td style="background-color: white;"> @Html.DisplayFor(modelItem => item.CertificateNumber)</td>
+
+
+                            <td class="bg-primary-light">
+                                @Html.DropDownListFor(model => model.ExternalRating_A, new SelectList(Model.CommonExtInt, "Value", "Text", item.ExternalRating_A), "", new { @class = "form-control" })
+
+                            </td>
+                            <td class="bg-primary-light">
+                                @Html.DropDownListFor(model => model.InternalRating_A, new SelectList(Model.CommonExtInt, "Value", "Text", item.InternalRating_A), "", new { @class = "form-control" })
+
+                            </td>
+                            <td class="bg-primary-light">
+                                @Html.EditorFor(model => model.AverageRating_A, new { htmlAttributes = new { @class = "form-control", @required = "true", disabled = "disabled", @readonly = "readonly" } })
+                            </td>
+                            <td class="bg-primary-light">
+                                @Html.EditorFor(model => model.LengthOFAbrasion_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, @onKeyUp = "requiredValue(this)", @onchange = "validateInput(this)" } })
+                            </td>
+                            <td class="bg-primary-light">
+                                @Html.EditorFor(model => model.DistanceOutboard_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, @onKeyUp = "requiredValue1(this)", @onchange = "validateInput1(this)" } })
+                            </td>
+                            <td class="bg-primary-light">
+                                @Html.EditorFor(model => model.CutYarnCount_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, @onKeyUp = "requiredValue2(this)", @onchange = "validateInput2(this)" } })
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.EditorFor(model => model.LengthOFGlazing_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, @onKeyUp = "requiredValue3(this)", @onchange = "validateInput3(this)" } })
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.DropDownListFor(model => model.External1, new SelectList(Model.CommonExtInt, "Value", "Text", item.ExternalRating_B), "", new { @class = "form-control" })
+
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.DropDownListFor(model => model.Internal1, new SelectList(Model.CommonExtInt, "Value", "Text", item.InternalRating_B), "", new { @class = "form-control" })
+
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.EditorFor(model => model.AverageRating_B, new { htmlAttributes = new { @class = "form-control", @required = "true", disabled = "disabled", @readonly = "readonly" } })
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.EditorFor(model => model.LengthOFAbrasion_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, @onKeyUp = "requiredValue4(this)", @onchange = "validateInput4(this)" } })
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.EditorFor(model => model.DistanceOutboard_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, @onKeyUp = "requiredValue5(this)", @onchange = "validateInput5(this)" } })
+                            </td>
+                            <td class="bg-info-light">
+                                @Html.EditorFor(model => model.CutYarnCount_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, @onKeyUp = "requiredValue6(this)", @onchange = "validateInput6(this)" } })
+                            </td>
+                            <td>
+                                @Html.EditorFor(model => model.LengthOFGlazing_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, @onKeyUp = "requiredValue7(this)", @onchange = "validateInput7(this)" } })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(model => model.Chafe_guard_condition, new SelectList(Model.ChafeGuard, "ChafeGuard", "ChafeGuard", item.Chafe_guard_condition), "", htmlAttributes: new { @class = "form-control select", @required = "true", @style = "width: 150px;", })
+
+                            </td>
+                            <td>
+                                @*@Html.EditorFor(model => model.Twist, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "if ( isNaN( String.fromCharCode(event.keyCode) )) return false;", @maxlength = 2, @min = "0" } })*@
+                                @Html.TextBoxFor(model => model.Twist, new { @class = "form-control", @required = "true", @onkeypress = "if ( isNaN( String.fromCharCode(event.keyCode) )) return false;", @oninput = "this.value = Math.min(this.value, 99);", @type = "number", @min = "0", @max = "99", @maxlength = 2 })
+                            </td>
+
+                            <td style="width:100px;padding:0px!important;">
+                                <div class="image-container" id='Maindiv3_@(count)'>
+                                    <div style="width:100px;padding:0px!important;height:57px!important;max-height:57px!important;" id='dZUpload3_@(count)' class="dropzone">
+                                        <div class="instruction-overlay">
+                                            <button class="btn-instruction">Upload images</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+
+                            @*<td style="width:80px">
+                                    <div style="width:80px" id='Maindiv1_@(count)'>
+
+                                    </div>
+                                    <div style="width:80px;padding:0px!important;height:57px!important;max-height:57px!important;" id='dZUpload_@(count)' class="dropzone">
+
+
+                                    </div>
+
+                                </td>*@
+                            @*<td style="width:80px;padding:0px!important;">
+                                    <div style="width:80px" id='Maindiv2_@(count)'>
+                                    </div>
+                                    <div style="width:80px;padding:0px!important;height:57px!important;max-height:57px!important;" id='dZUpload1_@(count)' class="dropzone">
+
+                                    </div>
+
+                                </td>*@
+                            <td style="display:none">@count </td>
+
+                            @{ count++; }
+                        </tr>
+
+                        i++;
+
+                    }
+
+
+
+                </tbody>
+            </table>
+</div>
+        </div>
+    </div>
+</div>
+
+
+<div id="instructionModal" class="modal">
+    <div class="modal-content" style="width: 80% !important; height:95vh !important; margin: 2% auto !important; padding: 40px 32px 30px 24px;max-width: 90%!important;max-height: 90%!important;overflow-y: auto!important;min-height: auto!important; ">
+        <span class="close">&times;</span>
+        <p>Instructions on how to upload images...</p>
+        <br />
+        <ul>
+            <li> The line length where you observed maximum abrasion should be clearly visible. </li>
+            <li> Upload single line length in at least 1 picture which is clearly indicating abrasion. </li>
+            <li> You may upload a coil picture in addition to other single line pictures. </li>
+            <li> Maximum 4 images per line allowed with max 500KB size each.</li>
+            <br />
+            <br />
+            @*<div class="demo-images">
+                    <img src="~/Inspect_Demo/1.jpg" />
+                    <img src="~/Inspect_Demo/2.png" />
+                    <img src="~/Inspect_Demo/3.jpg" />
+                    <img src="~/Inspect_Demo/4.jpg" />
+                </div>*@
+            <div class="demo-images">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div style="display: inline-block; text-align: center;">
+                            <img src="~/images/AI_R_images/lines/L1.png" />
+                            <br />
+                            <br />
+                            <span>Sample 1</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="display: inline-block; text-align: center;">
+                            <img src="~/images/AI_R_images/lines/L2.jpg" />
+                            <br />
+                            <br />
+                            <span>Sample 2</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="display: inline-block; text-align: center;">
+                            <img src="~/images/AI_R_images/lines/L3.png" />
+                            <br />
+                            <br />
+                            <span>Sample 3</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="display: inline-block; text-align: center;">
+                            <img src="~/images/AI_R_images/lines/L4.jpg" />
+                            <br />
+                            <br />
+                            <span>Sample 4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;width: 45%;float: right;box-shadow: 0 4px 8px 0 rgb(171 169 169 / 15%), 0 6px 20px 0 rgb(219 219 219 / 1%);padding: 65px;border-radius:5px;">
+                <span style="font-weight: 600;
+    font-size: 18px;"> Please Upload an image of a line</span><br><button id="continueButton"><i class="fa fa-upload" aria-hidden="true"></i><br>Upload Images</button>
+            </div>
+
+        </ul>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal">
+    <div id="myModal_1" class="modal-content">
+        <span class="close">&times;</span>
+        <div class="uploaded-images"></div>
+    </div>
+</div>
+
+
+<div id="PdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center">
+                        <iframe id="myFrame" style="display:none;width:100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loader" style="align-items:center" id="loader">
+</div>
+
+
+
+<script language=Javascript>
+
+    function isNumberKey(evt) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function validateInput(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 2 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Length of Abrasion A' cannot greater than 2 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput1(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 3 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Distance from outboard eye A' cannot greater than 3 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput2(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 2 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Cut Yarn counted A' cannot greater than 2 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput3(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 3 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Length of Glazing A' cannot greater than 3 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput4(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 2 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Length of Abrasion B' cannot greater than 2 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput5(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 3 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Distance from outboard eye B' cannot greater than 3 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput6(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 2 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Cut Yarn counted B' cannot greater than 2 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+    function validateInput7(inputField) {
+        const inputVal = inputField.value.trim();
+        const parts = inputVal.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts[1] || '';
+
+        const isValid =
+            integerPart.length <= 3 &&
+            /^\d+$/.test(integerPart) &&
+            decimalPart.length <= 2 &&
+            (decimalPart === '' || /^\d+$/.test(decimalPart));
+
+        if (isValid) {
+
+        } else {
+            alert("Value in 'Length of Glazing B' cannot greater than 3 digits & 2 decimal places !");
+            inputField.value = "0.00";
+        }
+    }
+
+
+    function handleDateChange() {
+        var inputValue = document.getElementById('InspectDate').value;
+        if (inputValue === "") {
+
+        } else {
+            $('#messageInsdt').text('');
+        }
+    }
+
+
+    function handleInspectBy() {
+        var inputValue = document.getElementById('InspectDate').value;
+        if (inputValue === "") {
+
+        } else {
+            $('#messageInsby').text('');
+        }
+    }
+</script>
+
+
+<script>
+
+    $("#Mydiv [id*='ExternalRating_A']").change(function () {
+        // //
+        var cells = $(this).closest('tr').children('td');
+        var value1 = cells.eq(9).find('select').val();
+        var value2 = cells.eq(10).find('select').val();
+        var x = parseInt(value1) + parseInt(value2);
+        var value3 = x / 2;
+        var iNum = value3;
+        var ss = iNum.toFixed();
+        //cells.eq(11).text(ss);
+        cells.eq(11).find('input').val(ss);
+        //cells.find("td:eq(11) input[type='text']").val(ss);
+        //cells.eq(9).text(new Number(value1) * new Number(value2));
+        //var state = $(this).parent().parent().find("input[id*='cboState']").val();
+    });
+
+
+
+    $("#Mydiv [id*='InternalRating_A']").change(function () {
+        // //
+        var cells = $(this).closest('tr').children('td');
+        var value1 = cells.eq(9).find('select').val();
+        var value2 = cells.eq(10).find('select').val();
+        var x = parseInt(value1) + parseInt(value2);
+        var value3 = x / 2;
+        var iNum = value3;
+        var ss = iNum.toFixed();
+        //cells.eq(11).text(ss);
+        cells.eq(11).find('input').val(ss);
+    });
+
+
+    $("#Mydiv [id*='External1']").change(function () {
+        ////
+        var cells = $(this).closest('tr').children('td');
+        var value1 = cells.eq(16).find('select').val();
+        var value2 = cells.eq(17).find('select').val();
+        var x = parseInt(value1) + parseInt(value2);
+        var value3 = x / 2;
+        var iNum = value3;
+        var ss = iNum.toFixed();
+        //cells.eq(18).text(ss);
+        cells.eq(18).find('input').val(ss);
+    });
+
+    $("#Mydiv [id*='Internal1']").change(function () {
+        // //
+        var cells = $(this).closest('tr').children('td');
+        var value1 = cells.eq(16).find('select').val();
+        var value2 = cells.eq(17).find('select').val();
+        var x = parseInt(value1) + parseInt(value2);
+        var value3 = x / 2;
+        var iNum = value3;
+        var ss = iNum.toFixed();
+        //cells.eq(18).text(ss);
+        cells.eq(18).find('input').val(ss);
+    });
+
+
+</script>
+
+
+<script type="text/javascript">
+
+    setTimeout(function () {
+
+        $('#successMessage').fadeOut('fast');
+        $('#errorMessage').fadeOut('fast');
+    }, 3000);
+
+
+</script>
+
+
+
+
+<script type="text/javascript">
+    //$('.datepicker').datepicker();
+
+    $("#InspectDate").datepicker({
+        endDate: 'today'
+    });
+
+</script>
+
+<script src="~/assetsV/js/ForDropZone.js"></script>
+
+<link href="~/assetsV/css/drpzone.css" rel="stylesheet" type="text/css" />
+
+<script src="~/assetsV/js/dpzone2.js" type="text/javascript"></script>
+
+
+<script>
+
+    let currentDropzoneElement;
+
+    function updateRowImageCount(rowElement) {
+        debugger
+        let imageCount = 0;
+        $(rowElement).find('.dropzone').each(function (index, element) {
+            let dropzone = $(element).data('dropzone');
+            if (dropzone) {
+                imageCount += dropzone.files.length;
+            }
+        });
+        return imageCount;
+    }
+
+    function updateImageContainer(dropzone) {
+        debugger
+        let $container = $(dropzone.element).closest('.image-container');
+        let fileCount = dropzone.files.length;
+
+        $container.removeClass('blur');
+        $container.find('.count-overlay').remove();
+
+        if (fileCount > 0) {
+            $container.addClass('blur');
+
+            let count = `+${fileCount - 1}`;
+            if (count == 0) {
+                $container.append(`<div class="count-overlay">${1}</div>`);
+            }
+            else {
+                $container.append(`<div class="count-overlay">${count}</div>`);
+            }
+
+            $container.find('.count-overlay').on('click', function () {
+                openModal(dropzone);
+            });
+
+            $container.find('.instruction-overlay').hide();
+
+        } else {
+
+            $container.find('.instruction-overlay').show();
+        }
+
+
+        let rowElement = $container.closest('tr');
+        let rowImageCount = updateRowImageCount(rowElement);
+    }
+
+
+    function openModal(dropzone) {
+
+        let $modal = $('#myModal');
+        let $uploadedImages = $modal.find('.uploaded-images');
+        $uploadedImages.empty();
+
+        dropzone.files.forEach(function (file, index) {
+            let imgSrc = file.dataURL || file.previewElement.querySelector("img").src;
+
+            let $imgContainer = $('<div>').css({
+                'position': 'relative',
+                'display': 'inline-block',
+                'margin': '15px'
+            });
+
+            let $img = $('<img>').attr('src', imgSrc).attr('data-index', index).css({
+                'max-width': '500%',
+                'max-height': '500px',
+
+            });
+
+            let $removeBtn = $('<span class="remove-image">X</span>').attr('data-index', index).css({
+                'position': 'absolute',
+                'top': '0px',
+                'right': '-20px',
+                'cursor': 'pointer',
+                'color': 'red',
+                'background': 'white',
+                'border-radius': '50%',
+                'padding': '2px 5px',
+                'font-weight': 'bold'
+            });
+
+            $imgContainer.append($img).append($removeBtn);
+
+            $uploadedImages.append($imgContainer);
+        });
+
+        $uploadedImages.data('dropzone', dropzone);
+
+        $modal.show();
+    }
+
+
+    $(document).on('click', '.remove-image', function () {
+        let index = $(this).data('index');
+        let $modal = $('#myModal');
+        let dropzoneElement = $modal.find('.uploaded-images').data('dropzone');
+        dropzoneElement.removeFile(dropzoneElement.files[index]);
+        updateImageContainer(dropzoneElement);
+        $modal.find('.uploaded-images').empty();
+
+        if (dropzoneElement.files.length === 0) {
+            $modal.hide();
+
+            let $container = $(dropzoneElement.element).closest('.image-container');
+            $container.find('.instruction-overlay').show();
+
+        } else {
+            openModal(dropzoneElement);
+        }
+    });
+
+    $('.close').on('click', function () {
+        $('#myModal').hide();
+    });
+
+    $(window).on('click', function (event) {
+        if (event.target.id === 'myModal') {
+            $('#myModal').hide();
+        }
+    });
+
+    function openInstructionModal(dropzone) {
+        let $instructionModal = $('#instructionModal');
+        $instructionModal.data('dropzone', dropzone);
+        currentDropzoneElement = dropzone.element;
+        $instructionModal.show();
+    }
+
+    $('#continueButton').on('click', function () {
+        debugger
+        // let dropzone = $('#instructionModal').data('dropzone');
+        $('#instructionModal').hide();
+        // $(dropzone.element).find('.instruction-overlay').remove();
+        $(currentDropzoneElement).trigger('click');
+    });
+
+    $(document).on('click', '.instruction-overlay .btn-instruction', function () {
+        let dropzone = $(this).closest('.dropzone').data('dropzone');
+        openInstructionModal(dropzone);
+    });
+
+    $(document).on('click', '.close', function () {
+        $('.modal').hide();
+    });
+
+    $(window).on('click', function (event) {
+        if (event.target.className === 'modal') {
+            $('.modal').hide();
+        }
+    });
+
+
+   $(document).ready(function () {
+        Dropzone.autoDiscover = false;
+
+        let loop = false;
+
+
+        $(".dropzone").each(function (index, element) {
+            debugger
+            let dropzone = new Dropzone(element, {
+                acceptedFiles: "image/jpeg,image/png,image/jpg",
+                url: '@Url.Content("~/GenericHandler.ashx")',
+                chunking: true,
+                chunkSize: 1000000,
+                maxFiles: 4,
+                /*maxFilesize: 0.20,*/
+                thumbnailWidth: null,
+                thumbnailHeight: null,
+                skipSizeCheck: false,
+                init: function () {
+                    const dzInstance = this;
+                    this.on("thumbnail", function (file, dataUrl) {
+                        updateImageContainer(this);
+                    });
+                    this.on("success", function (file) {
+                        updateImageContainer(this);
+                    });
+                    this.on("error", function (file, errorMessage) {
+                        debugger
+                        var type = file.type;
+                        const acceptedTypes = ["image/jpeg", "image/png", "image/jpg"];
+                        var filecheck = acceptedTypes.includes(type);
+                        if (!filecheck) {
+                            alert("Invalid file format! Only jpeg, jpg and png formats are allowed.");
+                            this.removeFile(file);
+                            return;
+                        }
+
+                    });
+                    this.on("addedfile", function (file) {
+
+
+                        if (!dzInstance.options.skipSizeCheck) {
+                            let maxSizeKB = 500;
+                            //let fileSizeMB = file.size / (1024 * 1024);
+                            let fileSizeKB = file.size / 1024;
+                            if (fileSizeKB > maxSizeKB) {
+                                alert("Max file size allowed is 500KB. Your file size is " + fileSizeKB.toFixed(2) + "KB.");
+                                dzInstance.removeFile(file);
+                                return;
+                            }
+                        }
+
+
+                        let rowElement = $(this.element).closest('tr');
+                        let rowImageCount = updateRowImageCount(rowElement);
+
+                        if (rowImageCount > 4 && loop == false) {
+                            alert("You can only upload a maximum of 4 images per row.");
+                            this.removeFile(file);
+                            loop = true;
+                        }
+                        else if (rowImageCount > 4 && loop == true) {
+                            this.removeFile(file);
+                        }
+                        else if (rowImageCount == 4) {
+                            loop = false;
+                        }
+
+
+                    });
+                },
+                success: function (file, response) {
+                    var imgName = response;
+                    file.previewElement.classList.add("dz-success");
+                    console.log("Successfully uploaded :" + imgName);
+
+                },
+                error: function (file, response) {
+                    file.previewElement.classList.add("dz-error");
+                },
+                maxfilesexceeded: function (file) {
+                    this.removeFile(file);
+                }
+            });
+
+            $(element).data('dropzone', dropzone);
+
+
+
+        });
+
+
+    });
+
+</script>
+
+
+
+
+<script>
+
+
+    function getImageCount(containerId) {
+        var container = document.getElementById(containerId);
+        if (!container) return 0;
+
+        var dropzones = container.getElementsByClassName('dropzone');
+        var imageCount = 0;
+
+        for (var i = 0; i < dropzones.length; i++) {
+            var dropzone = dropzones[i];
+            var files = dropzone.dropzone.files;
+            imageCount += files.length;
+        }
+
+        return imageCount;
+    }
+
+
+</script>
+
+
+<script>
+
+    var valueOF3 = []
+    function handleClick3(x) {
+
+        var id = x;
+        valueOF3.push("img3_" + id)
+
+        var result = confirm("Are you sure you want to delete?");
+        if (result == true) {
+            var mydivid = "Maindiv3_" + id;
+            var dZUpload_ = "dZUpload3_" + id;
+            image3 = "";
+            photo3 = "";
+            var MainDiv = document.getElementById(mydivid);
+            MainDiv.style.display = 'none';
+
+            var dZone = document.getElementById(dZUpload_);
+            dZone.style.display = 'block';
+        }
+    }
+
+
+</script>
+
+
+<script>
+
+    var allgetDataDB = []
+    function LoadDataIndexDB() {
+
+        showSpinnerwithoutBar();
+
+        var dbObj;
+        var request = indexedDB.open("DraftMooringDB")
+        request.onsuccess = function (e) {
+
+            dbObj = request.result;
+
+            const transaction = dbObj.transaction("MooringRopeInspection");
+            const objectStore = transaction.objectStore("MooringRopeInspection");
+
+            const request5 = objectStore.getAll();
+
+            request5.onsuccess = function () {
+                const RopeInspections = request5.result;
+
+                allgetDataDB = RopeInspections;
+                var MooringObj = RopeInspections[0];
+
+                $("#InspectBy").val(MooringObj.InspectBy);
+                $("#InspectDate").val(MooringObj.InspectDate);
+
+                var kk = 0;
+                let totalRows = $('#tbl1 > tbody  > tr').length;
+                let processedRows = 0;
+
+                $('#tbl1 > tbody  > tr').each(function (index, tr) {
+                    debugger
+
+                    var MooringRopeInspection = RopeInspections[kk];
+
+                    var row = $(this).closest("tr")[0];
+                    var cells = $(this).closest('tr').children('td');
+
+                    var Ropeid = row.cells[2].innerHTML;
+
+                    var cntSrNo = row.cells[26].innerHTML.trim();
+
+                    cells.eq(0).find("input[name='case1']").attr('checked', MooringRopeInspection.Mark);
+                    cells.eq(9).find('select').val(MooringRopeInspection.ExternalRating_A);
+                    cells.eq(10).find('select').val(MooringRopeInspection.InternalRating_A);
+                    cells.eq(11).find('input').val(MooringRopeInspection.AverageRating_A);
+
+                    cells.eq(12).find('input').val(MooringRopeInspection.LengthOFAbrasion_A);
+                    cells.eq(13).find('input').val(MooringRopeInspection.DistanceOutboard_A);
+                    cells.eq(14).find('input').val(MooringRopeInspection.CutYarnCount_A);
+                    cells.eq(15).find('input').val(MooringRopeInspection.LengthOFGlazing_A);
+
+                    cells.eq(16).find('select').val(MooringRopeInspection.ExternalRating_B);
+                    cells.eq(17).find('select').val(MooringRopeInspection.InternalRating_B);
+                    cells.eq(18).find('input').val(MooringRopeInspection.AverageRating_B);
+
+                    cells.eq(19).find('input').val(MooringRopeInspection.LengthOFAbrasion_B);
+                    cells.eq(20).find('input').val(MooringRopeInspection.DistanceOutboard_B);
+                    cells.eq(21).find('input').val(MooringRopeInspection.CutYarnCount_B);
+                    cells.eq(22).find('input').val(MooringRopeInspection.LengthOFGlazing_B);
+
+                    cells.eq(23).find('select').val(MooringRopeInspection.Chafe_guard_condition);
+                    cells.eq(24).find('input').val(MooringRopeInspection.Twist);
+
+                    var count = (cntSrNo - 1) * 2;
+                    var count1 = count + 1;
+
+
+                    var image3Names = MooringRopeInspection.Image3;
+                    var imageUrls = MooringRopeInspection.Photo3;
+
+                    // Append images to the dropzone
+                    var mydivid_3 = "Maindiv3_" + cntSrNo;
+                    var parentElement_3 = document.getElementById(mydivid_3);
+                    let dropzone = $(parentElement_3).find('.dropzone').data('dropzone');
+
+
+                    if (dropzone) {
+                        dropzone.options.skipSizeCheck = true;
+
+                        image3Names.forEach((imageName, index) => {
+                            let originalImageDataUrl = imageUrls[index];
+                            let mockFile = { name: imageName, size: originalImageDataUrl.length, dataURL: originalImageDataUrl };
+
+                            dropzone.emit("addedfile", mockFile);
+                            dropzone.emit("thumbnail", mockFile, originalImageDataUrl);
+                            dropzone.emit("complete", mockFile);
+
+                            dropzone.files.push(mockFile);
+                        });
+
+                        dropzone.options.skipSizeCheck = false;
+                        updateImageContainer(dropzone);
+                    }
+
+                    kk = kk + 1;
+
+                    processedRows++;
+
+                    if (processedRows === totalRows) {
+                        hideSpinnerwithoutBar();
+                    }
+
+                });
+
+            };
+
+        }
+        request.onerror = function (e) {
+
+            alert("No Found!");
+            hideSpinnerwithoutBar();
+        }
+
+    }
+
+</script>
+
+
+
+
+<script>
+
+    function SaveDataOnlineIndexDB() {
+
+
+        let dbName = "DraftMooringDB";
+        let formData = new FormData();
+
+        let dbVersion = "1";
+        var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = "";
+        var inspections = [];
+
+        $('#tbl1 > tbody  > tr').each(function (index, tr) {
+
+            var MooringRopeInspection = {};
+
+            var row = $(this).closest("tr")[0];
+            var cells = $(this).closest('tr').children('td');
+
+            var cntSrNo = row.cells[26].innerHTML.trim();
+
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+            image3 = [];
+            photo3 = [];
+
+            var mydivid_3 = "Maindiv3_" + cntSrNo;
+            var parentElement_3 = document.getElementById(mydivid_3);
+            let hasChildNodes_3 = parentElement_3.children.length;
+            var imageCount = getImageCount(mydivid_3);
+
+
+            $(parentElement_3).find('.dropzone').each(function (dzIndex, dzElement) {
+                if (dzElement.dropzone) {
+                    dzElement.dropzone.files.forEach(function (file) {
+                        image3.push(file.name);
+                        photo3.push(file.previewElement.querySelector("img").src);
+                    });
+                }
+            });
+
+
+            MooringRopeInspection.Mark = cells.eq(0).find('input').is(':checked');
+            MooringRopeInspection.ExternalRating_A = cells.eq(9).find('select').val();
+            MooringRopeInspection.InternalRating_A = cells.eq(10).find('select').val();
+
+            MooringRopeInspection.AverageRating_A = cells.eq(11).find('input').val().trim();
+
+            MooringRopeInspection.RopeId = row.cells[2].innerHTML;
+            MooringRopeInspection.WinchId = row.cells[3].innerHTML;
+
+            MooringRopeInspection.LengthOFAbrasion_A = cells.eq(12).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_A = cells.eq(13).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_A = cells.eq(14).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_A = cells.eq(15).find('input').val().trim();
+
+            MooringRopeInspection.ExternalRating_B = cells.eq(16).find('select').val();
+            MooringRopeInspection.InternalRating_B = cells.eq(17).find('select').val();
+
+            MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val().trim();
+
+            MooringRopeInspection.LengthOFAbrasion_B = cells.eq(19).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_B = cells.eq(20).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_B = cells.eq(21).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_B = cells.eq(22).find('input').val().trim();
+            MooringRopeInspection.Chafe_guard_condition = cells.eq(23).find('select').val();
+
+            MooringRopeInspection.Twist = cells.eq(24).find('input').val();
+
+            MooringRopeInspection.Image3 = image3;
+            MooringRopeInspection.Photo3 = photo3;
+
+            MooringRopeInspection.InspectBy = $("#InspectBy").val();
+            MooringRopeInspection.InspectDate = $("#InspectDate").val();
+            inspections.push(MooringRopeInspection);
+        });
+
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onupgradeneeded = () => {
+            let res = request.result;
+            res.createObjectStore('MooringRopeInspection', { autoIncrement: true })
+        }
+
+        request.onsuccess = () => {
+            const db = request.result;
+
+            const clearTx = db.transaction('MooringRopeInspection', 'readwrite');
+            const clearStore = clearTx.objectStore('MooringRopeInspection');
+            clearStore.clear();
+
+            clearTx.oncomplete = () => {
+                saveInspectionsInChunks(db, inspections, 10)
+                    .then(() => {
+                        alert("Current session is successfully saved as draft, but not submitted yet. Once system is in Online Mode, kindly submit or view/edit (if needed) this form by visiting this module/URL.");
+
+                        if (navigator.onLine) {
+
+                            setTimeout("location.reload(true);", 1500);
+
+                        }
+
+                    })
+                    .catch(err => {
+                        console.error("Error saving inspections:", err);
+                        alert("An error occurred while saving data.");
+                    });
+            };
+
+            clearTx.onerror = (err) => {
+                console.error("Error clearing store:", err);
+                alert("Failed to clear existing data in IndexedDB.");
+            };
+        };
+
+    }
+
+
+
+</script>
+
+
+
+<script>
+
+    async function saveInspectionsInChunks(db, inspections, chunkSize = 10) {
+        return new Promise((resolve, reject) => {
+            const totalRecords = inspections.length;
+            let currentIndex = 0;
+
+            function processChunk() {
+                if (currentIndex >= totalRecords) {
+                    resolve(); // All chunks processed
+                    return;
+                }
+
+                const chunk = inspections.slice(currentIndex, currentIndex + chunkSize);
+
+                // Create a new transaction for each chunk
+                const tx = db.transaction('MooringRopeInspection', 'readwrite');
+                const store = tx.objectStore('MooringRopeInspection');
+
+                chunk.forEach(item => {
+                    store.put(item);
+                });
+
+                tx.oncomplete = () => {
+                    currentIndex += chunkSize;
+                    setTimeout(processChunk, 50); // Process the next chunk
+                };
+
+                tx.onerror = (err) => {
+                    console.error("Transaction error:", err);
+                    reject(err);
+                };
+            }
+
+            processChunk();
+        });
+    }
+
+
+</script>
+
+
+
+
+<script>
+    function myfunc() {// Open a connection to the IndexedDB database
+        let request = window.indexedDB.open("myDatabase", 1);
+
+        // Create an object store for the form data
+        request.onupgradeneeded = function (event) {
+            let db = event.target.result;
+            let objectStore = db.createObjectStore("formData", { keyPath: "id", autoIncrement: true });
+        };
+
+        // Add form data to IndexedDB
+        function addFormData(formData) {
+            let request = window.indexedDB.open("myDatabase", 1);
+
+            request.onsuccess = function (event) {
+                let db = event.target.result;
+                let transaction = db.transaction(["formData"], "readwrite");
+                let objectStore = transaction.objectStore("formData");
+                let requestAdd = objectStore.add(formData);
+
+                requestAdd.onsuccess = function (event) {
+                    console.log("Form data added to IndexedDB.");
+                };
+
+                requestAdd.onerror = function (event) {
+                    console.log("Error adding form data to IndexedDB: ", event.target.error);
+                };
+            };
+        }
+
+        // Get form data from IndexedDB
+        function getFormData(formDataId) {
+            let request = window.indexedDB.open("myDatabase", 1);
+
+            request.onsuccess = function (event) {
+                let db = event.target.result;
+                let transaction = db.transaction(["formData"], "readonly");
+                let objectStore = transaction.objectStore("formData");
+                let requestGet = objectStore.get(formDataId);
+
+                requestGet.onsuccess = function (event) {
+                    let formData = event.target.result;
+                    console.log("Form data retrieved from IndexedDB: ", formData);
+                };
+
+                requestGet.onerror = function (event) {
+                    console.log("Error retrieving form data from IndexedDB: ", event.target.error);
+                };
+            };
+        }
+
+        // Update form data in IndexedDB
+        function updateFormData(formData) {
+
+            let request = window.indexedDB.open("myDatabase", 1);
+
+            request.onsuccess = function (event) {
+                let db = event.target.result;
+                let transaction = db.transaction(["formData"], "readwrite");
+                let objectStore = transaction.objectStore("formData");
+                let requestUpdate = objectStore.put(formData);
+
+                requestUpdate.onsuccess = function (event) {
+                    console.log("Form data updated in IndexedDB.");
+                };
+
+                requestUpdate.onerror = function (event) {
+                    console.log("Error updating form data in IndexedDB: ", event.target.error);
+                };
+            };
+        }
+
+
+
+    }
+</script>
+
+
+<script>
+
+
+
+    function extract_Base64Data(imgSrc) {
+        // Match and handle different image formats: jpeg, jpg, png
+        const base64PrefixMatch = imgSrc.match(/^data:image\/(jpeg|jpg|png);base64,/i);
+        if (base64PrefixMatch) {
+            return imgSrc.replace(base64PrefixMatch[0], ""); // Remove the base64 header
+        }
+        return null; // Return null if not base64 format
+    }
+
+    function detectMimeType(imgSrc) {
+        // This function detects the mime type from base64 image data
+        const match = imgSrc.match(/^data:image\/(jpeg|jpg|png);base64,/i);
+        return match ? `image/${match[1]}` : 'image/png'; // Default to PNG if not detected
+    }
+
+    function base_64ToBlob(base64Data, contentType) {
+        const byteCharacters = atob(base64Data); // Decode base64 to binary data
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+            const slice = byteCharacters.slice(offset, offset + 1024);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        return new Blob(byteArrays, { type: contentType }); // Create Blob with appropriate mime type
+    }
+
+    function blob_ToFile(blob, fileName) {
+        return new File([blob], fileName, { type: blob.type }); // Convert Blob to File
+    }
+
+</script>
+
+<script>
+    var Alert_Message = 0;
+</script>
+
+<script>
+
+
+   async  function SaveDataOnline() {debugger
+        const dbName = "DraftMooringDB";
+
+
+         $('#cover-spin').show();
+
+
+       await new Promise(resolve => setTimeout(resolve, 100));
+
+       for (var i = 0; i < 5; i++) {
+           (function (i) {
+               setTimeout(function () {
+                   console.log(i);
+
+                   if (i === 4) {
+
+                   }
+               }, 1000 * i);
+           })(i);
+       }
+
+         function generateUniqueFileName(name) {
+             const now = new Date();
+             const formattedDateTime = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}${now.getMilliseconds().toString().padStart(3, '0')}`;
+             return `${formattedDateTime}_${name}`;
+         }
+
+
+       var checkValidation = 0; var msg = ""; var vslRating = 0; var msgRmsg = "";
+        var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = ""; var chfgurad = 0; var CheckTwist = 0;
+        var ratingcheck = 0; var notacptable = 0; var certno = ""; var ratingcheck5 = 0;
+
+         var image1_cnt = 0; var image2_cnt = 0;
+
+
+        var Insby = $("#InspectBy").val();
+        var Insdt = $("#InspectDate").val();
+
+        if (Insdt == "") {
+
+            var msg = "Inspected Date can not be null !"
+            $('#messageInsdt').text(msg);
+            $('#messageInsdt').css("color", "red");
+
+            $('#cover-spin').hide();
+            Alert_Message = 1;
+
+            return;
+        }
+        else {
+            $('#messageInsdt').text('');
+        }
+        if (Insby == "") {
+
+            var msg = "Please fill name / rank of the person carrying out inspection"
+            $('#messageInsby').text(msg);
+            $('#messageInsby').css("color", "red");
+            $('#cover-spin').hide();
+            Alert_Message = 1;
+            return;
+        }
+        else {
+            $('#messageInsby').text('');
+        }
+
+       var formDataList = [];
+        var inspections = [];
+
+         $('#cover-spin').show();
+
+
+         $("#tbl1 input[name=case1]:checked").each(function () {
+
+             image1_cnt++;
+             image2_cnt++;
+
+             var MooringRopeInspection = {};
+
+             var formData = new FormData();
+
+            var row = $(this).closest("tr")[0];
+            var cells = $(this).closest('tr').children('td');
+
+             var cntSrNo = row.cells[26].innerHTML.trim();
+
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+             image3 = [];
+             photo3 = [];
+
+
+             var mydivid_3 = "Maindiv3_" + cntSrNo.trim();
+             var parentElement_3 = document.getElementById(mydivid_3);
+             let hasChildNodes_3 = parentElement_3.children.length;
+
+
+             $(parentElement_3).find('.dropzone').each(function (dzIndex, dzElement) {
+                 if (dzElement.dropzone) {
+                     dzElement.dropzone.files.forEach(function (file) {
+                         var uniqueFileName = generateUniqueFileName(file.name);
+
+                         sleepNew(250);
+
+                         if (!(file instanceof Blob)) {debugger
+
+                             const base64Data = extractBase64Data(file.previewElement.querySelector("img").src);
+                              const blob = base64ToBlob(base64Data, file.type || 'image/png');
+                             const convertedFile = blobToFile(blob, file.name);
+
+                             formData.append('files', convertedFile, uniqueFileName);
+
+                         }
+                         else {
+
+                             const base64Data1 = extractBase64Data(file.previewElement.querySelector("img").src);
+                             const blob1 = base64ToBlob(base64Data1, file.type || 'image/png');
+                             const convertedFile1 = blobToFile(blob1, file.name);
+
+                             formData.append('files', convertedFile1, uniqueFileName);
+
+                         }
+
+                         image3.push(uniqueFileName);
+
+                     });
+                 }
+             });
+
+
+             formDataList.push(formData);
+
+             MooringRopeInspection.ExternalRating_A = cells.eq(9).find('select').val();
+
+             MooringRopeInspection.InternalRating_A = cells.eq(10).find('select').val();
+
+             MooringRopeInspection.AverageRating_A = cells.eq(11).find('input').val().trim();
+
+             if (MooringRopeInspection.AverageRating_A == '6' || MooringRopeInspection.AverageRating_A == '7') {
+                 if (image3.length < 1) {
+                     vslRating = 1;
+                     certno = row.cells[8].innerHTML;
+                     msgRmsg = "Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach photograph, please browse and attach photographs !";
+                 }
+             }
+
+            var str = MooringRopeInspection.AverageRating_A;
+            var lngth = str.length;
+            if (str <= 0) {
+                ratingcheck = 1;
+
+            }
+
+            MooringRopeInspection.RopeId = row.cells[2].innerHTML;
+             MooringRopeInspection.WinchId = row.cells[3].innerHTML;
+
+
+            MooringRopeInspection.LengthOFAbrasion_A = cells.eq(12).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_A = cells.eq(13).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_A = cells.eq(14).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_A = cells.eq(15).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_A == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Abrasion(Rating) is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_A == '') {
+                $('#cover-spin').hide();
+                msg = "Distance from Outboard eye is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_A == '') {
+                $('#cover-spin').hide();
+                msg = "Cut Yarn Count is empty in Zone A, Please Enter the value (meter)";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_A == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Glazing is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+
+             MooringRopeInspection.ExternalRating_B = cells.eq(16).find('select').val();
+
+             MooringRopeInspection.InternalRating_B = cells.eq(17).find('select').val();
+
+             MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val().trim();
+             if (MooringRopeInspection.AverageRating_B == '6' || MooringRopeInspection.AverageRating_B == '7') {
+
+                 if (image3.length < 1 ) {
+                     vslRating = 1;
+                     certno = row.cells[8].innerHTML;
+                     msgRmsg = "Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach photograph, please browse and attach photographs !";
+                 }
+
+             }
+            var str1 = MooringRopeInspection.AverageRating_B;
+            var lngth1 = str1.length;
+            if (str1 <= 0) {
+                ratingcheck = 1;
+
+            }
+
+            MooringRopeInspection.LengthOFAbrasion_B = cells.eq(19).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_B = cells.eq(20).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_B = cells.eq(21).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_B = cells.eq(22).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_B == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Abrasion(Rating) is empty in Zone B, Please Enter the value"
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_B == '') {
+                $('#cover-spin').hide();
+                msg = "Distance from Outboard eye is empty in Zone B, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_B == '') {
+                $('#cover-spin').hide();
+                msg = "Cut Yarn Count is empty in Zone B, Please Enter the value (meter)";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_B == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Glazing is empty in Zone B, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.Chafe_guard_condition = cells.eq(23).find('select').val();
+
+            if (MooringRopeInspection.Chafe_guard_condition == "") {
+
+                chfgurad = 1;
+            }
+
+            if (MooringRopeInspection.Chafe_guard_condition == "Not Acceptable") {
+
+                if (image3.length < 1 ) {
+
+                    notacptable = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            if (MooringRopeInspection.AverageRating_A >= 5 || MooringRopeInspection.AverageRating_B >= 5) {
+
+                if (image3.length < 1 ) {
+
+                    ratingcheck5 = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+
+            }
+
+            var ssdd = row.cells[8].innerHTML;
+
+             MooringRopeInspection.Twist = cells.eq(24).find('input').val();
+             if (MooringRopeInspection.Twist == '') {
+                 $('#cover-spin').hide();
+                 msg = "Twist per (meter) can't be empty, Please Enter the value";
+                 Alert_Message = 1;
+                 checkValidation = 1;
+                 return;
+             }
+            MooringRopeInspection.Photo1 = "";
+             MooringRopeInspection.Photo2 = "";
+             MooringRopeInspection.Image3 = image3;
+            MooringRopeInspection.InspectBy = $("#InspectBy").val();
+            MooringRopeInspection.InspectDate = $("#InspectDate").val();
+
+            inspections.push(MooringRopeInspection);
+        });
+
+        if (notacptable == 1) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph where maximum abrasion/ damage is observed, please browse and attach photographs !");
+            Alert_Message = 1;
+            return;
+        }
+
+        if (ratingcheck != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert External or Internal Rating in Zone A or Zone B!");
+            Alert_Message = 1;
+            return;
+        }
+        if (chfgurad != 0) {
+            $('#cover-spin').hide();
+            alert("Please select an option from Chafe Guard !");
+            Alert_Message = 1;
+            return;
+        }
+        if (CheckTwist != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert Twist per(meter) !");
+            Alert_Message = 1;
+            return;
+        }
+        if (ratingcheck5 != 0) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph when rating equal or greater than 5, please browse and attach photographs !");
+            Alert_Message = 1;
+            return;
+       }
+
+       if (checkValidation != 0 ) {
+           alert(msg);
+           Alert_Message = 1;
+           return;
+       }
+
+       if (vslRating != 0) {
+           $('#cover-spin').hide();
+           alert(msgRmsg);
+           Alert_Message = 1;
+           return;
+       }
+
+        if (inspections == "[]") {
+            $('#cover-spin').hide();
+            if (checkValidation == 0) {
+
+                alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+                Alert_Message = 1;
+            }
+            return;
+        }
+
+       if (inspections.length < 1) {
+           $('#cover-spin').hide();
+           if (checkValidation == 0) {
+
+               alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+               Alert_Message = 1;
+           }
+           return;
+       }
+
+        if (checkValidation == 1) {
+            $('#cover-spin').hide();
+            return;
+        }
+
+       var finalFormData = new FormData();
+
+
+       finalFormData.append("inspections", JSON.stringify(inspections));
+
+       //formDataList.forEach(function (formData, index) {debugger
+       //    for (var pair of formData.entries()) {
+       //        finalFormData.append(pair[0], pair[1]);
+
+       //    }
+       //});
+
+       var finalimgFormData = new FormData();
+
+       await handleFileUpload(formDataList, finalimgFormData);
+
+       const loaderTime = calculateLoaderTiming(finalimgFormData);
+
+       try {
+
+           const response = await $.ajax({
+              url: '@Url.Action("InsertLineData", "LineInspection")',
+              type: 'POST',
+              data: finalFormData,
+              contentType: false,
+              processData: false,
+              //xhr: function() {
+              //    const xhr = new XMLHttpRequest();
+
+              //   xhr.upload.addEventListener('loadstart', function(event) {
+              //       simulateProgress(loaderTime);
+              //   });
+
+              //   xhr.upload.addEventListener('progress', function(event) {
+              //     if (event.lengthComputable) {
+              //         clearInterval(simulatedProgressInterval);
+              //         const percentComplete = Math.round((event.loaded / event.total) * 100);
+              //         updateProgressBar(percentComplete);
+              //     }
+              //   });
+
+              //    xhr.upload.addEventListener('load', function() {
+              //        clearInterval(simulatedProgressInterval);
+              //        updateProgressBar(100);
+              //    });
+
+              //    return xhr;
+              //}
+        });
+
+          // await simulateServerProcessing(loaderTime);
+
+      //  console.log("Data saved successfully:", response);
+      //   alert('Data uploaded successfully!');
+
+
+
+            const responseimg = await $.ajax({
+              url: '@Url.Action("InsertImages", "LineInspection")',
+              type: 'POST',
+              data: finalimgFormData,
+              contentType: false,
+              processData: false,
+              xhr: function() {
+                  const xhr = new XMLHttpRequest();
+
+                 xhr.upload.addEventListener('loadstart', function(event) {
+                     simulateProgress(loaderTime);
+                 });
+
+                 xhr.upload.addEventListener('progress', function(event) {
+                   if (event.lengthComputable) {
+                       clearInterval(simulatedProgressInterval);
+                       const percentComplete = Math.round((event.loaded / event.total) * 100);
+                       updateProgressBar(percentComplete);
+                   }
+                 });
+
+                  xhr.upload.addEventListener('load', function() {
+                      clearInterval(simulatedProgressInterval);
+                      updateProgressBar(100);
+                  });
+
+                  return xhr;
+              }
+        });
+
+           await simulateServerProcessing(loaderTime);
+
+           console.log("Data saved successfully:", responseimg);
+           alert('Data uploaded successfully!');
+            Alert_Message = 1;
+           indexedDB.deleteDatabase(dbName);
+           goBack();
+
+           return responseimg;
+
+       } catch  {
+        console.error("Error saving data:", error);
+        //alert('An error occurred while uploading data: ' + error.statusText);
+        //throw error;
+    } finally {
+        hideSpinner();
+    }
+
+    }
+
+
+
+</script>
+
+
+
+<script>
+
+
+   async  function SaveDataOnline_6Dec_amit() {debugger
+        const dbName = "DraftMooringDB";
+
+
+         $('#cover-spin').show();
+
+
+       await new Promise(resolve => setTimeout(resolve, 100));
+
+       for (var i = 0; i < 5; i++) {
+           (function (i) {
+               setTimeout(function () {
+                   console.log(i);
+
+                   if (i === 4) {
+
+                   }
+               }, 1000 * i);
+           })(i);
+       }
+
+         function generateUniqueFileName(name) {
+             const now = new Date();
+             const formattedDateTime = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}${now.getMilliseconds().toString().padStart(3, '0')}`;
+             return `${formattedDateTime}_${name}`;
+         }
+
+
+       var checkValidation = 0; var msg = ""; var vslRating = 0; var msgRmsg = "";
+        var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = ""; var chfgurad = 0; var CheckTwist = 0;
+        var ratingcheck = 0; var notacptable = 0; var certno = ""; var ratingcheck5 = 0;
+
+         var image1_cnt = 0; var image2_cnt = 0;
+
+
+        var Insby = $("#InspectBy").val();
+        var Insdt = $("#InspectDate").val();
+
+        if (Insdt == "") {
+
+            var msg = "Inspected Date can not be null !"
+            $('#messageInsdt').text(msg);
+            $('#messageInsdt').css("color", "red");
+
+            $('#cover-spin').hide();
+            return;
+        }
+        else {
+            $('#messageInsdt').text('');
+        }
+        if (Insby == "") {
+
+            var msg = "Please fill name / rank of the person carrying out inspection"
+            $('#messageInsby').text(msg);
+            $('#messageInsby').css("color", "red");
+            $('#cover-spin').hide();
+            return;
+        }
+        else {
+            $('#messageInsby').text('');
+        }
+
+       var formDataList = [];
+        var inspections = [];
+
+         $('#cover-spin').show();
+
+
+         $("#tbl1 input[name=case1]:checked").each(function () {
+
+             image1_cnt++;
+             image2_cnt++;
+
+             var MooringRopeInspection = {};
+
+             var formData = new FormData();
+
+            var row = $(this).closest("tr")[0];
+            var cells = $(this).closest('tr').children('td');
+
+             var cntSrNo = row.cells[26].innerHTML.trim();
+
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+             image3 = [];
+             photo3 = [];
+
+
+             var mydivid_3 = "Maindiv3_" + cntSrNo.trim();
+             var parentElement_3 = document.getElementById(mydivid_3);
+             let hasChildNodes_3 = parentElement_3.children.length;
+
+
+             $(parentElement_3).find('.dropzone').each(function (dzIndex, dzElement) {
+                 if (dzElement.dropzone) {
+                     dzElement.dropzone.files.forEach(function (file) {
+                         var uniqueFileName = generateUniqueFileName(file.name);
+
+                         sleepNew(250);
+
+                         if (!(file instanceof Blob)) {debugger
+
+                             const base64Data = extractBase64Data(file.previewElement.querySelector("img").src);
+                              const blob = base64ToBlob(base64Data, file.type || 'image/png');
+                             const convertedFile = blobToFile(blob, file.name);
+
+                             formData.append('files', convertedFile, uniqueFileName);
+
+                         }
+                         else {
+
+                             const base64Data1 = extractBase64Data(file.previewElement.querySelector("img").src);
+                             const blob1 = base64ToBlob(base64Data1, file.type || 'image/png');
+                             const convertedFile1 = blobToFile(blob1, file.name);
+
+                             formData.append('files', convertedFile1, uniqueFileName);
+
+                         }
+
+                         image3.push(uniqueFileName);
+
+                     });
+                 }
+             });
+
+
+             formDataList.push(formData);
+
+             MooringRopeInspection.ExternalRating_A = cells.eq(9).find('select').val();
+
+             MooringRopeInspection.InternalRating_A = cells.eq(10).find('select').val();
+
+             MooringRopeInspection.AverageRating_A = cells.eq(11).find('input').val().trim();
+
+             if (MooringRopeInspection.AverageRating_A == '6' || MooringRopeInspection.AverageRating_A == '7') {
+                 if (image3.length < 1) {
+                     vslRating = 1;
+                     certno = row.cells[8].innerHTML;
+                     msgRmsg = "Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach photograph, please browse and attach photographs !";
+                 }
+             }
+
+            var str = MooringRopeInspection.AverageRating_A;
+            var lngth = str.length;
+            if (str <= 0) {
+                ratingcheck = 1;
+
+            }
+
+            MooringRopeInspection.RopeId = row.cells[2].innerHTML;
+             MooringRopeInspection.WinchId = row.cells[3].innerHTML;
+
+
+            MooringRopeInspection.LengthOFAbrasion_A = cells.eq(12).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_A = cells.eq(13).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_A = cells.eq(14).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_A = cells.eq(15).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_A == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Abrasion(Rating) is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_A == '') {
+                $('#cover-spin').hide();
+                msg = "Distance from Outboard eye is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_A == '') {
+                $('#cover-spin').hide();
+                msg = "Cut Yarn Count is empty in Zone A, Please Enter the value (meter)";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_A == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Glazing is empty in Zone A, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+
+             MooringRopeInspection.ExternalRating_B = cells.eq(16).find('select').val();
+
+             MooringRopeInspection.InternalRating_B = cells.eq(17).find('select').val();
+
+             MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val().trim();
+             if (MooringRopeInspection.AverageRating_B == '6' || MooringRopeInspection.AverageRating_B == '7') {
+
+                 if (image3.length < 1 ) {
+                     vslRating = 1;
+                     certno = row.cells[8].innerHTML;
+                     msgRmsg = "Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach photograph, please browse and attach photographs !";
+                 }
+
+             }
+            var str1 = MooringRopeInspection.AverageRating_B;
+            var lngth1 = str1.length;
+            if (str1 <= 0) {
+                ratingcheck = 1;
+
+            }
+
+            MooringRopeInspection.LengthOFAbrasion_B = cells.eq(19).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_B = cells.eq(20).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_B = cells.eq(21).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_B = cells.eq(22).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_B == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Abrasion(Rating) is empty in Zone B, Please Enter the value"
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_B == '') {
+                $('#cover-spin').hide();
+                msg = "Distance from Outboard eye is empty in Zone B, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_B == '') {
+                $('#cover-spin').hide();
+                msg = "Cut Yarn Count is empty in Zone B, Please Enter the value (meter)";
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_B == '') {
+                $('#cover-spin').hide();
+                msg = "Length OF Glazing is empty in Zone B, Please Enter the value";
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.Chafe_guard_condition = cells.eq(23).find('select').val();
+
+            if (MooringRopeInspection.Chafe_guard_condition == "") {
+
+                chfgurad = 1;
+            }
+
+            if (MooringRopeInspection.Chafe_guard_condition == "Not Acceptable") {
+
+                if (image3.length < 1 ) {
+
+                    notacptable = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            if (MooringRopeInspection.AverageRating_A >= 5 || MooringRopeInspection.AverageRating_B >= 5) {
+
+                if (image3.length < 1 ) {
+
+                    ratingcheck5 = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+
+            }
+
+            var ssdd = row.cells[8].innerHTML;
+
+             MooringRopeInspection.Twist = cells.eq(24).find('input').val();
+             if (MooringRopeInspection.Twist == '') {
+                 $('#cover-spin').hide();
+                 msg = "Twist per (meter) can't be empty, Please Enter the value";
+                 checkValidation = 1;
+                 return;
+             }
+            MooringRopeInspection.Photo1 = "";
+             MooringRopeInspection.Photo2 = "";
+             MooringRopeInspection.Image3 = image3;
+            MooringRopeInspection.InspectBy = $("#InspectBy").val();
+            MooringRopeInspection.InspectDate = $("#InspectDate").val();
+
+            inspections.push(MooringRopeInspection);
+        });
+
+        if (notacptable == 1) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph where maximum abrasion/ damage is observed, please browse and attach photographs !");
+            return;
+        }
+
+        if (ratingcheck != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert External or Internal Rating in Zone A or Zone B!");
+            return;
+        }
+        if (chfgurad != 0) {
+            $('#cover-spin').hide();
+            alert("Please select an option from Chafe Guard !");
+            return;
+        }
+        if (CheckTwist != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert Twist per(meter) !");
+            return;
+        }
+        if (ratingcheck5 != 0) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph when rating equal or greater than 5, please browse and attach photographs !");
+            return;
+       }
+
+       if (checkValidation != 0 ) {
+           alert(msg);
+           return;
+       }
+
+       if (vslRating != 0) {
+           $('#cover-spin').hide();
+           alert(msgRmsg);
+           return;
+       }
+
+        if (inspections == "[]") {
+            $('#cover-spin').hide();
+            if (checkValidation == 0) {
+
+                alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+            }
+            return;
+        }
+
+       if (inspections.length < 1) {
+           $('#cover-spin').hide();
+           if (checkValidation == 0) {
+
+               alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+           }
+           return;
+       }
+
+        if (checkValidation == 1) {
+            $('#cover-spin').hide();
+            return;
+        }
+
+       var finalFormData = new FormData();
+
+
+       finalFormData.append("inspections", JSON.stringify(inspections));
+
+       //formDataList.forEach(function (formData, index) {debugger
+       //    for (var pair of formData.entries()) {
+       //        finalFormData.append(pair[0], pair[1]);
+
+       //    }
+       //});
+
+       await handleFileUpload(formDataList, finalFormData);
+
+       const loaderTime =  calculateLoaderTiming(finalFormData);
+
+   try {
+
+            const response = await $.ajax({
+                url: '@Url.Action("InsertImages1", "LineInspection")',
+                type: 'POST',
+                data: finalFormData,
+                contentType: false,
+                processData: false,
+                timeout: 30000000,
+                success: function (response) {
+                    //alert(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (textStatus === 'timeout') {
+                        // alert('The request timed out. Please try again later.');
+                    } else {
+                        // alert('An error occurred: ' + textStatus);
+                    }
+                },
+                 //xhr: function () {
+                //    const xhr = new XMLHttpRequest();
+
+                //    xhr.upload.addEventListener('loadstart', function (event) {
+                //        simulateProgress(loaderTime);
+                //    });
+
+                //    xhr.upload.addEventListener('progress', function (event) {
+                //        if (event.lengthComputable) {
+                //            clearInterval(simulatedProgressInterval);
+                //            const percentComplete = Math.round((event.loaded / event.total) * 100);
+                //            updateProgressBar(percentComplete);
+                //        }
+                //    });
+
+                //    xhr.upload.addEventListener('load', function () {
+                //        clearInterval(simulatedProgressInterval);
+                //        updateProgressBar(100);
+                //    });
+
+                //    return xhr;
+                //}
+            });
+
+            if (response && response.success) {
+                console.log("Data saved successfully:", response);
+                alert('Data uploaded successfully!');
+                indexedDB.deleteDatabase(dbName);
+                goBack();
+            } else {
+                throw new Error('Server responded with an error: ' + (response.message || 'Unknown error.'));
+            }
+
+
+
+            //await simulateServerProcessing(loaderTime);
+            console.log("Data saved successfully:", response);
+            alert('Data uploaded successfully!');
+            indexedDB.deleteDatabase(dbName);
+            goBack();
+            return response;
+
+        }
+        catch
+        {
+            //console.error("Error saving data:", error);
+           // if (error.status === 200) {
+               // alert('Data uploaded successfully, but encountered a minor error.');
+            //}
+           // else {
+               // alert(error.statusText);
+           // }
+        }
+        finally {
+            hideSpinner();
+        }
+
+
+    }
+
+
+
+</script>
+
+
+
+<script>
+
+    async function handleFileUpload(formDataList, finalFormData) {
+        const chunkSize = 5;  // Process in chunks to avoid blocking
+        for (let i = 0; i < formDataList.length; i += chunkSize) {
+            const chunk = formDataList.slice(i, i + chunkSize);
+
+            // Process each chunk asynchronously
+            await appendFormDataAsync(chunk, finalFormData);
+            await new Promise(resolve => setTimeout(resolve, 50)); // Yield execution to avoid freezing UI
+        }
+    }
+
+    async function appendFormDataAsync(formDataList, finalFormData) {
+        for (const formData of formDataList) {
+            for (const pair of formData.entries()) {
+                finalFormData.append(pair[0], pair[1]);
+            }
+            await new Promise(resolve => setTimeout(resolve, 0));  // Allow other events to execute
+        }
+    }
+
+</script>
+
+
+
+<script>
+    function sleepNew(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+</script>
+
+
+<script>
+
+
+    $('#btnSubmitOnline').click(async function () {
+        debugger
+
+        showSpinner();
+
+        try {
+            await SaveDataOnline(); // Await the completion of the async function
+        } catch {
+            debugger
+
+            //alert("amit testing");
+            //alert(error);
+            console.error("An error occurred while saving data online11:", error);
+        } finally {
+
+
+            hideSpinner(); // Hide spinner after the operation completes
+
+            if (Alert_Message == 0) {
+
+                alert("Data Upload Successfully  !!");
+
+                const dbName = "DraftMooringDB";
+                indexedDB.deleteDatabase(dbName);
+                goBack();
+
+            }
+
+        }
+
+
+    });
+
+</script>
+
+
+<script>
+
+     function insert_tempBase64(Image1, Image2, Photo1, Photo2) {
+
+        $('#cover-spin').show();
+
+        //alert(dataToSend);
+        // var inspections = "ffff";
+
+             //setTimeout(function () {
+        $.ajax({
+            url: '@Url.Action("insert_tempBase64Data", "LineInspection")',
+            type: "POST",
+            data: { 'Image1': Image1, 'Image2': Image2, 'Photo1': Photo1, 'Photo2': Photo2 },
+            dataType: "json",
+            beforeSend: function (x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                }
+            },
+            success: function (result) {
+                alert('base64 Sucess');
+                sleep(1000);
+                //  $('#cover-spin').hide();
+            },
+            error: function (result) {
+                //  $('#cover-spin').hide();
+                alert(result.error);
+                alert(result.message);
+                alert("Failed to process Inspection.");
+
+            }
+
+        });
+
+        /* }, 100);  // Delay by 1000ms (1 second)*/
+
+    }
+
+    @*function insert_tempBase64(Image1, Image2, Photo1, Photo2) {
+        alert(444);
+    return new Promise((resolve, reject) => {
+        $('#cover-spin').show();
+
+        $.ajax({
+            url: '@Url.Action("insert_tempBase64Data", "LineInspection")',
+            type: "POST",
+            data: { 'Image1': Image1, 'Image2': Image2, 'Photo1': Photo1, 'Photo2': Photo2 },
+            dataType: "json",
+            beforeSend: function (x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                }
+            },
+            success: function (result) {
+                $('#cover-spin').hide();
+                resolve(result); // Resolve the promise on success
+            },
+            error: function (result) {
+                $('#cover-spin').hide();
+                alert("Failed to process Inspection.");
+                reject(result); // Reject the promise on error
+            }
+        });
+    });
+}*@
+
+
+
+</script>
+
+
+
+<script>
+     function SaveDataOffline() {
+
+        var checkValidation = 0;
+
+        var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = ""; var chfgurad = 0;
+        var ratingcheck = 0; var notacptable = 0; var certno = ""; var ratingcheck5 = 0;
+
+        //$('.dropzone')[0].dropzone.files.forEach(function (file) {
+        //    //file.previewElement.remove();
+        //    //
+        //   // file.name5
+        //    var dddg = file.name;
+
+        //    var aad = file.previewElement.querySelector("img").src;
+
+
+        //    var image = new Image();
+        //    image.src = aad;
+        //    document.body.appendChild(image);
+
+
+        //    image1 = aad;
+
+        //    var src = aad;
+        //    //src += aad;
+        //    var newImage = document.createElement('img');
+        //    newImage.src = src;
+        //    newImage.width = newImage.height = "80";
+        //    var sd = newImage.outerHTML;
+        //    //document.querySelector('#imageContainer').innerHTML = newImage.outerHTML;
+        //});
+
+
+
+        var Insby = $("#InspectBy").val();
+        var Insdt = $("#InspectDate").val();
+        if (Insby == "") {
+
+            var msg = "Please fill name / rank of the person carrying out inspection"
+            $('#messageInsby').text(msg);
+            $('#messageInsby').css("color", "red");
+
+            return;
+        }
+        if (Insdt == "") {
+
+            var msg = "Inspected Date can not be null !"
+            $('#messageInsdt').text(msg);
+            $('#messageInsdt').css("color", "red");
+
+
+            return;
+        }
+
+
+
+        var inspections = []; // list object
+         //$('#tbl1 > tbody  > tr').each(function () { //loop in table list
+         //
+        $("#tbl1 input[name=case1]:checked").each(function () {
+
+
+            var MooringRopeInspection = {};
+            var row = $(this).closest("tr")[0];
+            //var row1 = $(this).closest("tr").find('input');
+            var cells = $(this).closest('tr').children('td');
+
+
+            var cntSrNo = row.cells[27].innerHTML.trim();
+
+            image1 = "";
+            image2 = "";
+            photo1 = "";
+            photo2 = "";
+
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+            $('.dropzone')[count].dropzone.files.forEach(function (file) {
+
+                image1 = file.name;
+                photo1 = file.previewElement.querySelector("img").src;
+            });
+
+            $('.dropzone')[count1].dropzone.files.forEach(function (file) {
+
+                image2 = file.name;
+                photo2 = file.previewElement.querySelector("img").src;
+            });
+
+
+            MooringRopeInspection.ExternalRating_A = cells.eq(9).find('select').val();
+            MooringRopeInspection.InternalRating_A = cells.eq(10).find('select').val();
+            if (MooringRopeInspection.ExternalRating_A == '') {
+
+                alert("External Abrasion(Rating) is empty in Zone A, Please Select the Rating");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.InternalRating_A == '') {
+
+                alert("Internal Abrasion(Rating) is empty in Zone A, Please Select the Rating");
+                checkValidation = 1;
+                return;
+            }
+
+            //MooringRopeInspection.AverageRating_A = cells.find("td:eq(11) input[type='text']").val();
+            //MooringRopeInspection.AverageRating_A = row.cells[11].innerHTML;
+            MooringRopeInspection.AverageRating_A = cells.eq(11).find('input').val().trim();
+
+            var str = MooringRopeInspection.AverageRating_A;
+            var lngth = str.length;
+            if (lngth > 2) {
+                ratingcheck = 1;
+                alert("Please Insert External or Internal Rating !");
+                return;
+            }
+
+            MooringRopeInspection.RopeId = row.cells[2].innerHTML;
+            MooringRopeInspection.WinchId = row.cells[3].innerHTML;
+
+
+            //MooringRopeInspection.RopeType = row.cells[10].innerHTML;
+            //MooringRopeInspection.ExternalRating_A = row1.cells[9].text;
+            //MooringRopeInspection.InternalRating_A = row.cells[10].innerHTML;
+            //MooringRopeInspection.AverageRating_A = row.cells[11].innerHTML;
+
+            MooringRopeInspection.LengthOFAbrasion_A = cells.eq(12).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_A = cells.eq(13).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_A = cells.eq(14).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_A = cells.eq(15).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_A == '') {
+
+                alert("Length OF Abrasion(Rating) is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_A == '') {
+
+                alert("Distance from Outboard eye is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_A == '') {
+
+                alert("Cut Yarn Count is empty in Zone A, Please Enter the value (meter)");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_A == '') {
+
+                alert("Length OF Glazing is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.ExternalRating_B = cells.eq(16).find('select').val();
+            MooringRopeInspection.InternalRating_B = cells.eq(17).find('select').val();
+
+            if (MooringRopeInspection.ExternalRating_B == '') {
+
+                alert("External Abrasion(Rating) is empty in Zone B, Please Select the Rating");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.InternalRating_B == '') {
+
+                alert("Internal Abrasion(Rating) is empty in Zone B, Please Select the Rating");
+                checkValidation = 1;
+                return;
+            }
+
+            //MooringRopeInspection.AverageRating_B = row.cells[18].innerHTML;
+            MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val().trim();
+            var str1 = MooringRopeInspection.AverageRating_B;
+            var lngth1 = str1.length;
+            if (lngth1 > 2) {
+                ratingcheck = 1;
+                //alert("Please Insert External or Internal Rating !");
+                //return;
+            }
+
+
+            //MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val();
+            MooringRopeInspection.LengthOFAbrasion_B = cells.eq(19).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_B = cells.eq(20).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_B = cells.eq(21).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_B = cells.eq(22).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_B == '') {
+
+                alert("Length OF Abrasion(Rating) is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_B == '') {
+
+                alert("Distance from Outboard eye is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_B == '') {
+
+                alert("Cut Yarn Count is empty in Zone B, Please Enter the value (meter)");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_B == '') {
+
+                alert("Length OF Glazing is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.Chafe_guard_condition = cells.eq(23).find('select').val();
+
+            if (MooringRopeInspection.Chafe_guard_condition == "") {
+
+                chfgurad = 1;
+            }
+
+            if (MooringRopeInspection.Chafe_guard_condition == "Not Acceptable") {
+
+                if (image1 == "" && image2 == "") {
+
+                    notacptable = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            if (MooringRopeInspection.AverageRating_A >= 5 || MooringRopeInspection.AverageRating_B >= 5) {
+
+                if (image1 == "" && image2 == "") {
+
+                    ratingcheck5 = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            MooringRopeInspection.Twist = cells.eq(24).find('input').val();
+            MooringRopeInspection.Image1 = image1;
+            MooringRopeInspection.Image2 = image2;
+            MooringRopeInspection.Photo1 = photo1;
+            MooringRopeInspection.Photo2 = photo2;
+            //MooringRopeInspection.Photo2 = this.cells[28].innerHTML;
+            //Movie.Year = this.cells[2].innerHTML;
+            MooringRopeInspection.InspectBy = $("#InspectBy").val();
+            MooringRopeInspection.InspectDate = $("#InspectDate").val();
+            inspections.push(MooringRopeInspection);
+        });
+
+
+
+       // alert(inspections);
+
+        if (notacptable == 1) {
+
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph where maximum abrasion/ damage is observed, please browse and attach photographs !");
+            return;
+        }
+
+        if (ratingcheck != 0) {
+
+            alert("Please Insert External or Internal Rating !");
+            return;
+        }
+        if (chfgurad != 0) {
+
+            alert("Please select an option from Chafe Guard !");
+            return;
+        }
+        if (ratingcheck5 != 0) {
+
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph when rating equal or greater than 5, please browse and attach photographs !");
+            return;
+        }
+
+
+        inspections = JSON.stringify(inspections);
+
+        if (inspections == "[]") {
+            alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+            return;
+        }
+
+        if (checkValidation == 1) {
+            return;
+        }
+
+
+        //// send message to service worker via postMessage
+        //var msg = {
+        //    'form_data': inspections
+        //}
+
+        //// <-This // line right here sends our data to sw.js
+        //navigator.serviceWorker.controller.postMessage(msg)
+
+
+
+        // save to local storage
+        ////
+
+        //if (Modernizr.localstorage) {
+        //    var addLineInspection = window.localStorage;
+        //    addLineInspection.setItem("addLineInspection", inspections);
+        //    alert("Your Internet is not connected (Offline). Do not worry. Your form is still submitted and will be accepted once internet connection is restored. Thank you.");
+
+        //    //bootbox.alert({
+        //    //    message: "Your Internet is not connected (Offline). Do not worry. Your form is still submitted and will be accepted once internet connection is restored. Thank you.",
+        //    //    size: 'large'
+        //    //});
+        //}
+
+        $.ajax({
+            url: '@Url.Action("InsertInspection", "LineInspection")',
+            type: "POST",
+            data: { 'inspections': inspections },
+            dataType: "json",
+            beforeSend: function (x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                }
+            },
+            success: function (result) {
+                localData.removeItem("addLineInspection");
+                //
+                window.location.href = result;
+            }
+        });
+
+
+
+
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    var indexcheck = 0;
+    //$('td').click(function () {
+    $('td').on('click', function () {
+        //alert(344);
+        var row_index = $(this).parent().index('tr');
+        indexcheck = row_index;
+        // alert(indexcheck);
+        // var col_index = $(this).index('tr:eq(' + row_index + ') td');
+    });
+
+    $('td').keydown(function (evt) {
+        // if (evt.keyCode == 40) {
+        //event.preventDefault();
+
+        //alert(5553);
+        //var cellindex = $(this).index()
+        ////
+        var rowindex = $(this).parents('tr').index() + 2;
+        indexcheck = rowindex;
+
+        //   $(this).parents('table').find('tr:eq(' + rowindex + ') td:eq(' + cellindex + ')').focus()
+        //}
+    });
+
+    $("#tbl1").on("click", "td", function () {
+        var row_index = $(this).parent().index('tr');
+        indexcheck = row_index;
+
+
+        //alert(indexcheck);
+    });
+
+    function requiredValue(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+        var last2 = value.slice(-2);
+        //alert(last2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(12).find('input').val('0.00');
+        }
+        if (value > 99.99) {
+            alert("Value in 'Length of Abrasion A' cannot greater than 2 digits & 2 decimal places !");
+            //var ssd = $("#tbl1").children().children().eq(2).children().eq(12).index('tr');
+
+
+            $("#tbl1").children().children().eq(indexcheck).children().eq(12).find('input').val('0.00');
+
+        }
+    }
+
+
+    function requiredValue1(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(13).find('input').val('0.00');
+        }
+
+        if (value > 999.99) {
+            alert("Value in 'Distance from outboard eye A' cannot greater than 3 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(13).html('0.00');
+            //$('#tbl1 td').eq(13).find("input").val('0.00');
+
+
+            $("#tbl1").children().children().eq(indexcheck).children().eq(13).find('input').val('0.00');
+
+
+
+        }
+    }
+
+    function requiredValue2(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(14).find('input').val('0.00');
+        }
+
+        if (value > 99.99) {
+            alert("Value in 'Cut Yarn counted A' cannot greater than 2 digits & 2 decimal places !");
+            // $('#tbl1 td').eq(14).html('0.00');
+            //$('#tbl1 td').eq(14).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(14).find('input').val('0.00');
+        }
+    }
+
+    function requiredValue3(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(15).find('input').val('0.00');
+        }
+
+        if (value > 999.99) {
+            alert("Value in 'Length of Glazing A' cannot greater than 3 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(15).html('0.00');
+            // $('#tbl1 td').eq(15).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(15).find('input').val('0.00');
+        }
+    }
+
+    function requiredValue4(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(19).find('input').val('0.00');
+        }
+
+        if (value > 99.99) {
+            alert("Value in 'Length of Abrasion B' cannot greater than 2 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(19).html('0.00');
+            //$('#tbl1 td').eq(19).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(19).find('input').val('0.00');
+        }
+    }
+
+    function requiredValue5(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(20).find('input').val('0.00');
+        }
+
+        if (value > 999.99) {
+            alert("Value in 'Distance from outboard eye B' cannot greater than 3 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(20).html('0.00');
+            //$('#tbl1 td').eq(20).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(20).find('input').val('0.00');
+        }
+    }
+
+    function requiredValue6(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(21).find('input').val('0.00');
+        }
+
+        if (value > 99.99) {
+            alert("Value in 'Cut Yarn counted B' cannot greater than 2 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(21).html('0.00');
+            // $('#tbl1 td').eq(21).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(21).find('input').val('0.00');
+        }
+    }
+
+    function requiredValue7(arg) {
+        var id = arg.getAttribute('id');
+        var value = arg.value;
+
+        var last2 = value.slice(-2);
+        if (last2 == "..") {
+            alert("Only one decimal allowed!");
+            $("#tbl1").children().children().eq(indexcheck).children().eq(22).find('input').val('0.00');
+        }
+
+        if (value > 999.99) {
+            alert("Value in 'Length of Glazing B' cannot greater than 3 digits & 2 decimal places !");
+            //$('#tbl1 td').eq(22).html('0.00');
+            // $('#tbl1 td').eq(22).find("input").val('0.00');
+            $("#tbl1").children().children().eq(indexcheck).children().eq(22).find('input').val('0.00');
+        }
+    }
+
+</script>
+
+<script>
+    $('.pane-hScroll').scroll(function () {
+        $('.pane-vScroll').width($('.pane-hScroll').width() + $('.pane-hScroll').scrollLeft());
+    });
+
+    //// Example 2
+    //$('.pane--table2').scroll(function () {
+    //    $('.pane--table2 table').width($('.pane--table2').width() + $('.pane--table2').scrollLeft());
+    //});
+</script>
+
+<script>
+    Dropzone.options.imageUpload = {
+
+        maxFilesize: 10,
+
+        acceptedFiles: ".jpeg,.jpg,.png,.gif"
+
+    };
+</script>
+
+<script>
+    function goBack() {
+         var newUrl = '@Url.Action("Index", "LineInspection")';
+        window.location.href = newUrl;
+        //window.history.back();
+    }
+</script>
+
+<script>
+    $('#btnReset').click(function () {
+
+
+
+        $("#InspectDate").val('');
+        $("#InspectBy").val('');
+
+        //$('#LengthOFAbrasion_A').text(function () {
+        //    return $(this).val('0.00');
+        //})
+
+
+        $("#Chafe_guard_condition").val(null).trigger("change");
+
+        //document.getElementById("#External1").innerHTML = "";
+
+
+
+        $('#Mydiv').find('input:text, input:password,input:file, select')
+            .each(function () {
+                $(this).val('0.00');
+
+                var row = $(this).closest("tr")[0];
+                //var row1 = $(this).closest("tr").find('input');
+                var cells = $(this).closest('tr').children('td');
+
+                row.cells[11].innerHTML = "";
+                row.cells[18].innerHTML = "";
+
+
+                //Dropzone.forElement("#dZUpload").removeAllFiles(true);
+
+                //$("#dZUpload").html("");
+
+                // var dropzone = $(this).get(0).dropzone;
+
+                $('.dropzone')[0].dropzone.files.forEach(function (file) {
+
+                    //this.removeFile(true);
+                    file.previewElement.remove();
+                });
+
+
+
+                // $("#dZUpload").load(location.href + " #dZUpload>*", "");
+
+                Dropzone.forElement("#dZUpload").removeAllFiles(true);
+                //dZUpload[0].dropzone.removeAllFiles();
+            });
+
+
+
+        //Dropzone.forElement(".dropzone").removeAllFiles(true);
+
+        var ele = document.getElementsByName('case1');
+        for (var i = 0; i < ele.length; i++) {
+            if (ele[i].type == 'checkbox')
+                ele[i].checked = false;
+
+        }
+
+        $("#selectall").prop("checked", false);
+
+
+    });
+</script>
+
+
+
+<script>
+
+
+
+    function SaveDataOnline1() {
+
+        var checkValidation = 0;
+
+        var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = ""; var chfgurad = 0; var CheckTwist = 0;
+        var ratingcheck = 0; var notacptable = 0; var certno = ""; var ratingcheck5 = 0;
+
+
+
+        $('#cover-spin').show();
+
+        var Insby = $("#InspectBy").val();
+        var Insdt = $("#InspectDate").val();
+        if (Insby == "") {
+
+            var msg = "Please fill name / rank of the person carrying out inspection"
+            $('#messageInsby').text(msg);
+            $('#messageInsby').css("color", "red");
+            $('#cover-spin').hide();
+            return;
+        }
+        if (Insdt == "") {
+
+            var msg = "Inspected Date can not be null !"
+            $('#messageInsdt').text(msg);
+            $('#messageInsdt').css("color", "red");
+
+            $('#cover-spin').hide();
+            return;
+        }
+
+
+
+        var inspections = []; // list object
+        //$('#tbl1 > tbody  > tr').each(function () { //loop in table list
+
+        $("#tbl1 input[name=case1]:checked").each(function () {
+
+            var MooringRopeInspection = {};
+            var row = $(this).closest("tr")[0];
+            //var row1 = $(this).closest("tr").find('input');
+            var cells = $(this).closest('tr').children('td');
+
+
+            var cntSrNo = row.cells[27].innerHTML.trim();
+
+            image1 = "";
+            image2 = "";
+            photo1 = "";
+            photo2 = "";
+
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+            $('.dropzone')[count].dropzone.files.forEach(function (file) {
+
+                image1 = file.name;
+                photo1 = file.previewElement.querySelector("img").src;
+            });
+
+            $('.dropzone')[count1].dropzone.files.forEach(function (file) {
+
+                image2 = file.name;
+                photo2 = file.previewElement.querySelector("img").src;
+            });
+
+
+            MooringRopeInspection.ExternalRating_A = cells.eq(9).find('select').val();
+            MooringRopeInspection.InternalRating_A = cells.eq(10).find('select').val();
+
+            //MooringRopeInspection.AverageRating_A = cells.find("td:eq(11) input[type='text']").val();
+            //MooringRopeInspection.AverageRating_A = cells[11].innerHTML;
+            MooringRopeInspection.AverageRating_A = cells.eq(11).find('input').val().trim();
+
+            var str = MooringRopeInspection.AverageRating_A;
+            var lngth = str.length;
+            if (str < 1) {
+                ratingcheck = 1;
+                //alert("Please Insert External or Internal Rating !");
+                return;
+            }
+
+            MooringRopeInspection.RopeId = row.cells[2].innerHTML;
+            MooringRopeInspection.WinchId = row.cells[3].innerHTML;
+
+
+            //MooringRopeInspection.RopeType = row.cells[10].innerHTML;
+            //MooringRopeInspection.ExternalRating_A = row1.cells[9].text;
+            //MooringRopeInspection.InternalRating_A = row.cells[10].innerHTML;
+            //MooringRopeInspection.AverageRating_A = row.cells[11].innerHTML;
+
+            MooringRopeInspection.LengthOFAbrasion_A = cells.eq(12).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_A = cells.eq(13).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_A = cells.eq(14).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_A = cells.eq(15).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_A == '') {
+                $('#cover-spin').hide();
+                alert("Length OF Abrasion(Rating) is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_A == '') {
+                $('#cover-spin').hide();
+                alert("Distance from Outboard eye is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_A == '') {
+                $('#cover-spin').hide();
+                alert("Cut Yarn Count is empty in Zone A, Please Enter the value (meter)");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_A == '') {
+                $('#cover-spin').hide();
+                alert("Length OF Glazing is empty in Zone A, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.ExternalRating_B = cells.eq(16).find('select').val();
+            MooringRopeInspection.InternalRating_B = cells.eq(17).find('select').val();
+            //MooringRopeInspection.AverageRating_B = row.cells[18].innerHTML;
+            MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val().trim();
+            var str1 = MooringRopeInspection.AverageRating_B;
+            var lngth1 = str1.length;
+            if (str1 < 1) {
+                ratingcheck = 1;
+                //alert("Please Insert External or Internal Rating !");
+                return;
+            }
+
+
+            //MooringRopeInspection.AverageRating_B = cells.eq(18).find('input').val();
+            MooringRopeInspection.LengthOFAbrasion_B = cells.eq(19).find('input').val().trim();
+            MooringRopeInspection.DistanceOutboard_B = cells.eq(20).find('input').val().trim();
+            MooringRopeInspection.CutYarnCount_B = cells.eq(21).find('input').val().trim();
+            MooringRopeInspection.LengthOFGlazing_B = cells.eq(22).find('input').val().trim();
+            if (MooringRopeInspection.LengthOFAbrasion_B == '') {
+                $('#cover-spin').hide();
+                alert("Length OF Abrasion(Rating) is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.DistanceOutboard_B == '') {
+                $('#cover-spin').hide();
+                alert("Distance from Outboard eye is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.CutYarnCount_B == '') {
+                $('#cover-spin').hide();
+                alert("Cut Yarn Count is empty in Zone B, Please Enter the value (meter)");
+                checkValidation = 1;
+                return;
+            }
+            if (MooringRopeInspection.LengthOFGlazing_B == '') {
+                $('#cover-spin').hide();
+                alert("Length OF Glazing is empty in Zone B, Please Enter the value");
+                checkValidation = 1;
+                return;
+            }
+
+            MooringRopeInspection.Chafe_guard_condition = cells.eq(23).find('select').val();
+
+            if (MooringRopeInspection.Chafe_guard_condition == "") {
+
+                chfgurad = 1;
+            }
+
+            if (MooringRopeInspection.Chafe_guard_condition == "Not Acceptable") {
+
+                if (image1 == "" && image2 == "") {
+
+                    notacptable = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            if (MooringRopeInspection.AverageRating_A >= 5 || MooringRopeInspection.AverageRating_B >= 5) {
+
+                if (image1 == "" && image2 == "") {
+
+                    ratingcheck5 = 1;
+                    certno = row.cells[8].innerHTML;
+                }
+            }
+
+            MooringRopeInspection.Twist = cells.eq(24).find('input').val();
+            var checkTwistValue = MooringRopeInspection.Twist
+            if (checkTwistValue == "") {
+                CheckTwist = 1
+                //alert("Please Insert Twist !");
+                return;
+            }
+
+
+            MooringRopeInspection.Image1 = image1;
+            MooringRopeInspection.Image2 = image2;
+            MooringRopeInspection.Photo1 = photo1;
+            MooringRopeInspection.Photo2 = photo2;
+            //MooringRopeInspection.Photo2 = this.cells[28].innerHTML;
+            //Movie.Year = this.cells[2].innerHTML;
+            MooringRopeInspection.InspectBy = $("#InspectBy").val();
+            MooringRopeInspection.InspectDate = $("#InspectDate").val();
+            inspections.push(MooringRopeInspection);
+        });
+
+
+
+       // alert(inspections);
+
+        if (notacptable == 1) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph where maximum abrasion/ damage is observed, please browse and attach photographs !");
+            return;
+        }
+
+        if (ratingcheck != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert External or Internal Rating !");
+            return;
+        }
+
+        if (ratingcheck5 != 0) {
+            $('#cover-spin').hide();
+            alert("Due to the reported condition of Line ID {" + certno + "}, it is compulsory to attach atleast 1 photograph when rating equal or greater than 5, please browse and attach photographs !");
+            return;
+        }
+
+        if (chfgurad != 0) {
+            $('#cover-spin').hide();
+            alert("Please select an option from Chafe Guard !");
+            return;
+        }
+        if (CheckTwist != 0) {
+            $('#cover-spin').hide();
+            alert("Please Insert Twist Value !");
+            return;
+        }
+        inspections = JSON.stringify(inspections);
+
+        if (inspections == "[]") {
+            $('#cover-spin').hide();
+            alert("Please Choose atleast 1 line to inspect by selecting checkbox in the first column !");
+            return;
+        }
+
+        if (checkValidation == 1) {
+            $('#cover-spin').hide();
+            return;
+        }
+
+
+        //// send message to service worker via postMessage
+        //var msg = {
+        //    'form_data': inspections
+        //}
+
+        //// <-This // line right here sends our data to sw.js
+        //navigator.serviceWorker.controller.postMessage(msg)
+
+
+
+        // save to local storage
+
+
+        //if (Modernizr.localstorage) {
+        //    var addLineInspection = window.localStorage;
+        //    addLineInspection.setItem("addLineInspection", inspections);
+        //    alert("Your Internet is not connected (Offline). Do not worry. Your form is still submitted and will be accepted once internet connection is restored. Thank you.");
+
+
+        //}
+        sleep(1000);
+
+        $.ajax({
+            url: '@Url.Action("InsertInspection", "LineInspection")',
+            type: "POST",
+            data: { 'inspections': inspections },
+            dataType: "json",
+            beforeSend: function (x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                }
+            },
+            success: function (result) {
+                $('#cover-spin').hide();
+                //localData.removeItem("addLineInspection");
+                //alert(result);
+                //sleep(1000);
+                //alert('Data has been Submitted.');
+                window.location.href = window.location.origin + result;
+
+            },
+            error: function (result) {
+                $('#cover-spin').hide();
+                alert('Error');
+                window.location.href = window.location.origin + result;
+            }
+
+        });
+
+
+
+
+    }
+
+
+
+
+</script>
+
+
+
+<script>
+
+
+    function extractBase64Data(dataUrl) {
+
+        return dataUrl.split(',')[1];
+    }
+
+    function base64ToBytes(base64) {
+        const binaryString = window.atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        return bytes;
+    }
+
+    function base64ToBlob(base64, contentType = 'image/png') {
+
+        const bytes = base64ToBytes(base64);
+        return new Blob([bytes], { type: contentType });
+    }
+
+    function blobToFile(blob, fileName) {
+
+        return new File([blob], fileName, { type: blob.type });
+    }
+
+
+</script>
+
+
+<script>
+        function uploadFile(formDataList) {
+            alert(formDataList);
+
+             $.ajax({
+                 url: '@Url.Action("UploadFile", "LineInspection")',
+                type: 'POST',
+                 data: JSON.stringify(formDataList),
+                processData: false,
+                 contentType: 'application/json',
+                success: function (response) {
+                    sleep(1000);
+                    //console.log('Files uploaded successfully');
+                },
+                error: function (xhr, status, error) {
+                    console.error('File upload failed: ' + error);
+                }
+            });
+        }
+</script>
+
+
+<script>
+  async  function uploadFile1(file) {
+    var formData = new FormData();
+    formData.append('file', file);
+
+      await $.ajax({
+        url: '@Url.Action("UploadFile", "LineInspection")',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+          success: function (response) {
+              sleepNew(1000);
+            //alert('File uploaded successfully');
+        },
+        error: function(xhr, status, error) {
+            alert('Error uploading file: ' + error);
+        }
+    });
+}
+</script>
