@@ -1,0 +1,840 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digimoor-X7</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/select2.min.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+
+
+    @*<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+
+    @*<link href="~/css/jquery-ui.css" rel="stylesheet" />
+        <link href="~/css/icon-line.css" rel="stylesheet" />*@
+
+
+    <link href="~/Datepicker/datepicker.min.css" rel="stylesheet" />
+    <script src="~/assetsV/js/jquery-3.2.1.min.js"></script>
+    <script src="~/Datepicker/datepicker.min.js"></script>
+
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+
+    <link rel="manifest" href="~/manifest.json">
+    <meta name="theme-color" content="#2196f3" />
+
+    <script src="~/js/moment.js"></script>
+    <script src="~/TemplateFiles/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/TemplateFiles/plugins/toastr/toastr.min.js"></script>
+    <link href="~/TemplateFiles/plugins/toastr/toastr.min.css" rel="stylesheet" />
+
+
+    <link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+        .multiselect-container > li > a > label.checkbox {
+            width: 250px;
+        }
+
+
+        i.fa.fa-angle-down {
+            color: black !important;
+        }
+
+        .main-header {
+            position: fixed;
+            z-index: 1111;
+            top: 0;
+            width: 100%;
+        }
+
+        section.content-header {
+            margin-top: 56px;
+        }
+
+        span.logo-here img {
+            padding: 5px;
+            border-radius: 15px;
+        }
+
+        aside.main-sidebar {
+            position: fixed;
+            top: 0px;
+        }
+    </style>
+
+</head>
+<body class="mini-navbar">
+    <input type="hidden" id="ipadd" />
+    <div id="wrapper">
+
+        <nav id="lmprSide" class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+
+
+
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" class="img-circle" style="background-color: white;" src="~/images/49web.png" />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        Welcome,<strong class="font-bold">  @HttpContext.Current.User.Identity.Name</strong>
+                                    </span> <span class="text-muted text-xs block"> <b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li class="divider"></li>
+                                @*<li><a href="javascript:void(0)">Logout</a></li>*@
+
+                                <li>
+                                    <a href="/Account/SignOut">
+                                        <i class="ti-power-off pdd-right-10"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            <img src="~/images/49web.png" style="background-color: white;" alt="img">
+                        </div>
+                    </li>
+
+
+                    <li style="display:none" id="N1" class="">
+                        <a href="javascript:void(0)"> <i class="fa fa-envelope-open-o"style="color:#00b8ef">
+</i><label class="nav-label">Notifications</label></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a onclick="Amenu('N1',event)" class="top-menu-btn count-info" href="@Url.Action("Index", "ShipNotification", new { area = "NotificationInfos" })">
+
+                                    <i class="fa fa-envelope-open-o">
+
+                                    </i>&nbsp; <label>LMP Notification</label>
+                                </a>
+                            </li>
+                            <li>
+                                <a onclick="Amenu('N1',event)" class="top-menu-btn count-info" href="@Url.Action("Index", "LooseEquipmentNotification", new { area = "NotificationInfos" })">
+
+                                    <i class="fa fa-arrow-circle-o-left">
+
+                                    </i>&nbsp; <label>Loose Equipment Notification</label>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li style="display:none" id="N2">
+                        <a onclick="Amenu('N2',event)" class="top-menu-btn count-info" href="@Url.Action("Index", "Wearzone", new { area = "NotificationInfos" })">
+
+                            <i class="fa fa-arrow-circle-o-right">
+
+                            </i>&nbsp; <label>Winch Rotation Schedule</label>
+                        </a>
+                    </li>
+
+                    <li style="display:none" id="N3">
+                        <a onclick="Amenu('N3',event)" class="top-menu-btn count-info" href="@Url.Action("End", "Wearzone", new { area = "NotificationInfos" })">
+
+                            <i class="fa fa-arrow-circle-o-left">
+
+                            </i>&nbsp; <label>End To End Schedule</label>
+                        </a>
+                    </li>
+
+                    @{ if (@Shipment49Web.Common.CommonClass.LineInnerOuter == true)
+                        {
+                            
+                                <li style="display:none" id="N_4">
+                                    <a onclick="Amenu('N_4')" class="top-menu-btn count-info" href="@Url.Action("Inboard_OutBoard_End", "Wearzone", new { area = "NotificationInfos" })">
+                                        <i class="fa fa-arrow-circle-o-left">
+
+                                        </i>&nbsp; <label>Inner Outer End Schedule</label> @*<label>Inboard-OutBoard Schedule</label>*@
+                                    </a>
+                                </li>
+                           
+                        }
+                    }
+
+                    <li style="display:none" id="trainID" class="active">
+                        <a onclick="Amenu('T1',event)" class="top-menu-btn" href="@Url.Action("Training", "TrainingC", new { area = "TrainingContent" })">
+
+                            <i class="uil uil-clipboard-notes"></i> <label class="nav-label">Training Content</label>
+                        </a>
+                    </li>
+                    @*<li style="display:none" id="precrtID">
+                            <a href="javascript:void(0)"><i class="fa fa-flask"></i> <label class="nav-label">Inspect Discard Criteria</label><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li>
+
+                                    <a href="@Url.Action("Index", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">Line Creteria</a>
+                                </li>
+                                <li>
+
+                                    <a href="@Url.Action("taildiscardsetting", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">Rope Tail Creteria</a>
+                                </li>
+
+                                <li>
+
+                                    <a href="@Url.Action("LEdiscardsetting", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">Loose Equipment</a>
+                                </li>
+                                <li>
+
+                                    <a href="@Url.Action("winchrotationsetting", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">Winch Rotation</a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+
+                    <li style="display:none" id="N4">
+                        <a onclick="Amenu('N4',event)" href="@Url.Action("Index", "InspectDiscardCriteria", new { area = "InsDisCriteria" })">
+
+                            <i class="uil uil-layer-group"></i> <label class="nav-label">Line Criteria</label>
+                        </a>
+                    </li>
+
+                    @{ if (@Shipment49Web.Common.CommonClass.MinimumRopeTails > 0)
+                        {
+
+                            <li style="display:none" id="N5">
+                                <a onclick="Amenu('N5',event)" href="@Url.Action("taildiscardsetting", "InspectDiscardCriteria", new { area = "InsDisCriteria" })">
+
+                                    <i class="uil uil-layer-group"></i> <label class="nav-label">Rope Tail Criteria</label>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                    <li style="display:none" id="N6">
+                        <a onclick="Amenu('N6',event)" href="@Url.Action("LEdiscardsetting", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">
+
+                            <i class="uil uil-layer-group"></i> <label class="nav-label">Loose Equipment Criteria</label>
+                        </a>
+                    </li>
+                    <li style="display:none" id="N7">
+                        <a onclick="Amenu('N7',event)" href="@Url.Action("winchrotationsetting", "InspectDiscardCriteria" ,new { area= "InsDisCriteria"} )">
+
+                            <i class="uil uil-layer-group"></i> <label class="nav-label">Winch Rotation Criteria</label>
+                        </a>
+                    </li>
+
+                    <!--<li class="active">
+
+                        <ul class="nav nav-second-level collapse" id="ulLeftMenu"></ul>
+                    </li>-->
+
+
+                </ul>
+
+                <ul class="nav metismenu" id="side-menu">
+                </ul>
+
+
+            </div>
+        </nav>
+
+
+
+        @*<aside class="main-sidebar">
+            <section class="sidebar">
+            <ul class="sidebar-menu" id="ulLeftMenu"></ul>
+            </section>
+            </aside>*@
+
+
+        <div id="page-wrapper">
+            <header class="row border-bottom">
+                <p id="offline" style="display: none; text-align: center; padding-top: 6px; color: red">
+                    Internet Status is ‘OFFLINE’ - You will only be able to "VIEW" pages saved in history i.e. pages visited before. Please note you will not be able to Submit any form, add, view or download any attachments or insert any data in the 'OFFLINE' mode.
+
+                    @*@{
+                            if (Session["LastSyncTime"] != null)
+                            {
+                                @String.Format("Last Sync Time: {0}", Session["LastSyncTime"])
+                            }
+                        }*@
+                </p>
+
+                <p id="online" style="display: none; text-align: center; padding-top: 6px; color: green">
+                    Internet Status is ‘ONLINE’ - To view latest entries on the list, please refresh the desired page by using ‘CTRL + F5’ keys on your keyboard.
+                    @*@{
+                            if (Session["LastSyncTime"] != null)
+                            {
+                                @String.Format("Last Sync Time: {0} GMT", Session["LastSyncTime"])
+                            }
+                        }*@
+                </p>
+
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+
+                        <a class="navbar-minimalize minimalize-styl-2" href="javascript:void(0)"><i class="fa fa-bars"></i> </a>
+                        <div class="navbar-form-custom mt-4">
+                            <img src="~/images/Digimoor-color-logo.png" height="35">
+
+                            @{
+
+                                <p>@Session["VesselNames"].ToString()</p>
+                            }
+
+
+                        </div>
+
+                    </div>
+                    @Html.Partial("_VesselTopMenu")
+                </nav>
+            </header>
+
+            @*Body section*@
+
+            @RenderBody()
+        </div>
+    </div>
+
+
+
+
+    <script>
+        function urlcheck(clicked_id) {
+
+
+            var url = clicked_id, retObject = {}, parameters;
+
+            if (url.indexOf('?') === -1) {
+                return null;
+            }
+
+            url = url.split('?')[1];
+
+            //  var currentURL = "http://localhost:14652/MooringManual/MSMP";
+
+            var currentURL = window.location.href = window.location.protocol + "//" + window.location.host + "/MooringManual/MSMP";
+            window.location.href = currentURL + "?" + url;
+            //parameters = url.split('&');
+
+            //for (var i = 0; i < parameters.length; i++) {
+            // retObject[parameters[i].split('=')[0]] = parameters[i].split('=')[1];
+            //}
+
+            //alert(clicked_id);
+
+        }
+    </script>
+    <!-- <footer class="footer">
+        <div>
+            <strong>Copyright</strong> &copy; Digimoor. All Rights Reserved 2021.
+        </div>
+    </footer> -->
+    @*<script src="~/js/jquery-2.1.1.js"></script>*@
+    @*<script src="~/assetsV/js/jquery-3.2.1.min.js"></script>*@
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/js/select2.full.min.js"></script>
+    @*<script src="~/js/navAdmin.js"></script>*@
+    <!-- <script src="~/js/plugins/pace/pace.min.html"></script> -->
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    @*<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+
+
+    <script src="~/js/jquery-ui-min.js"></script>
+    <script src="~/js/bootstrap-multiselect.js"></script>
+
+
+    @*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>*@
+
+
+    @*<script>
+            $(function () {
+                $(".select2").select2({
+                    placeholder: "Select an option",
+                    allowClear: false
+                });
+                $(".select-control").select2({
+                    minimumResultsForSearch: -1,
+                    allowClear: false
+                });
+            });
+        </script>*@
+
+
+    <script>
+        $(function () {
+            $(".select2").select2({
+                placeholder: "Select an option",
+                allowClear: false
+            });
+            $(".select-control").select2({
+                minimumResultsForSearch: -1,
+                allowClear: false
+            });
+            //$(".datepicker").datepicker({
+            //    dateFormat: 'yy-mm-dd'
+            //});
+        });
+    </script>
+
+
+
+    <script type="text/javascript">
+        //var interval = 10000;
+        //setInterval(function () { GetIPAdd(), Update() }, interval);
+
+        function Update() {
+            //$.get("/[ControllerName]/ActualizarPrecios", function () {
+            // alert("Load was performed.")
+            //}
+            //);
+            //$.ajax({
+            // url: '/Account/AutoLogout',
+            // //data: formData,
+            // processData: false,
+            // contentType: false,
+            // type: 'POST',
+            // success: function (data) {
+            // //alert(data);
+            // window.location.href = "/Account/Login/"
+            // }
+            //});
+            var Ip = $('#ipadd').val();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/Account/AutoLogout',
+                data: { 'Ip': Ip },
+                success: function (response) {
+                    if (response.Result == true) {
+
+
+                        var check = response.lgn;
+                        if (check == 1) {
+                            //alert(response.AnotherLog);
+                        }
+                        if (check == 2) {
+                            // alert(response.AnotherLog);
+                            window.location.href = "/Account/Login/"
+                        }
+
+
+
+                    }
+                    else {
+                        //alert('An Error has occured. Please try again.');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    // alert('An Error has occured. Please try again.');
+                }
+            });
+        }
+    </script>
+
+
+    @*<script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('/serviceworker.js')
+                    .then(function () { console.log('Service Worker Registered'); });
+
+
+
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                const downlinkKbps = connection.downlink * 1000;
+                if (downlinkKbps > 200) {
+
+                    console.log(`Estimated Downspeed: ${downlinkKbps} kbps`);
+
+
+
+
+                }
+
+
+            }
+
+
+        </script>*@
+
+
+
+
+    @*<script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('/serviceworker.js')
+                    .then(function () { console.log('Service Worker Registered now'); });
+
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/serviceworker.js').then(reg => {
+                        reg.onupdatefound = () => {
+                            const installingWorker = reg.installing;
+                            installingWorker.onstatechange = () => {
+                                if (installingWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // New update available
+                                        console.log("New content is available; please refresh.");
+                                        // Optionally, prompt the user to refresh
+                                    } else {
+                                        // Content is cached for offline use.
+                                        console.log("Content is now available offline!");
+                                    }
+                                }
+                            };
+                        };
+                    }).catch(error => {
+                        console.error('Error during service worker registration:', error);
+                    });
+                }
+
+            }
+
+        </script>*@
+
+
+    <script>
+
+    function Amenu(M, event) {
+
+
+
+            if (!navigator.onLine) {
+                event.preventDefault(); // Prevent the default anchor click behavior
+                const anchor = event.currentTarget; // This is the anchor element
+                //const path = new URL(anchor.href).pathname; // Extract the pathname
+                const path = new URL(anchor.href).pathname + new URL(anchor.href).search;  // Extract the pathname
+
+                caches.match(path).then(response => {
+                    if (response) {
+                        //console.log(`URL is in cache: ${path}`);
+                        localStorage.setItem('PSID', M);
+                        window.location.href = anchor.href; // Manually redirect if the page is cached
+                    } else {
+                        console.log(`URL is not in any cache: ${path}`);
+                        alert('This page is currently not on your PC browser cache. To make it accessible in offline mode for future, revisit the page when internet is available (online mode). The system stores cache automatically in your PC browser cache memory when you browse the page at least for a few seconds while you are online.');
+                    }
+                }).catch(error => {
+                    console.error('Failed to check the cache status:', error);
+                });
+            }
+            else {
+                localStorage.setItem('PSID', M);
+            }
+
+        }
+
+
+         function SetVesselSessionID() {
+
+            var VesselSessionValue = @Session["VesselSessionID"];
+
+            if (VesselSessionValue != '') {
+                localStorage.setItem('VesselSessionID', VesselSessionValue);
+                //alert('set');
+            }
+
+        }
+
+    </script>
+
+
+
+
+    <script>
+
+        function TabFunction() {
+
+            $("#side-menu li.active").removeClass('active');
+
+            //alert('me');
+
+            var M = localStorage.getItem('PSID');
+
+            //if (window.location.href.indexOf("NotificationInfos") > -1) {
+            //    M = 'N1';
+            //}
+
+            $('#' + M).addClass("active");
+        }
+
+
+    </script>
+
+
+
+
+
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('/serviceworker.js')
+                .then(function () { console.log('Service Worker Registered'); });
+
+            //$("#btnSubmitOnline").show();
+            //$("#btnSubmit").show();
+            //$("#online").show();
+
+            if (navigator.onLine) {
+                $("#btnSubmitOnline").show();
+                $("#fileUpload").show();
+                $("#btnSubmit").hide();
+                $("#online").show();
+                $("#offline").hide();
+                //SyncData();
+            } else {
+                $("#fileUpload").hide();
+                $("#btnSubmitOnline").hide();
+                $("#btnSubmit").show();
+                $("#offline").show();
+                $("#online").hide();
+            }
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        var alertShown = false;
+
+        setInterval(function () {
+
+            try {
+
+                if (navigator.onLine) {
+
+                    getCodeVersion_Check();
+
+                    console.log('Network is online');
+                    $("#btnSubmitOnline").show();
+                    //$("#btnSubmit").hide();
+                    $("#fileUpload").show();
+                    $('#btnSubmitOnline').attr('disabled', false);
+
+
+                    //$('select.StopOnline').prop('disabled', false);
+
+                    $('button.StopOnline').prop('disabled', false);
+                    $('Input.StopOnline').prop('disabled', false);
+
+                    $("#btnSubmit").hide();
+                    $("#online").show();
+                    $("#offline").hide();
+                    //SyncData();
+
+                    var Islive = localStorage.getItem('livestatus');
+                    if (Islive == 'offline') {
+                        // Reload the page
+                        window.location.reload();
+                        //Update on reload.
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.register('/serviceworker.js').then(function (registration) {
+                                console.log('Service Worker Registered');
+                                // Attempt to update the service worker every time the page is reloaded
+                                registration.update();
+                            }).catch(function (error) {
+                                console.log('Registration failed with ' + error);
+                            });
+                        }
+                    }
+                    // Set the 'reloaded' flag
+                    localStorage.setItem('livestatus', 'online');
+                }
+                else {
+                    debugger;
+                    console.log('Network is Offline');
+                    $("#fileUpload").hide();
+                    $("#btnSubmitOnline").show();
+                    //$("#btnSubmit").show();
+                    $("#btnSubmit").hide();
+                    $('#btnSubmitOnline').attr('disabled', true);
+
+                    //$('select.StopOnline').prop('disabled', true);
+                    //$('select.StopOnline').css('cursor', 'not-allowed');
+                    var buttonElementM = $('.multiselect.dropdown-toggle.btn.btn-default');
+                    buttonElementM.prop('disabled', true);
+
+
+                    $('#linetype').prop('disabled', true);
+
+                    $('button.StopOnline').prop('disabled', true);
+                    $('Input.StopOnline').prop('disabled', true);
+
+                    $('Input.StopOnline').on('mouseenter', function () {
+                        $(this).css('cursor', 'not-allowed');
+                    });
+
+                    // Prevent default action for all a tags with the class .StopOnline
+                    $('a.StopOnline').on('click', function (e) {
+                        e.preventDefault();
+
+                    }).css({
+                        'pointer-events': 'none',
+                        'cursor': 'not-allowed'
+                    });  // Optional: Make them visually unclickable
+
+
+                    $("#offline").show();
+                    $("#online").hide();
+
+
+
+                    localStorage.setItem('livestatus', 'offline');
+
+
+
+                }
+
+            } catch (e) {
+
+            }
+
+            //TabFunction();
+        }, 2000);
+
+
+
+        function getCodeVersion_Check() {
+            $.ajax({
+                url: '/Account/GetCodeVersion', // Ensure this URL matches your routing configuration
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        //alert(response.Data);
+                        //debugger;
+                        var Current_Built = response.Data;
+                        var CodeVersion = localStorage.getItem('Build_Version');
+                        if (CodeVersion == null) {
+                            localStorage.setItem('Build_Version', "");
+                        }
+
+                        if (CodeVersion != Current_Built) {
+
+                            if (!alertShown) {
+                                alert('Your session has been logged out. For security reasons, we request you to log in again.');
+                                alertShown = true; // Set the flag to true after showing the alert
+                            }
+                            window.location.href = window.origin + '/account/login';
+                        }
+
+
+
+                    } else {
+                        console.error('Unexpected response format:', response);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error occurred: ' + error);
+                    console.log(xhr.responseText); // Log the actual response for debugging
+                }
+            });
+        }
+
+    </script>
+
+
+    <script>
+        function HyperLinkOffline(event) {
+
+            if (!navigator.onLine) {
+                event.preventDefault(); // Prevent the default anchor click behavior
+                const anchor = event.currentTarget; // This is the anchor element
+                if (anchor.tagName == "BUTTON" || anchor.innerText == "Add Damaged Rope-Tail" || anchor.innerText == "Add Damaged Line") {
+                    alert('This feature is accessible exclusively when an internet connection is available (online mode).');
+                }
+                else {
+
+                    if (anchor.innerText == "Add Mooring Operation" || anchor.innerText == "Add New Inspection" || anchor.innerText == "View") {
+                        const path = new URL(anchor.href).pathname + new URL(anchor.href).search;  // Extract the pathname
+
+                        caches.match(path).then(response => {
+                            if (response) {
+                                //console.log(`URL is in cache: ${path}`);
+
+                                window.location.href = anchor.href; // Manually redirect if the page is cached
+                            } else {
+                                console.log(`URL is not in any cache: ${path}`);
+                                alert('This page is currently not on your PC browser cache. To make it accessible in offline mode for future, revisit the page when internet is available (online mode). The system stores cache automatically in your PC browser cache memory when you browse the page at least for a few seconds while you are online.');
+                            }
+                        }).catch(error => {
+                            console.error('Failed to check the cache status:', error);
+                        });
+
+                    }
+                    else {
+                        if (anchor.innerText.includes("Add") || anchor.innerText.includes("Assign")) {
+                            alert('This feature is accessible exclusively when an internet connection is available (online mode).');
+                        }
+                        else {
+                            const path = new URL(anchor.href).pathname + new URL(anchor.href).search;  // Extract the pathname
+
+                            caches.match(path).then(response => {
+                                if (response) {
+                                    //console.log(`URL is in cache: ${path}`);
+
+                                    window.location.href = anchor.href; // Manually redirect if the page is cached
+                                } else {
+                                    console.log(`URL is not in any cache: ${path}`);
+                                    alert('This page is currently not on your PC browser cache. To make it accessible in offline mode for future, revisit the page when internet is available (online mode). The system stores cache automatically in your PC browser cache memory when you browse the page at least for a few seconds while you are online.');
+                                }
+                            }).catch(error => {
+                                console.error('Failed to check the cache status:', error);
+                            });
+                        }
+                    }
+
+                }
+            }
+        }
+
+                    //function HyperLinkOffline(event) {
+
+                    //    if (!navigator.onLine) {
+                    //        event.preventDefault(); // Prevent the default anchor click behavior
+                    //        const anchor = event.currentTarget; // This is the anchor element
+                    //        if (anchor.tagName == "BUTTON") {
+                    //            alert('This feature is accessible exclusively when an internet connection is available (online mode).');
+                    //        }
+                    //        else {
+
+                    //            if (anchor.innerText == "Add Mooring Operation" || anchor.innerText == "Add new inspection" || anchor.innerText == "View") {
+                    //                const path = new URL(anchor.href).pathname + new URL(anchor.href).search;  // Extract the pathname
+
+                    //                caches.match(path).then(response => {
+                    //                    if (response) {
+                    //                        //console.log(`URL is in cache: ${path}`);
+
+                    //                        window.location.href = anchor.href; // Manually redirect if the page is cached
+                    //                    } else {
+                    //                        console.log(`URL is not in any cache: ${path}`);
+                    //                        alert('This page is currently not on your PC browser cache. To make it accessible in offline mode for future, revisit the page when internet is available (online mode). The system stores cache automatically in your PC browser cache memory when you browse the page at least for a few seconds while you are online.');
+                    //                    }
+                    //                }).catch(error => {
+                    //                    console.error('Failed to check the cache status:', error);
+                    //                });
+
+                    //            }
+                    //            else {
+                    //                alert('This feature is accessible exclusively when an internet connection is available (online mode).');
+                    //            }
+
+                    //        }
+                    //    }
+
+
+                    //}
+    </script>
+
+
+</body>
+</html>
