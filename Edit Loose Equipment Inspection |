@@ -1,0 +1,949 @@
+@model Reports.MooringLooseEquipInspection
+@{
+    ViewBag.Title = "AddLeInspection";
+    Layout = "~/Views/Shared/_LayoutVessel7.cshtml";
+}
+
+
+
+<style>
+    .image-container.blur .dropzone {
+        filter: blur(5px);
+    }
+
+    .dropzone img {
+        filter: blur(5px);
+        width: 100%;
+        height: auto;
+    }
+	div#dZUpload_1 {
+    width: 100% !important;
+}
+</style>
+<script type="text/javascript">
+    function chkInternetStatus() {
+        if (navigator.onLine) {
+            SaveData();
+        } else {
+            alert("Oops! You're offline, Form cannot be submitted in offline mode.");
+        }
+    }
+</script>
+
+<script>
+
+    function GetVesselSessionID() {
+        var Vesselid = localStorage.getItem('VesselSessionID');
+        //alert('ajax call')
+        // Use AJAX to send this to the server
+        $.ajax({
+            url: '/LEInspection/SetVesselSessionID', // Your server endpoint to set the session ID
+            type: 'POST',
+            data: { VesselSessionID: Vesselid },
+            success: function (response) {
+                console.log('Session ID set on server:', response);
+            },
+            error: function (error) {
+                console.log('Error setting Session ID on server:', error);
+            }
+        });
+    }
+
+</script>
+
+<script>
+    window.onload = function () {
+        GetVesselSessionID();
+
+        if (!window.location.hash) {
+            // Set a timeout to allow the hash to be appended before reloading
+            setTimeout(function () {
+                // Append the hash to the URL
+                window.location.hash = 'loaded'; // This sets the hash
+                // Reload the page
+                window.location.reload(true); // Force reload from server
+            }, 2000); // Wait for 1 second before executing
+        }
+        TabFunction();
+
+        var attach = $("#AttachmentPath").val();
+       
+        if (attach != '' || attach == null) {
+            var element = document.getElementById("ImageFile");
+            element.required = false;
+            //element.disabled = true;
+            //element.style.display = "none"; 
+            var label = document.getElementById("Lbl_attached");
+            label.textContent = attach;
+        }
+        else {
+
+
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function onUploadControlFileUploadComplete(s, e) {
+        if (e.isValid)
+            $("#uploadedImage").attr("src", e.callbackData);
+        setElementVisible("uploadedImage", e.isValid);
+    }
+    function onImageLoad() {
+        var externalDropZone = $("#externalDropZone");
+        var uploadedImage = $("#uploadedImage");
+        uploadedImage.css({
+            left: (externalDropZone.width() - uploadedImage.width()) / 2,
+            top: (externalDropZone.height() - uploadedImage.height()) / 2
+        });
+        setElementVisible("dragZone", false);
+    }
+    function setElementVisible(elementId, visible) {
+        var el = $("#" + elementId);
+        if (visible)
+            el.show();
+        else
+            el.hide();
+    }
+</script>
+
+
+<script>
+    function selectall(source) {
+        checkboxes = document.getElementsByName('case1');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+
+
+<style>
+    .photo-thumbnail {
+        width: 80px;
+        height: 50px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    #cover-spin1 {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: rgba(100, 88, 124, 0.42);
+        z-index: 9999;
+        display: none; /* Hide by default */
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+        #cover-spin1::after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%; /* Center spinner horizontally */
+            top: 50%; /* Center spinner vertically */
+            width: 40px;
+            height: 40px;
+            border-style: solid;
+            border-color: black;
+            border-top-color: transparent;
+            border-width: 4px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%); /* Adjust to center the spinner */
+            animation: spin 0.8s linear infinite;
+        }
+
+    div#Mydiv {
+        /*background-color: lightblue;*/
+        height: 450px;
+        /*width: 200px;*/
+        overflow-y: scroll;
+    }
+
+    th, td {
+        border: 1px solid black;
+    }
+
+    span#messageInsby {
+        position: absolute;
+        bottom: -18px;
+        left: 14px;
+        font-size: 11px;
+    }
+
+    span#messageInsdt {
+        position: absolute;
+        bottom: -16px;
+        font-size: 11px;
+        left: 14px;
+    }
+
+    @@media only screen and (max-width: 1295px) {
+        .col-md-6.change_rt {
+            display: block !important;
+        }
+
+            .col-md-6.change_rt .download-btn.text-center.mb-5 {
+                text-align: left !important;
+            }
+    }
+	div#dZUpload1_1 {
+    width: 100% !important;
+}
+</style>
+
+<script>
+    function goBack() {
+        var newUrl = '@Url.Action("Index", "LEInspection", new { LE_ID = @Session["LooseEqTypeID"] })';
+        window.location.href = newUrl;
+        //window.history.back();
+    }
+</script>
+<script>
+    function checkFileType() {
+        const input = document.getElementById('photo');
+        const files = input.files;
+        const validExtensions = ['xls', 'xlsx'];
+
+        for (let i = 0; i < files.length; i++) {
+            const fileExtension = files[i].name.split('.').pop().toLowerCase();
+            if (!validExtensions.includes(fileExtension)) {
+                alert('Invalid file type. Please select an Excel file (.xls or .xlsx).');
+                input.value = ''; // Clear the input
+                break;
+            }
+        }
+    }
+</script>
+<script>
+    function ValidateSize(file) {
+
+        debugger;
+        // str1 = new string[26] { "jpg", "jpeg", "png", "pps", "ppt", "pptx", "xls", "xlsm", "xlsx", "doc", "docx", "pdf", "rtf", "txt", "GIF", "WAV", "MID", "MIDI", "WMA", "MP3", "OGG", "RMA", "AVI", "MP4", "DIVX", "WMV" };
+        var fileInput = document.getElementById('ImageFile');
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.xls|\.xlsm|\.xlsx|\.doc|\.docx|\.pdf|\.rtf|\.txt|\.GIF|\.gif)$/i;
+        if (!allowedExtensions.exec(filePath) && filePath != "") {
+            // alert('Please upload file having extensions .jpeg/.jpg/.png/.gif only.');
+            alert('This file type not allowed !');
+            fileInput.value = '';
+            return false;
+        }
+        else {
+
+            var FileSize = file.files[0].size / 1024; // in KB
+
+            if (FileSize > 200) {
+                alert('File size exceeds 200 KB');
+                file.value = "";
+                //document.getElementById('file').value = '';
+                return false;
+            } else {
+
+            }
+        }
+    }
+</script>
+
+<script>
+    function datecheck(t) {
+
+        var dtvalue = t.value;
+        const currentDate = new Date();
+        const selectedDate = new Date(dtvalue);
+
+        currentDate.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        const timeDifference = selectedDate - currentDate;
+        const dayDifference = timeDifference / (1000 * 3600 * 24);
+
+        if (dayDifference > 1) {
+            alert("Please select a date that is not more than one day in the future.");
+            document.getElementById("InspectDate").value = '';
+            return;
+        }
+    }
+</script>
+
+<script>
+    function clearForm() {
+        document.getElementById('InspectBy').value = '';
+        document.getElementById('InspectDate').value = '';
+        document.getElementById('ImageFile').value = '';
+
+        document.getElementById('Condition').value = '';
+        document.getElementById('Remarks').value = '';
+    }
+</script>
+
+<!-- Spinner Overlay -->
+<div id="cover-spin1">
+    <div class="spinner1"></div>
+</div>
+
+<div class="content">
+
+    <div class="page-heading page-header-flex">
+        <div>
+            <h1 class="page-title">
+                Edit Loose Equipment Inspection | @ViewBag.LooseEqType
+            </h1>
+        </div>
+        <div class="form-actions">
+            @*<input class="btn btn-success btn-width" id="btnSubmit" onclick="SaveData()" type="button" name="btnSubmit" style="width: 12%;cursor:pointer;" value="Save" />*@
+            <a name="back" id="btnBack" onclick="goBack()" class="btn btn-primary btn-width"> Go Back</a>
+            <button name="Reset" type="reset" id="btnReset" onClick="clearForm();" class="btn btn-danger btn-width"><i class="uil uil-redo mr-2"></i>Reset</button>
+            <button id="btnSubmitOnline" onclick="SaveData()" type="button" name="btnSubmit" class="btn btn-success btn-width"><i class="uil uil-check mr-2"></i>Update</button>
+
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content">
+        @if (TempData["Error"] != null)
+        {
+            <p class="alert alert-danger" id="errorMessage">@TempData["Error"]</p>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="panel panel-default mb-6" style="background: white;height: 130px;padding-top: 10px;display: flex;align-items: center;justify-content: center;">
+                    @{
+                        var loosetypeid = Request.QueryString["LET"]; // Extract the 'LET' value from query string
+                    }
+
+                    @*<input type="text" value="@TempData["MaxReceivedDate"]" id="maxreceiveddate" />*@
+                    @*<div class="col-md-6 change_rt" style="display: flex;align-items: center;margin-top: 21px;">
+                        <div class="download-btn text-center mb-5">
+                            <button type="button"
+                                    onclick="location.href='@Url.Action("DownloadExcelSheet2", "LEInspection", new { loosetypeid = loosetypeid })'"
+                                    style="height:40px;"
+                                    class="btn btn-info StopOnline">
+                                <i class="uil uil-import mr-2"></i>Download Template
+                            </button>
+                        </div>
+                        <div class="download-btn text-center mb-5">
+                            @using (Html.BeginForm("AddLeInspection", "LEInspection", FormMethod.Post, new { area = "LooseEquipment", enctype = "multipart/form-data" }))
+                            {
+                                <div class="col-md-8">
+                                    <input class="StopOnline" type="file" name="photo" id="photo" style="text-align:center" accept=".xls,.xlsx" onchange="checkFileType()" multiple />
+                                </div>
+                                <input class="uil uil-import mr-2 StopOnline" name="submit" type="submit" value="Import Template" id="Import" />
+                            }
+                        </div>
+
+                    </div>*@
+                    <div class="col-md-12" style="display: flex;align-items: center;">
+                        <div class=" form-group mr-2">
+                            <label class="col-md-12">
+                                <label class="control-label">Inspection by<sup>*</sup></label>
+                                <div>
+                                    @Html.EditorFor(model => model.InspectBy, new { htmlAttributes = new { @class = "form-control", @required = "true", @MaxLength = 100 } })
+                                    <span id="messageInsby"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group mr-2">
+                            <label class="col-md-12">
+                                <label class="control-label">Inspection Date<sup>*</sup></label>
+                                <div>
+                                    @Html.TextBoxFor(x => x.InspectDate, "{0:yyyy-MM-dd}", new { @autocomplete = "off", @readonly = "true", @class = "form-control datepicker", @placeholder = "yyyy-mm-dd", @required = "true", @onchange = "datecheck(this)" })
+                                    <span id="messageInsdt"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group mr-2">
+                            <div>
+                                <div style="position:relative;">
+                                    <label class="control-label">Attachment<sup></sup></label>
+                                    @Html.HiddenFor(model => model.AttachmentPath)
+                                    @Html.TextBox("ImageFile", "", new { type = "file", onchange = "ValidateSize(this)", @required = "true"})
+                                    <label id="Lbl_attached" style="font-size:11px; color:cornflowerblue;  font-style:italic"></label>
+                                    <label style=" font-size: 11px;font-style:italic;position:absolute;width: 100%;top: 68px;left: 0px;">Acceptable file types : Image (jpg, jpeg, png), PDF, MS Word (doc, docx), Excel (xls, xlsx), PPT (ppt, pptx)</label>
+                                    <div class="error"></div>
+                                </div>
+                                @*<div>
+                                        @Html.TextBox("ImageFile", "", new { @class = "StopOnline", Id = "ImageFile", type = "file", onchange = "ValidateSize(this)" })
+                                        <label style="font-size:13px;font-style:italic">Acceptable file types : Image (jpg, jpeg, png), PDF, MS Word (doc, docx), Excel (xls, xlsx)</label>
+                                        <div class="error"></div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="Mydiv" class="card-body">
+
+                <div class="table-responsive">
+
+                    @{
+                        int count = 1;
+                    }
+                    <table id="tbl1" class="table table-bordered" height="50">
+                        <thead style="overflow-x:auto;overflow-y:auto" class=" text-primary">
+                            <tr>
+                                <th style="display:none"></th>
+                                <th style="display:none">Id</th>
+                                <th style="display:none">LEType</th>
+                                <th style="display:none">LeId</th>
+                                <th>Cert.No. - Unique Id</th>
+                                <th>Condition</th>
+                                <th>Remarks</th>
+                                <th style="width:400px;">Photo1</th>
+                                <th style="width:400px;">Photo2</th>
+                                <th style="display:none">S.No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            @foreach (var item in Model.AddLeInspectionList)
+                            {
+                                <tr>
+                                    <td style="display:none"> @Html.DisplayFor(modelItem => item.InspectionID)</td>
+                                    <td style="display:none"> @Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td style="display:none"> @Html.DisplayFor(modelItem => item.LooseETypeId)</td>
+                                    <td style="display:none"> @Html.DisplayFor(modelItem => item.LooseEtbPK)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.Number)</td>
+                                    <td>
+                                        @Html.DropDownListFor(model => model.Condition, new SelectList(Model.LooseConditions, "Value", "Text", item.Condition), new { @class = "form-control" })
+
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => item.Remarks, new { htmlAttributes = new { @class = "form-control", @required = "false", @MAxLength = 100 } })
+                                    </td>
+
+                                    <td style="width:150px;position:relative;">
+                                        @*@Html.HiddenFor(model => item.Image1)*@
+                                        @Html.HiddenFor(model => item.Image1, new { @id = "hdnbtn2_" + (count) })
+                                        @if (!string.IsNullOrEmpty(item.Image1))
+                                        {
+                                            <button id='btn1_@(count)' onclick="showhideImages(@count,@item.LooseEtbPK)" class="close" style="color:black;">
+                                                <span>&times;</span>
+                                            </button>
+                                            <a id='btn2_@(count)' href='#'>
+                                                <img id="Photo1" style='width: 80px; height: 50px;border-radius: 5px;cursor: pointer;transition: 0.3s;' onclick='return showImageIns(this)' src="/images/InspectionImages/@item.Image1">
+                                            </a>
+
+                                            <div style="display:none;" id='dZUpload_@(count)' class="dropzone">
+                                                <div class="dz-defaultdz-message"></div>
+                                            </div> }
+                                        else
+                                        {
+                                            <div style="width:150px;" id='dZUpload_@(count)' class="dropzone">
+                                                <div class="dz-defaultdz-message"></div>
+                                            </div>}
+                                    </td>
+
+                                    <td style="width:150px;position:relative;">
+                                        @*@Html.HiddenFor(model => item.Image2)*@
+                                        @Html.HiddenFor(model => item.Image2, new { @id = "hdnbtn21_" + (count) })
+                                        @if (!string.IsNullOrEmpty(item.Image2))
+                                        {
+                                            <button id='btn11_@(count)' onclick="showhideImages1(@count,@item.LooseEtbPK)" class="close" style="color:black;">
+                                                <span>&times;</span>
+                                            </button>
+                                            <a id='btn21_@(count)' href='#'>
+                                                <img id="Photo2" style='width: 80px; height: 50px;border-radius: 5px;cursor: pointer;transition: 0.3s;' onclick='return showImageIns(this)' src="/images/InspectionImages/@item.Image2">
+                                            </a>
+
+                                            <div style="display:none;" id='dZUpload1_@(count)' class="dropzone">
+                                                <div class="dz-defaultdz-message"></div>
+                                            </div> }
+                                        else
+                                        {
+                                            <div style="width:150px;" id='dZUpload1_@(count)' class="dropzone">
+                                                <div class="dz-defaultdz-message"></div>
+                                            </div>}
+                                    </td>
+                                    <td style="display:none">@count </td>
+
+                                    @{ count++; }
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ImageModalInspection" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <img id="imgNameIns" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language=Javascript>
+      <!--
+
+    function isNumberKey(evt) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    //-->
+</script>
+
+
+<script type="text/javascript">
+
+    setTimeout(function () {
+
+        $('#successMessage').fadeOut('fast');
+        $('#errorMessage').fadeOut('fast');
+    }, 3000);
+
+
+</script>
+<script type="text/javascript">
+    $('.datepicker').datepicker();
+</script>
+
+<script src="~/assetsV/js/ForDropZone.js"></script>
+<link href="~/assetsV/css/drpzone.css" rel="stylesheet" type="text/css" />
+<script src="~/assetsV/js/dpzone2.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Dropzone.autoDiscover = false;
+
+        $(".dropzone").dropzone({
+
+            acceptedFiles: "image/jpeg,image/png,image/jpg",
+            url: "GenericHandler.ashx",
+            maxFiles: 1,
+            maxFilesize: .20,
+            thumbnailWidth: null,
+            thumbnailHeight: null,
+            init: function () {
+                this.on("thumbnail", function (file, dataUrl) {
+                    $('.dz-image').last().find('img').attr({ width: '100%', height: '100%' });
+                }),
+                    this.on("success", function (file) {
+                        $('.dz-image').css({ "width": "100%", "height": "auto" });
+                    }),
+                    this.on("error", function (file, errorMessage) {
+
+                        var type = file.type;
+                        const acceptedTypes = ["image/jpeg", "image/png", "image/jpg"];
+                        var filecheck = acceptedTypes.includes(type);
+
+                        if (filecheck == false) {
+                            alert("Invalid file format! Only jpeg, jpg and png formats are allowed.");
+                            this.removeFile(file);
+                            return;
+                        }
+
+                        var check = file.accepted;
+                        if (check == false) {
+                            var sizechk = file.size;
+                            var rr = sizechk / 1024;
+
+                            if (rr > 200) {
+                                alert("Max file size allowed to upload is 200 kb, current file is size :- " + rr.toFixed(2) + " kb.");
+                                this.removeFile(file);
+
+                            } else {
+                                alert("error : " + errorMessage);
+                                this.removeFile(file);
+
+                            }
+
+                        }
+                    });
+            },
+            addRemoveLinks: true,
+
+            //acceptedFiles: ".jpeg,.jpg,.png,.gif",
+            //acceptedFiles: 'image/jpeg,image/png,image/gif,image/jpg,application/pdf',
+            success: function (file, response) {
+
+                var imgName = response;
+                file.previewElement.classList.add("dz-success");
+                console.log("Successfully uploaded :" + imgName);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
+        });
+    });
+</script>
+
+<script>
+    function showhideImages(count, RopeId) {
+        //alert(RopeId);
+        //alert(count);
+        var result = confirm("Are you sure you want to delete this? This action will permanently remove it.");
+        if (result == true) {
+
+            alert('aya in first');
+
+            $("#btn1_" + count).hide();
+            $("#btn2_" + count).hide();
+            $("#dZUpload_" + count).show();
+            //$("#dZUpload").show();
+
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/LEInspection/DeleteImage',
+                data: { 'LooseEPK': RopeId, 'Image': 1 },
+                success: function (response) {
+                    if (response.Result == true) {
+
+                        alert('Image Delete Successfully !');
+                        $("#hdnbtn2_" + count).val("");
+                    }
+                    else {
+                        alert('An Error has occured. Please try again.');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //toastr["error"]('An Error has occured. Please try again.');
+                    alert('An Error has occured. Please try again.');
+                }
+            });
+
+        }
+
+    }
+</script>
+<script>
+    function showhideImages1(count, RopeId) {
+        //alert(RopeId);
+
+        var result = confirm("Are you sure you want to delete this? This action will permanently remove it.");
+        if (result == true) {
+
+
+            $("#btn11_" + count).hide();
+            $("#btn21_" + count).hide();
+            $("#dZUpload1_" + count).show();
+            //$("#dZUpload").show();
+            alert('aya 2nd');
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/LEInspection/DeleteImage',
+                data: { 'LooseEPK': RopeId, 'Image': 2 },
+                success: function (response) {
+                    if (response.Result == true) {
+
+                        alert('Image Delete Successfully !');
+                        $("#hdnbtn21_" + count).val("");
+                    }
+                    else {
+                        alert('An Error has occured. Please try again.');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //toastr["error"]('An Error has occured. Please try again.');
+                    alert('An Error has occured. Please try again.');
+                }
+            });
+        }
+    }
+</script>
+
+<script>
+    function showImageIns(param) {
+        var imgSrc = $(param).attr("src");
+        //alert(imgSrc);
+        $('#imgNameIns').attr('src', imgSrc);
+        $('#ImageModalInspection').modal('show');
+    }
+</script>
+
+<script>
+    function showSpinnerwithoutBar() {
+        document.getElementById('cover-spin1').style.display = 'flex';
+    }
+
+    function hideSpinnerwithoutBar() {
+        //  $('#cover-spin').hide();
+        document.getElementById('cover-spin1').style.display = 'none';
+    }
+</script>
+<script>
+    function SaveData() {
+        showSpinnerwithoutBar();
+        debugger;
+        var Insby = $("#InspectBy").val();
+        var Insdt = $("#InspectDate").val();
+        if (Insby == "") {
+            var msg = "Inspect By can not be null !"
+            $('#messageInsby').text(msg);
+            $('#messageInsby').css("color", "red");
+            hideSpinnerwithoutBar();
+            return;
+        }
+        else { $('#messageInsby').text(""); }
+        if (Insdt == "") {
+
+            var msg = "Inspected Date can not be null !"
+            $('#messageInsdt').text(msg);
+            $('#messageInsdt').css("color", "red");
+            hideSpinnerwithoutBar();
+
+            return;
+        }
+        else { $('#messageInsdt').text(""); }
+
+        var inspections = [];
+        // 'input[name="chk[]"]:checked'
+        var ErrorCheck = 0;
+
+        $("#tbl1 tbody tr").each(function () {
+            var img1count = 0;
+            var img2count = 0;
+            var image1 = ""; var image2 = ""; var photo1 = ""; var photo2 = "";
+
+            var MooringLooseEquipInspection = {};
+            var row = $(this).closest("tr")[0];
+            //var row1 = $(this).closest("tr").find('input');
+            var cells = $(this).closest('tr').children('td');
+
+
+           // cindex++;
+
+            var cntSrNo = row.cells[9].innerHTML;
+            //alert("a "+cntSrNo);
+            //if (cntSrNo == "S.No") {
+            //    cntSrNo = cindex;
+            //}
+            //alert("b " + cntSrNo);
+            var count = (cntSrNo - 1) * 2;
+            var count1 = count + 1;
+
+            $('.dropzone')[count].dropzone.files.forEach(function (file) {
+                image1 = file.name;
+                photo1 = file.previewElement.querySelector("img").src;
+            });
+
+            $('.dropzone')[count1].dropzone.files.forEach(function (file) {
+                image2 = file.name;
+                photo2 = file.previewElement.querySelector("img").src;
+            });
+
+            var Certificate = row.cells[4].innerHTML;
+            var NA_Condition = cells.eq(5).find('select').val();
+            if (NA_Condition == "") {
+                var msgs = "Select a condition of Certificate number '" + Certificate + "' !";
+                alert(msgs);
+                ErrorCheck = ErrorCheck + 1;
+                hideSpinnerwithoutBar();
+                return;
+            }
+            if (NA_Condition == "Not Acceptable" && image1 == "" && image2 == "") {
+                var msgs = "Photo Can not be blank for Certificate number '" + Certificate + "' !";
+                alert(msgs);
+                ErrorCheck = ErrorCheck + 1;
+                hideSpinnerwithoutBar();
+                return;
+            }
+
+
+            MooringLooseEquipInspection.InspectBy = $("#InspectBy").val();
+            MooringLooseEquipInspection.InspectDate = $("#InspectDate").val();
+            MooringLooseEquipInspection.InspectionID = row.cells[0].innerHTML;
+            MooringLooseEquipInspection.LooseETypeId = row.cells[2].innerHTML;
+            MooringLooseEquipInspection.LooseEtbPK = row.cells[3].innerHTML;
+            MooringLooseEquipInspection.Number = row.cells[4].innerHTML;
+            MooringLooseEquipInspection.Condition = cells.eq(5).find('select').val();
+            MooringLooseEquipInspection.Remarks = cells.eq(6).find('input').val();
+
+
+            MooringLooseEquipInspection.Image1 = image1;
+            MooringLooseEquipInspection.Image2 = image2;
+            MooringLooseEquipInspection.Photo1 = photo1;
+            MooringLooseEquipInspection.Photo2 = photo2;
+
+
+            inspections.push(MooringLooseEquipInspection);
+        });
+
+
+
+       // alert(inspections);
+
+        if (ErrorCheck > 0) {
+            hideSpinnerwithoutBar();
+            return;
+        }
+
+        inspections = JSON.stringify(inspections);
+
+        if (inspections == "[]") {
+            alert("Please Choose atleast one Loose Equipment for inspection !");
+            hideSpinnerwithoutBar();
+            return;
+        }
+        debugger;
+       // var myfilehas = document.getElementById("ImageFile");
+
+        let myfile = document.getElementById("ImageFile").files[0];
+
+        //let req = new XMLHttpRequest();
+        let formData = new FormData();
+        var LetID = '@Request.QueryString["LET"]';
+        formData.append("file", myfile);
+
+        $.ajax({
+            type: "POST",
+            url: '/LEInspection/UploadFile?id=' + LetID,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                console.log(result);
+            },
+            error: function (xhr, status, p3, p4) {
+                var err = "Error " + " " + status + " " + p3 + " " + p4;
+                if (xhr.responseText && xhr.responseText[0] == "{")
+                    err = JSON.parse(xhr.responseText).Message;
+                console.log(err);
+                alert(err);
+            }
+        });
+        //req.open("POST", '~/images/AttachFiles');
+        //req.send(formData);
+
+        //formData.append("photo", photo);
+        //fetch('/images/AttachFiles', { method: "POST", body: formData });
+
+        var Id = '@Request.QueryString["LET"]';
+
+        var newUrl = '@Url.Action("Index", "LEInspection",new { area= "LooseEquipment"} )?LE_ID=' + Id + '';
+
+        sleep(1000);
+
+        $.ajax({
+            url: '@Url.Action("InsertInspection", "LEInspection")',
+            type: "POST",
+            data: { 'inspections': inspections },
+            dataType: "json",
+            beforeSend: function (x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                }
+            },
+            success: function (result) {
+                //Write your code here
+                //alert(result);
+
+                window.location.href = result;
+            },
+            error: function (t)
+            {
+                alert(t);
+                hideSpinnerwithoutBar();
+            }
+        });
+
+
+
+        //$.ajax({
+        //    type: 'POST',
+        //    dataType: 'json',
+        //    url: '/LineInspection/InsertInspection',
+        //    //data: JSON.stringify(inspections),
+        //    data: { 'inspections': JSON.stringify(inspections) },
+        //    //contentType: "application/json; charset=utf-8",
+        //    //contentType: "application/json;",
+
+        //    success: function (r) {
+        //       // alert("Record(s) inserted.");
+        //    },
+        //    error: function (r) {
+        //        //alert(r.responseText);
+        //    }
+        //});
+
+    }
+
+</script>
+
+<script>
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+    }
+</script>
+
+<script>
+    $('#btnReset').click(function () {
+
+        $("#InspectDate").val('');
+        $("#InspectBy").val('');
+        var ele = document.getElementsByName('case1');
+        for (var i = 0; i < ele.length; i++) {
+            if (ele[i].type == 'checkbox')
+                ele[i].checked = false;
+        }
+        $("#selectall").prop("checked", false);
+
+        $('#Mydiv').find('input:text, input:password,input:file, select')
+            .each(function () {
+                $(this).val('');
+            });
+    });
+</script>
