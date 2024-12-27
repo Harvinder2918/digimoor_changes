@@ -1,0 +1,776 @@
+@model Reports.MooringRopeInspection
+@{ ViewBag.Title = "viewinspection";
+    Layout = "~/Views/Shared/_LayoutVessel7.cshtml"; }
+
+<style>
+    table#tbl1 thead {
+        position: sticky !important;
+        top: -3px !important;
+        z-index: 9999 !important;
+    }
+
+    table#tbl1 {
+        background: white;
+        min-width: 1920px !important;
+    }
+
+    .wrapper-content {
+        padding: 8px 10px 0px !important;
+    }
+
+    .mb-6, .my-6 {
+        margin-bottom: 1rem !important;
+    }
+
+   
+
+    .panel-body {
+        padding-top: 25px !important;
+        padding-bottom: 10px !important;
+    }
+
+    table#tbl1 {
+        background: white;
+        max-width: 1860px !important;
+    }
+
+        table#tbl1 th {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-wrap: wrap !important;
+        }
+
+    th {
+        font-size: 12px !important;
+        width: 170px !important;
+    }
+
+    div#Mydiv {
+        max-height: 800px!important;
+        overflow-x: scroll !important;
+    }
+
+    #page-wrapper {
+        min-height: 1200px !important;
+    }
+
+
+    .excellent {
+        color: black;
+    }
+
+    .safe {
+        color: green;
+    }
+
+    .good {
+        color: limegreen;
+    }
+
+    .low {
+        color: limegreen;
+    }
+
+    .mediocre {
+        color: orange;
+    }
+
+    .middle {
+        color: orange;
+    }
+
+    .poor {
+        color: orangered;
+    }
+
+    .high {
+        color: orangered;
+    }
+
+    .extr-poor {
+        color: red;
+    }
+
+    .very-high {
+        color: red;
+    }
+
+</style>
+
+
+<style>
+
+    .image-container {
+        display: inline-block;
+        position: relative;
+        margin: 10px;
+        overflow: hidden;
+        width: 100px;
+        height: 57px;
+    }
+
+        .image-container.blur .dropzone {
+            filter: blur(5px);
+        }
+
+    .count-overlay {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 7px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10;
+        font-weight: bold;
+        font-size: 16px;
+        display: none;
+    }
+
+    .image-container.blur .count-overlay {
+        display: block;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .uploaded-images img {
+        margin: 10px;
+        max-width: 100%;
+        max-height: 100px;
+    }
+
+</style>
+
+<style>
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        padding: 20px; /* Adjusted padding */
+        border: 1px solid #888;
+        max-width: 90%; /* Responsive max width */
+        max-height: 80%; /* Responsive max height */
+        overflow-y: auto; /* Allow scrolling if content is too large */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        animation: modalopen 0.5s;
+    }
+
+
+    .uploaded-images {
+        display: grid; /* Use grid layout */
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        gap: 10px; /* Space between images */
+        justify-items: center; /* Center images */
+    }
+
+        .uploaded-images img {
+            width: 100%; /* Make images responsive */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 100%; /* Ensure images don't exceed container */
+            border-radius: 5px; /* Optional: add some rounding to images */
+        }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+
+<script>
+
+    window.onload = function () {
+
+        GetVesselSessionID();
+
+        if (!window.location.hash) {
+            sleep(1000);
+            window.location = window.location + '#loaded';
+            window.location.reload(true);
+        }
+        TabFunction();
+    }
+</script>
+
+<script>
+
+    function GetVesselSessionID() {
+        var Vesselid = localStorage.getItem('VesselSessionID');
+        //alert('ajax call')
+        // Use AJAX to send this to the server
+        $.ajax({
+            url: '/LineInspection/SetVesselSessionID', // Your server endpoint to set the session ID
+            type: 'POST',
+            data: { VesselSessionID: Vesselid },
+            success: function (response) {
+                console.log('Session ID set on server:', response);
+            },
+            error: function (error) {
+                console.log('Error setting Session ID on server:', error);
+            }
+        });
+    }
+
+</script>
+
+<div class="page-heading page-header-flex">
+    <div>
+        <h1 class="page-title">
+            View Mooring Rope Inspection
+        </h1>
+
+    </div>
+
+    <div>
+        <div class="form-actions">
+            @*<a class="btn btn-info" onclick="showpdf(this.id)" id="~/images/InspectionImages/MOORING ROPES INSPECTION GUIDE.pdf"><i class="uil uil-import mr-2"></i>Inspection Guidance</a>*@
+            @*<a name="back" id="btnBack" href="~/MooringLine/LineInspection/index" class="btn btn-primary btn-width"> Go Back</a>*@
+            <a name="back" id="btnBack" onclick="goBack()" class="btn btn-primary btn-width"> Go Back</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div div class="col-md-8">
+        <span class="excellent">Evaluation-Risk: 1 </span>
+        <span class="safe">Excellent-Safe</span>
+        <span>| 2</span>
+        <span class="good">Good-Low</span>
+        <span>| 3</span>
+        <span class="mediocre">Mediocre–Middle</span>
+        <span>| 4</span>
+        <span class="poor">Poor–High</span>
+        <span>| 5</span>
+        <span class="extr-poor">Extr Poor-Very High</span>
+    </div>
+    <div class="col-md-4">
+        <div class="download-btn text-right mb-2">
+
+            <a style="display:none" class="btn btn-info" onclick="showpdf(this.id)" id="~/images/InspectionImages/MOORING ROPES INSPECTION GUIDE.pdf"><i class="uil uil-import mr-2"></i>Inspection Guidance</a>
+
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+
+        <div id="Mydiv" class="table-responsive freeze-side1">
+            @{ int count = 1; }
+
+
+
+            <table id="tbl1" class="table table-bordered" height="50">
+                <thead>
+                    <tr class="table-mark">
+                        <th style="background:white"></th>
+                        <th colspan="7" style="background:white"></th>
+                        <th colspan="7" class="bg-primary"><label>ZONE 1- Chock/Fairlead Hardware Contact Zone</label></th>
+                        <th colspan="7" class="bg-info"><label>ZONE 2- Tension Drum Contact Zone</label></th>
+                        <th colspan="5" style="background:white"></th>
+                    </tr>
+                    <tr>
+
+                        <th style="display:none">Id</th>
+
+                        <th><input type="checkbox" disabled checked="checked" id="selectall" onClick="selectall(this)" />Select All</th>
+                        <th>Winch #</th>
+                        <th>Line Position</th>
+                        <th>Inspection Date</th>
+                        <th>Inspection By</th>
+                        <th style="min-width:20px!important">Line<br> Type</th>
+                        <th style="min-width:100px!important;">Unique ID</th>
+                        <th>Certificate Number</th>
+
+
+                        <th>External Abrasion<br>(Rating)</th>
+                        <th>Internal Abrasion<br>(Rating)</th>
+                        <th>Average<br>(Rating)</th>
+                        <th>Length of Abrasion<br>(Rating)</th>
+                        <th>Distance from outboard eye<br>(meters)</th>
+                        <th>Cut Yarn Count(#)</th>
+                        <th>Length of Glazing<br>(meters)</th>
+
+                        <th>External Abrasion<br>(Rating)2</th>
+                        <th>Internal Abrasion<br>(Rating)2</th>
+                        <th>Average<br>(Rating)2</th>
+                        <th>Length of Abrasion<br>(Rating)2</th>
+                        <th>Distance from outboard eye<br>(meters)2</th>
+                        <th>Cut Yarn Count(#)2</th>
+                        <th>Length of Glazing<br>(meters)2</th>
+
+                        <th>Chafe Guard</th>
+                        <th>Twist per<br>(meter)</th>
+                        @*<th style="width:230px">View Image</th>
+                        <th style="width:230px">View Image</th>*@
+                        <th>Images</th>
+                        <th style="display:none">S.No</th>
+                        <th>AI Status</th>
+
+
+                    </tr>
+                </thead>
+                <tbody class="pane-vScroll">
+
+                    @foreach (var item in Model.AddInspectionList)
+                    {
+        <tr>
+            <td><input class="case1" name="case1" disabled checked="checked" type="checkbox" />    &nbsp; </td>
+            <td style="display:none"> @Html.DisplayFor(modelItem => item.Id)</td>
+            <td style="display:none"> @Html.DisplayFor(modelItem => item.RopeId)</td>
+            <td style="display:none"> @Html.DisplayFor(modelItem => item.WinchId)</td>
+            <td> @Html.DisplayFor(modelItem => item.AssignedNumber)</td>
+            <td> @Html.DisplayFor(modelItem => item.Location)</td>
+
+            <td>
+                @{ var inspDate = Model.InspectDate;
+                    if (inspDate != null)
+                    {
+                        var inspDate1 = Convert.ToDateTime(inspDate).ToString("dd-MMM-yyyy");
+
+    @Html.Raw(inspDate1) } }
+            </td>
+            <td> @Html.DisplayFor(modelItem => item.InspectBy)</td>
+
+            <td style="min-width:60px!important;">@Html.DisplayFor(modelItem => item.RopeType)</td>
+            <td style="min-width:60px!important;"> @Html.DisplayFor(modelItem => item.UniqueId)</td>
+            <td> @Html.DisplayFor(modelItem => item.CertificateNumber)</td>
+
+
+            <td style="width:100px!important" class="bg-primary-light">
+
+
+                @Html.DropDownListFor(m => m.ExternalRating_A, new SelectList(Model.CommonExtInt, "Value", "Text", item.ExternalRating_A), new { @class = "form-control", disabled = "disabled", @readonly = "readonly" })
+
+            </td>
+            <td style="width:100px!important" class="bg-primary-light">
+                @Html.DropDownListFor(model => model.InternalRating_A, new SelectList(Model.CommonExtInt, "Value", "Text", item.InternalRating_A), new { @class = "form-control", disabled = "disabled", @readonly = "readonly" })
+
+            </td>
+            <td class="bg-primary-light">
+                @Html.EditorFor(model => item.AverageRating_A, new { htmlAttributes = new { @class = "form-control", @required = "true", disabled = "disabled", @readonly = "readonly" } })
+            </td>
+            <td class="bg-primary-light">
+                @Html.EditorFor(model => item.LengthOFAbrasion_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue(this)" } })
+            </td>
+            <td class="bg-primary-light">
+                @Html.EditorFor(model => item.DistanceOutboard_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue1(this)" } })
+            </td>
+            <td class="bg-primary-light">
+                @Html.EditorFor(model => item.CutYarnCount_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue2(this)" } })
+            </td>
+            <td class="bg-primary-light">
+                @Html.EditorFor(model => item.LengthOFGlazing_A, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue3(this)" } })
+            </td>
+            <td style="width:100px!important" class="bg-info-light">
+                @Html.DropDownListFor(model => model.External1, new SelectList(Model.CommonExtInt, "Value", "Text", item.ExternalRating_B), new { @class = "form-control", disabled = "disabled", @readonly = "readonly" })
+
+            </td>
+            <td style="width:100px!important" class="bg-info-light">
+                @Html.DropDownListFor(model => model.Internal1, new SelectList(Model.CommonExtInt, "Value", "Text", item.InternalRating_B), new { @class = "form-control", disabled = "disabled", @readonly = "readonly" })
+
+            </td>
+            <td class="bg-info-light">
+                @Html.EditorFor(model => item.AverageRating_B, new { htmlAttributes = new { @class = "form-control", @required = "true", disabled = "disabled", @readonly = "readonly" } })
+            </td>
+            <td class="bg-info-light">
+                @Html.EditorFor(model => item.LengthOFAbrasion_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue4(this)" } })
+            </td>
+            <td class="bg-info-light">
+                @Html.EditorFor(model => item.DistanceOutboard_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue5(this)" } })
+            </td>
+            <td class="bg-info-light">
+                @Html.EditorFor(model => item.CutYarnCount_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue6(this)" } })
+            </td>
+            <td class="bg-info-light">
+                @Html.EditorFor(model => item.LengthOFGlazing_B, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 6, disabled = "disabled", @readonly = "readonly", @onKeyUp = "requiredValue7(this)" } })
+            </td>
+            <td>
+                @Html.DropDownListFor(model => item.Chafe_guard_condition, new SelectList(Model.ChafeGuard, "ChafeGuard", "ChafeGuard", item.Chafe_guard_condition), htmlAttributes: new { @class = "form-control", disabled = "disabled", @readonly = "readonly", @required = "true", @style = "width: 150px;", })
+
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Twist, new { htmlAttributes = new { @class = "form-control", @required = "true", @onkeypress = "return isNumberKey(event)", @maxlength = 5, disabled = "disabled", @readonly = "readonly", @min = "0", @Value = "0" } })
+            </td>
+
+            @*<td style="width:200px">
+
+                    @if (item.Image1 != "")
+                    {
+
+                        <img style='width: 80px; height: 80px;border-radius: 5px;cursor: pointer;transition: 0.3s;' onclick='return showImageIns(this)' src="~/images/InspectionImages/@item.Image1"> }
+                    else
+                    {
+                        <img style='width: 80px; height: 80px;border-radius: 5px;cursor: pointer;transition: 0.3s;' src="~/images/noimage.png">}
+                </td>
+
+                <td style="width:200px">
+
+                    @if (item.Image2 != "")
+                    {
+
+                        <img style='width: 80px; height: 80px;border-radius: 5px;cursor: pointer;transition: 0.3s;' onclick='return showImageIns(this)' src="~/images/InspectionImages/@item.Image2"> }
+                    else
+                    {
+                        <img style='width: 80px; height: 80px;border-radius: 5px;cursor: pointer;transition: 0.3s;' src="~/images/noimage.png">}
+                </td>*@
+
+        <td style="width:100px;padding:0px!important;">
+            <div class="image-container" id="Maindiv3_@(item.Id)">
+                <div class="dropzone" id="dZUpload3_@(item.Id)"
+                     style="width:100px; padding:0px!important; height:57px!important; max-height:57px!important;"
+                     data-existing-images="@(string.Join(",", item.Image3 ?? new List<string>()))"
+                     data-existing-image-urls="@(string.Join(",", item.Photo3 ?? new List<string>()))">
+                </div>
+            </div>
+        </td>
+
+            <td style="display:none">@count </td>
+
+                    <td>@Html.Raw(item.AIRating_Status)</td>
+
+            @{ count++; }
+        </tr>}
+
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="uploaded-images"></div>
+    </div>
+</div>
+
+
+<div id="ImageModalInspection" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <img id="imgNameIns" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center">
+                        <iframe id="myFrame" style="display: none; height: 590px; width: 100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showpdf(param) {
+        // var imgSrc = $(param).attr("src");
+        // alert(param);
+
+        // /images/AttachFiles / _49 Web Street, Grey Box Web Application Vulnerability Assessment Report3798.pdf
+        var omyFrame = document.getElementById("myFrame");
+        omyFrame.style.display = "block";
+        omyFrame.src = param;
+        // omyFrame.load();
+        // $('#ifrID').attr('src', param);
+        $('#PdfModal').modal('show');
+    }
+</script>
+
+@*}*@
+
+
+
+<script>
+    function showImageIns(param) {
+        var imgSrc = $(param).attr("src");
+        //alert(imgSrc);
+        $('#imgNameIns').attr('src', imgSrc);
+        $('#ImageModalInspection').modal('show');
+    }
+</script>
+
+
+<script language=Javascript>
+      <!--
+
+    function isNumberKey(evt) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    //-->
+</script>
+
+<script>
+    function goBack() {
+
+        var newUrl = '@Url.Action("Index", "LineInspection")';
+        window.location.href = newUrl;
+        //window.history.back();
+    }
+</script>
+
+
+<script>
+
+    $('.pane-hScroll').scroll(function () {
+        $('.pane-vScroll').width($('.pane-hScroll').width() + $('.pane-hScroll').scrollLeft());
+    });
+
+</script>
+
+<script src="~/assetsV/js/ForDropZone.js"></script>
+<link href="~/assetsV/css/drpzone.css" rel="stylesheet" type="text/css" />
+<script src="~/assetsV/js/dpzone2.js" type="text/javascript"></script>
+
+<script>
+
+
+    function loadExistingImages(dropzone, images, imageUrls) {
+
+        if (images != "") {
+
+            if (typeof images === 'string') {
+                images = images.split(',');
+            }
+            if (typeof imageUrls === 'string') {
+                imageUrls = imageUrls.split(',');
+            }
+
+            if (images && images.length > 0) {
+                images.forEach((imageName, index) => {
+                    let mockFile = { name: imageName, size: 12345, dataURL: imageUrls[index] };
+                    dropzone.emit("addedfile", mockFile);
+                    dropzone.emit("thumbnail", mockFile, imageUrls[index]);
+                    dropzone.emit("complete", mockFile);
+                    dropzone.files.push(mockFile);
+                });
+                updateImageContainer(dropzone);
+            }
+        }
+
+ 
+        if (!images || images.length === 0) {
+            let $container = $(dropzone.element).closest('.image-container');
+
+            $container.find('img').remove();
+            $container.find('.count-overlay').remove();
+
+            $container.find('.dz-default.dz-message').remove();
+
+            $container.find('.dropzone').append(`<img src="/images/noimage.png" alt="No image available" style="width: 100%; height: auto; max-height: 57px;"/>`);
+
+            // Ensure the UI is updated properly
+            updateImageContainer(dropzone);
+        }
+
+    }
+
+    function updateRowImageCount(rowElement) {
+        let imageCount = 0;
+        $(rowElement).find('.dropzone').each(function (index, element) {
+            let dropzone = $(element).data('dropzone');
+            if (dropzone) {
+                imageCount += dropzone.files.length;
+            }
+        });
+        return imageCount;
+    }
+
+    function updateImageContainer(dropzone) {debugger
+        let $container = $(dropzone.element).closest('.image-container');
+        let fileCount = dropzone.files.length;
+
+        $container.removeClass('blur');
+        $container.find('.count-overlay').remove();
+
+        if (fileCount > 0) {
+            $container.addClass('blur');
+            let count = `+${fileCount - 1}`;
+           // $container.append(`<div class="count-overlay">${count}</div>`);
+            if (count == 0) {
+                $container.append(`<div class="count-overlay">${1}</div>`);
+            }
+            else {
+                $container.append(`<div class="count-overlay">${count}</div>`);
+            }
+
+            $container.find('.count-overlay').on('click', function () {
+                openModal(dropzone);
+            });
+        }
+        //else {
+            
+        //    $container.find('.dropzone').append(`<img src="~/images/noimage.png" alt="No image available" style="max-width: 100%; max-height: 57px;" />`);
+        //}
+
+        let rowElement = $container.closest('tr');
+        let rowImageCount = updateRowImageCount(rowElement);
+    }
+
+
+    function openModal(dropzone) {
+
+        debugger;
+        let $modal = $('#myModal');
+        let $uploadedImages = $modal.find('.uploaded-images');
+        $uploadedImages.empty();
+
+        dropzone.files.forEach(function (file, index) {
+            let imgSrc = file.dataURL || file.previewElement.querySelector("img").src;
+
+            let $imgContainer = $('<div>').css({
+                'position': 'relative',
+                'display': 'inline-block',
+                'margin': '15px'
+            });
+
+            let $img = $('<img>').attr('src', imgSrc).attr('data-index', index).css({
+                'max-width': '500%',
+                'max-height': '500px',
+            });
+
+            $imgContainer.append($img);
+
+            $uploadedImages.append($imgContainer);
+        });
+
+        $uploadedImages.data('dropzone', dropzone);
+
+        $modal.show();
+    }
+
+
+
+    $('.close').on('click', function () {
+        $('#myModal').hide();
+    });
+
+    $(window).on('click', function (event) {
+        if (event.target.id === 'myModal') {
+            $('#myModal').hide();
+        }
+    });
+
+
+</script>
+
+
+<script>
+
+
+    $(document).ready(function () {
+        Dropzone.autoDiscover = false;
+
+        $(".dropzone").each(function (index, element) {
+            let dropzone = new Dropzone(element, {
+                acceptedFiles: "image/jpeg,image/png,image/jpg",
+                url: "#",  
+                maxFiles: 4,
+                maxFilesize: 0.20,
+                clickable: false,  
+                init: function () {
+                    this.on("thumbnail", function (file, dataUrl) {
+                        updateImageContainer(this);
+                    });
+                }
+            });
+
+            let existingImages = $(element).data('existing-images');
+            let existingImageUrls = $(element).data('existing-image-urls');
+            loadExistingImages(dropzone, existingImages, existingImageUrls);
+
+            $(element).data('dropzone', dropzone);
+        });
+    });
+
+
+</script>
+
+
+
+
+
+
