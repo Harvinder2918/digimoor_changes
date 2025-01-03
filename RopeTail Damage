@@ -1,0 +1,277 @@
+
+@model Shipment49Web.Areas.MooringTail.Models.RopeDamage
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutVessel7.cshtml";
+}
+
+
+<style>
+    .table > thead > tr > th {
+        border: 1px solid white;
+    }
+
+    .table > thead > tr > td {
+        border: 1px solid white;
+    }
+
+   .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    height: calc(90vh - 0px) !important;
+}
+    thead {
+        position: sticky;
+        top: 0px;
+    }
+
+    tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #e7e7e7;
+        font-size: 12px !important;
+    }
+
+    th {
+        width: 81px;
+        font-size: 12px !important;
+    }
+
+    thead {
+        position: sticky !important;
+        top: -3px !important;
+        z-index: 9999 !important;
+    }
+
+        thead th {
+            padding: 16px !important;
+        }
+		.table > thead > tr > th {
+   border: 0px;
+}
+.table td {
+   border: 0px;
+}
+ 
+</style>
+
+
+<script type='text/javascript'>
+
+    window.onload = function () {
+
+        GetVesselSessionID();
+
+        if (!window.location.hash) {
+            sleep(1000);
+            window.location = window.location + '#loaded';
+            window.location.reload(true);
+        }
+        TabFunction();
+    }
+
+</script>
+
+<script>
+
+    function GetVesselSessionID() {
+        var Vesselid = localStorage.getItem('VesselSessionID');
+        //alert('ajax call')
+        // Use AJAX to send this to the server
+        $.ajax({
+            url: '/TailDamage/SetVesselSessionID', // Your server endpoint to set the session ID
+            type: 'POST',
+            data: { VesselSessionID: Vesselid },
+            success: function (response) {
+                console.log('Session ID set on server:', response);
+            },
+            error: function (error) {
+                console.log('Error setting Session ID on server:', error);
+            }
+        });
+    }
+
+</script>
+
+<div class="page-heading page-header-flex">
+    <div>
+        <h1 class="page-title">
+            RopeTail Damage
+        </h1>
+        @*<ol class="breadcrumb">
+                <li><a href="">Home</a></li>
+                <li><a href="">Form</a></li>
+                <li><a>Create</a></li>
+            </ol>*@
+    </div>
+    @if (TempData["Error"] != null)
+    {
+        <p class="alert alert-danger" id="errorMessage">@TempData["Error"]</p>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+    }
+    <div>
+
+        <a onclick="HyperLinkOffline(event);" class="btn btn-info" href="@Url.Action("addlinedamage", "TailDamage")">
+            <i class="fa fa-plus-circle mr-2"></i>Add RopeTail Damage
+        </a>
+        @*<a name="back" id="btnBack" onclick="goBack()" class="btn btn-primary btn-width"> << Go Back</a>*@
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="display:none">Id</th>
+                        <th>Unique ID</th>
+                        <th>Cert.No.</th>
+                        <th>Assigned Winch</th>
+                        <th>Assigned Location</th>
+                        <th>Damage Date</th>
+                        <th>Damage Reason</th>
+                        <th>Damage Location</th>
+                        <th>Damage Observerd During</th>
+                        <th>Incident Report</th>
+                        <th>Action After Damage</th>
+                        <th>Port Name</th>
+                        <th>Status</th>
+                        @*<th width="100px">View</th>*@
+                        <th width="100px">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+
+                    @foreach (var item in Model.RopeDamageList)
+                    {
+
+
+                        <tr>
+                            <td style="display:none"> @Html.DisplayFor(modelItem => item.Id)</td>
+                            <td> @Html.DisplayFor(modelItem => item.UniqueId)</td>
+                            <td> @Html.DisplayFor(modelItem => item.CertificateNumber)</td>
+
+                            @if (item.AssignedNumber != null)
+                            {
+                                <td> @Html.DisplayFor(modelItem => item.AssignedNumber)</td>
+                            }
+                            else
+                            {
+                                <td>Not Assigned</td>
+                            }
+                            @if (item.AssignedLocation != null)
+                            {
+
+                                <td> @Html.DisplayFor(modelItem => item.AssignedLocation)</td>
+                            }
+                            else
+                            {
+                                <td>Not Assigned</td>
+                            }
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DamageDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DamageReason)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DamageLocation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DamageObserved)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IncidentReport)
+                            </td>
+                            <td style="word-wrap: break-word; white-space: normal;">
+                                @Html.DisplayFor(modelItem => item.IncidentAction) &nbsp;
+                                @if (item.IncidentAction == "Others")
+                                {
+                                    <span data-toggle="tooltip" data-placement="top" title="@item.IncidentActionOther" style="color: blue;cursor:pointer"> <i class="fa fa-info"></i></span>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PortName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            @*<td width="100px">
+            <a href="#" class="btn btn-sm btn-light btn-view" data-toggle="modal" data-target="#viewModal">
+                <i class="uil uil-eye mr-2"></i>View
+            </a>
+        </td>*@
+
+                            <td width="100px">
+                                <button type="button" class="btn btn-sm btn-light btn-delete StopOnline">
+                                    @Html.ActionLink("Delete", "Delete", "TailDamage", new { id = item.Id }, new { @class = "btn btn-sm btn-light btn-delete StopOnline", onclick = "return confirm('Are sure wants to delete?');" })
+                                    <i class="uil uil-trash-alt mr-2"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function BtnUpdateStatus(Id) {
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/AssignTail/Shifttoinactive',
+            data: { 'Id': Id },
+            success: function (response) {
+                if (response.Result == true) {
+                    alert('Status Updated successfully.');
+                    //toastr["success"]('Status Updated successfully.');
+                    window.location.reload();
+
+                }
+                else {
+                    alert('An Error has occured. Please try again.');
+                    // toastr["error"]('An Error has occured. Please try again.');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                //toastr["error"]('An Error has occured. Please try again.');
+                alert('An Error has occured. Please try again.');
+            }
+        });
+
+    };
+    //}
+</script>
+
+<script type="text/javascript">
+
+    setTimeout(function () {
+
+        $('#successMessage').fadeOut('fast');
+        $('#errorMessage').fadeOut('fast');
+    }, 3000);
+
+
+</script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+
+
+
+
