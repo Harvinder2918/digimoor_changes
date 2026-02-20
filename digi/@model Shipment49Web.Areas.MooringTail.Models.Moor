@@ -1,0 +1,1353 @@
+@model Shipment49Web.Areas.MooringTail.Models.MooringRopeDetails
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutforVesselSummary.cshtml";
+}
+
+
+<style>
+    iframe {
+        height: 500px;
+        width: 500px;
+    }
+</style>
+
+<style>
+    iframe {
+        height: 500px;
+        width: 500px;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        color: #444 !important;
+        border-top: 3px solid #3c8dbc;
+        border-radius: 4px !important;
+        margin-bottom: 0px !important;
+        font-size: 14px !important;
+        border-left-color: #dddddd !important;
+        border-right-color: #dddddd !important;
+        background: white;
+        font-weight: 600 !important;
+    }
+
+    a.nav-link {
+        background: transparent;
+        border-bottom: 1px solid gray;
+        margin-bottom: 5px !important;
+        border-top-color: transparent;
+        font-size: 14px !important;
+    }
+
+    .tab-content {
+        margin-top: -5px;
+    }
+
+    a.nav-link {
+        font-weight: 100 !important;
+        color: black !important;
+    }
+
+    #page-wrapper {
+        min-height: 1200px !important;
+    }
+
+    .page-header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1111 !important;
+    }
+
+    .modal-content {
+        width: 90% !important;
+        height: 80% !important;
+        overflow-y: auto;
+        margin: 8% auto;
+    }
+
+    img#imgName {
+        width: 90%;
+    }
+
+    #myModal_1.modal-content {
+        width: 90% !important;
+        height: 100% !important;
+        overflow-y: auto !important;
+        margin: 8% auto !important;
+    }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    iframe#myFrame {
+        min-height: 700px;
+    }
+
+    .modal-dialog {
+        width: 900px !important;
+    }
+
+    .modal-body.odd-even-strip {
+        height: 700px;
+        overflow-y: scroll;
+    }
+</style>
+
+
+<style>
+
+    @*CR01*@
+
+    #cover-spin {
+
+        position: fixed;
+
+        width: 100%;
+
+        left: 0;
+
+        right: 0;
+
+        top: 0;
+
+        bottom: 0;
+
+        background-color: rgba(100,88,124,0.42);
+
+        z-index: 9999;
+
+        display: none;
+
+    }
+
+    @@-webkit-keyframes spin {
+
+        from {
+
+            -webkit-transform: rotate(0deg);
+
+        }
+
+        to {
+
+            -webkit-transform: rotate(360deg);
+
+        }
+
+    }
+
+    @@keyframes spin {
+
+        from {
+
+            transform: rotate(0deg);
+
+        }
+
+        to {
+
+            transform: rotate(360deg);
+
+        }
+
+    }
+
+    #cover-spin::after {
+
+        content: '';
+
+        display: block;
+
+        position: absolute;
+
+        left: 48%;
+
+        top: 40%;
+
+        width: 40px;
+
+        height: 40px;
+
+        border-style: solid;
+
+        border-color: black;
+
+        border-top-color: transparent;
+
+        border-width: 4px;
+
+        border-radius: 50%;
+
+        -webkit-animation: spin .8s linear infinite;
+
+        animation: spin .8s linear infinite;
+
+    }
+
+    body {
+
+        height: 100%;
+
+        overflow-y: auto !important;
+
+    }
+
+
+</style>
+
+
+<style>
+
+    .dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+        color: #0e0e0e !important;
+    }
+
+    .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+        opacity: 0.35 !important;
+    }
+	.wrapper-content {
+    padding: 10px 10px 40px!important;
+	}
+	.ropeUsedIn {
+    opacity: 0;
+}
+
+.multiselect {
+    opacity: 1 !important;
+}
+button.btn.btn-default.multiselect-clear-filter {
+    padding: 10px!important;
+}
+ul.multiselect-container.dropdown-menu {
+    max-height: 450px;
+    overflow: hidden auto;
+    width: 180px;
+}
+.mr-2 {
+    width: 180px !important;
+}
+label.mb-0.font-weight-bold {
+    margin-right: 13px!important;
+}
+</style>
+
+
+<div id="cover-spin"></div>
+<div class="loader" style="align-items:center" id="loader">
+</div>
+
+<script type='text/javascript'>
+
+    //window.onload = function () {
+    //    if (!window.location.hash) {
+    //        sleep(1000);
+    //        window.location = window.location + '#loaded';
+    //        window.location.reload(true);
+    //    }
+
+    //    TabFunction();
+    //}
+
+</script>
+
+<script type='text/javascript'>
+
+    window.onload = function () {
+
+        TabFunction();
+    }
+ $(document).ready(function () {
+
+        $('.ropeUsedIn').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            nonSelectedText: 'None selected',
+            buttonWidth: '180px',
+            maxHeight: 250,
+            onChange: toggleDownloadButton,
+            onSelectAll: toggleDownloadButton,
+            onDeselectAll: toggleDownloadButton
+        });
+</script>
+
+<div class="content">
+
+
+
+    <div class="page-heading page-header-flex">
+        <div>
+            <h1 class="page-title">
+                Mooring Rope Tail Details
+            </h1>
+
+
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <p class="alert alert-danger" id="errorMessage">@TempData["Error"]</p>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+
+    </div>
+
+    <div>
+
+        <div class="wrapper wrapper-content">
+            <div class="container-fluid">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item active">
+                        <a class="nav-link active" data-toggle="tab" href="#home">Rope Tail in use(Incl. spare)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#menu1">Discarded Rope Tail Records</a>
+                    </li>
+
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane  active" id="home">
+                        <div class="form-body">
+
+                            <!-- RIGHT : FILTER + DOWNLOAD -->
+
+                            <div class="d-flex justify-content-end align-items-center" style="float:right;">
+
+                                <!-- LABEL -->
+                                <label class="mb-0 mr-2 font-weight-bold">
+                                    Rope Used In
+                                </label>
+
+                                <!-- MULTISELECT -->
+                                <div style="width:180px;" class="mr-2">
+                                    @Html.ListBoxFor(m => m.StatusIDs, (IEnumerable<SelectListItem>)Model.StatusList, new { @class = "form-control ropeUsedIn", multiple = "multiple" })
+                                </div>
+
+                                <!-- DOWNLOAD BUTTON -->
+                                <button type="button" class="btn btn-primary" id="activeRT_cert_Download">
+                                    <i class="fa fa-download"></i> Download
+                                </button>
+
+                            </div>
+
+                            <br /><br /><br />
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th style="display:none">Id</th>
+                                            <th>Unique ID</th>
+                                            <th>Cert.No.</th>
+                                            <th>Assigned Winch</th>
+                                            <th>Location</th>
+                                            <th>Manufacturer</th>
+                                            <th>Line Type</th>
+                                            <th>Installed Date</th>
+                                            <th>MBL</th>
+                                            <th>LDBF</th>
+                                            <th>Current Running Hours</th>
+                                            <th>Remarks</th>
+                                            <th width="200">Is Rope-Tail Certificate in compliance with MEG 4</th>
+                                            <th>View Attachment</th>
+
+                                            <th width="60px">View</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                        @foreach (var item in Model.MooringLineList)
+                                        {
+                                            <tr>
+                                                <td style="display:none"> @Html.DisplayFor(modelItem => item.Id)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.UniqueID)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CertificateNumber)</td>
+                                                @if (item.AssignedWinch != null)
+                                                {
+                                                    <td> @Html.DisplayFor(modelItem => item.AssignedWinch)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.DisplayFor(modelItem => item.RopeUsedin)</td>
+                                                }
+                                                @if (item.Location != null)
+                                                {
+                                                    <td> @Html.DisplayFor(modelItem => item.Location)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>Not Assigned</td>
+                                                }
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ManufacturerName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RopeType)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.InstalledDate1)
+                                                </td>
+
+
+                                                @{ if (item.MBL > 0)
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.MBL)
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>-</td>
+                                                    }
+                                                }
+
+                                                @{ if (item.LDBF > 0)
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.LDBF)
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>-</td>
+                                                    }
+                                                }
+                                                <td> @Html.DisplayFor(modelItem => item.CurrentRunningHours)</td>
+                                                <td>
+                                                    @if (item.Remarks != null)
+                                                    {
+                                                        @(item.Remarks.Length > 10 ? item.Remarks.Substring(0, 10) + "..." : item.Remarks)
+                                                    }
+                                                    else
+                                                    {
+
+                                                        @Html.DisplayFor(modelItem => item.Remarks)
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.IsComplianceWith_MEG4)
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        string folderpath = ViewData["folderPath"] as string;
+                                                        string fileFromS3 = null;
+                                                        string extn = null;
+
+                                                        if (item.attachment != null)
+                                                        {
+                                                            fileFromS3 = Shipment49Web.Common.S3CommonMethod.GetImageUrlIfExists(folderpath, item.attachment);
+                                                            extn = item.attachment.Split('.').Last().ToLower();
+                                                        }
+
+                                                        bool fileExists = item.attachment != null && fileFromS3 != null && fileFromS3 != "Not Found";
+                                                    }
+
+                                                    @if (fileExists)
+                                                    {
+                                                        string attachmentType = "";
+
+                                                        if (new[] { "jpg", "jpeg", "png", "tiff", "raw", "bmp", "svg", "psd" }.Contains(extn))
+                                                        {
+                                                            attachmentType = "image";
+                                                        }
+                                                        else if (new[] { "pdf", "doc", "docx" }.Contains(extn))
+                                                        {
+                                                            attachmentType = "document";
+                                                        }
+                                                        else
+                                                        {
+                                                            attachmentType = "other";
+                                                        }
+                                                        <button type="button" class="btn btn-sm btn-light btn-view StopOnline">
+
+
+                                                            <a class="StopOnline"
+                                                               href="#"
+                                                               data-src="@item.attachment"
+                                                               data-type="@attachmentType"
+                                                               data-directory="@folderpath"
+                                                               onclick="return handleViewAttachment(this)">
+                                                                View Attachment
+                                                            </a>
+                                                        </button>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="StopOnline">No Attachment</span>
+                                                    }
+
+
+                                                </td>
+
+
+                                                <td width="100px">
+                                                    <a href="#" class="btn btn-sm btn-light btn-view" onclick="detailChk(@item.RopeId, '@ViewBag.vesselId')">
+                                                        <i class="uil uil-eye mr-2"></i>View
+                                                    </a>
+                                                </td>
+
+
+
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane  fade" id="menu1">
+                        <!-- <h3 class="card-title">
+                            Discarded Rope Tail Records
+                        </h3> -->
+                        <div class="form-body">
+
+                            <!-- RIGHT : DOWNLOAD -->
+
+                            <div class="d-flex justify-content-end align-items-center" style="float:right;">
+
+                                <!-- DOWNLOAD BUTTON -->
+                                <button type="button" class="btn btn-primary" id="discardRT_cert_Download">
+                                    <i class="fa fa-download"></i> Download
+                                </button>
+
+                            </div>
+
+                            <br /><br /><br />
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Unique ID</th>
+                                            <th>Cert.No.</th>
+                                            <th>Assigned Winch</th>
+                                            <th>Location</th>
+                                            <th>Manufacturer</th>
+                                            <th>Line Type</th>
+                                            <th>Installed Date</th>
+                                            <th>MBL</th>
+                                            <th>LDBF</th>
+                                            <th>Current Running Hours</th>
+
+                                            <th>Remarks</th>
+                                            <th>View Attachment</th>
+                                            <th width="60px">View</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MooringLineList1)
+                                        {
+                                            <tr>
+                                                <td> @Html.DisplayFor(modelItem => item.UniqueID)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CertificateNumber)</td>
+                                                @if (item.AssignedWinch != null)
+                                                {
+                                                    <td> @Html.DisplayFor(modelItem => item.AssignedWinch)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.DisplayFor(modelItem => item.RopeUsedin)</td>
+                                                }
+                                                @if (item.Location != null)
+                                                {
+                                                    <td> @Html.DisplayFor(modelItem => item.Location)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>Not Assigned</td>
+                                                }
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ManufacturerName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RopeType)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.InstalledDate1)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MBL)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.LDBF)
+                                                </td>
+                                                <td> @Html.DisplayFor(modelItem => item.CurrentRunningHours)</td>
+
+                                                <td>
+                                                    @if (item.Remarks != null)
+                                                    {
+                                                        @(item.Remarks.Length > 10 ? item.Remarks.Substring(0, 10) + "..." : item.Remarks)
+                                                    }
+                                                    else
+                                                    {
+
+                                                        @Html.DisplayFor(modelItem => item.Remarks)
+                                                    }
+                                                </td>
+
+                                                <td>
+                                                    @if (item.attachment != null)
+                                                    {
+
+                                                        var extn = item.attachment.Split('.').Last();
+
+
+                                                        if (extn == "jpg" || extn == "JPG" || extn == "jpeg" || extn == "JPEG" || extn == "png" || extn == "PNG" || extn == "TIFF" || extn == "RAW" || extn == "BMP" || extn == "SVG" || extn == "PSD")
+                                                        {
+
+                                                            <a onclick='return showImages(this.id)' id="~/images/AttachFiles/@item.attachment">View Attachment</a>
+                                                        }
+                                                        else if (extn == "pdf" || extn == "PDF")
+                                                        {
+                                                            <a onclick='return showpdf(this.id)' id="~/images/AttachFiles/@item.attachment">View Attachment</a>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <a target="_blank" href="~/images/AttachFiles/@item.attachment">View Attachment</a>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <a>No Attachment</a>
+                                                        //"No Attachment";
+                                                    }
+
+                                                </td>
+                                                <td width="100px">
+                                                    <a href="#" class="btn btn-sm btn-light btn-view" onclick="detailChk(@item.RopeId, '@ViewBag.vesselId')">
+                                                        <i class="uil uil-eye mr-2"></i>View
+                                                    </a>
+                                                </td>
+
+
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="viewModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">View Rope Tail </h4>
+            </div>
+            <div class="modal-body odd-even-strip">
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Manufacturer Name</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pmname"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Rope-Tail Type</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="plinetype"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Rope-Tail Construction</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="plineConst"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Material</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="plineMaterial"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Diameter(mm)</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pDiameter"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Length(mtrs)</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pLength"></p>
+                    </div>
+                </div>
+                @*Added By Surjit for new columns*@
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Current Length(mtrs)</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="CrtLength"></p>
+                    </div>
+                </div>
+                @*END*@
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">TDBF</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pldbf"></p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">MBL</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pmbl"></p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">WLL(T)</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pwll"></p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Certificate Number</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pcertno"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Unique Ident. No.</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="puid"></p>
+                    </div>
+                </div>
+                @*Added By Surjit for new columns*@
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Manufacturer Date</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="mnufrdt"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Certificate Issue Date</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="crtisudt"></p>
+                    </div>
+                </div>
+                @*END*@
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Received Date</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="precdt"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Is this Rope-Tail installed and in use?</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pinstaldtused"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Installed Date</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pinstaldt"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Rope-Tail Tagging</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="plinetag"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Start Counter Hours</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="prnghrs"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Application (What is it used for?)</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pusedin"></p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Is Rope-Tail Certificate in compliance with MEG 4</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="pIsComplianceWith_MEG4"></p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 col-sm-6 col-form-label">
+                        <label class="control-label">Remarks</label>
+                    </label>
+                    <div class="col-md-7 col-sm-6">
+                        <p id="premarks" style="word-wrap: break-word; white-space: pre-wrap;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function detailChk(Id, vesselId) {
+        debugger
+        var RopeId = Id;
+        var vslId = vesselId;
+        //
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/VesselSummary/singleVesselSummary/DetailCheck',
+            data: { 'RopeId': RopeId, 'vslId': vslId },
+            contentType: "application/json;charset=utf-8",
+            success: function (response) {
+                //
+                if (response != null) {
+                    $('#viewModal').modal('show');
+                    $('#plinetype').text(response.rptype);
+                    $('#plineConst').text(response.RopeConstruction);
+                    $('#pDiameter').text(response.DiaMeter);
+                    $('#pLength').text(response.Length);
+                    $('#pmbl').text(response.MBL);
+                    $('#pldbf').text(response.LDBF);
+                    $('#pwll').text(response.WLL);
+                    $('#pmname').text(response.ManufacturerId);
+                    $('#pcertno').text(response.CertificateNumber);
+                    $('#puid').text(response.UniqueID);
+                    $('#precdt').text(response.ReceivedDate);
+                    if (response.CurrentLength != '' && response.CurrentLength != null) {
+                        $('#CrtLength').text(response.CurrentLength);
+                    }
+                    else {
+                        $('#CrtLength').text(response.Length);
+                    }
+
+                    if (response.ManufactureDate != '' && response.ManufactureDate != null) {
+                        $('#mnufrdt').text(response.ManufactureDate);
+                    }
+                    else {
+                        $('#mnufrdt').text("N/A");
+                    }
+
+                    if (response.CertificateIssueDate != '' && response.CertificateIssueDate != null) {
+                        $('#crtisudt').text(response.CertificateIssueDate);
+                    }
+                    else {
+                        $('#crtisudt').text("N/A");
+                    }
+
+                    if (response.ReceivedDate != '') {
+                        $('#pinstaldtused').text("Yes");
+                    }
+                    else {
+                        $('#pinstaldtused').text("No");
+                    }
+
+                    $('#pinstaldt').text(response.InstalledDate);
+                    $('#plinetag').text(response.RopeTagging);
+                    $('#prnghrs').text(response.StartCounterHours);
+                    $('#plineMaterial').text(response.lineMaterial);
+                    $('#pusedin').text(response.usedin);
+                    $('#pIsComplianceWith_MEG4').text(response.IsComplianceWith_MEG4);
+
+                    $('#premarks').text(response.Remarks);
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                alert('An Error has occured. Please try again.');
+            }
+        });
+
+    }
+</script>
+
+
+<div id="ImageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center;  ">
+                        <img style="max-width:100%" id="imgName" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center">
+                        <iframe id="myFrame" style="display:none;width:100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showImages(param) {
+        // var imgSrc = $(param).attr("src");
+        //alert(imgSrc);
+        $('#imgName').attr('src', param);
+        $('#ImageModal').modal('show');
+    }
+</script>
+
+<script>
+    function showpdf(param) {
+        // var imgSrc = $(param).attr("src");
+        // alert(param);
+
+        // /images/AttachFiles / _49 Web Street, Grey Box Web Application Vulnerability Assessment Report3798.pdf
+        var omyFrame = document.getElementById("myFrame");
+        omyFrame.style.display = "block";
+        omyFrame.src = param;
+        // omyFrame.load();
+        // $('#ifrID').attr('src', param);
+        $('#PdfModal').modal('show');
+    }
+</script>
+
+
+
+<script type="text/javascript">
+
+    setTimeout(function () {
+
+        $('#successMessage').fadeOut('fast');
+        $('#errorMessage').fadeOut('fast');
+    }, 3000);
+
+
+</script>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+@*cr01*@
+
+<script>
+
+    function handleViewAttachment(element) {
+
+        debugger
+
+        $('#cover-spin').show();
+
+        var attachmentName = $(element).data('src');
+
+        var directory = $(element).data('directory');
+
+        // Check if directory is null, undefined, or empty string
+
+        if (!directory || directory === 'null' || directory === 'undefined') {
+
+            directory = 'default';
+
+        }
+
+
+        var fileType = $(element).data('type');
+
+        if (!attachmentName) {
+
+            $('#cover-spin').hide();
+
+            alert("No attachment found.");
+
+            return false;
+
+        }
+
+        if (fileType === "image") {
+
+            handleshowImages(element);
+
+            $('#cover-spin').hide();
+
+        }
+
+        else if (fileType === "document") {
+
+            getfilesfroms3showpdf(attachmentName, directory); // Pass directory here
+
+        }
+
+        else {
+
+            $.post('/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+
+                { attachmentName: attachmentName, dir: directory },
+
+                function (response) {
+
+                    $('#cover-spin').hide();
+
+                    if (response && response.success && response.url) {
+
+                        window.open(response.url, '_blank');
+
+                    } else {
+
+                        alert(response.message || "File not available.");
+
+                    }
+
+                });
+
+        }
+
+        return false;
+
+    }
+
+
+    function getfilesfroms3showpdf(attachmentName, directory) {
+
+        $.ajax({
+
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+
+            type: 'POST',
+
+            data: {
+
+                attachmentName: attachmentName,
+
+                dir: directory
+
+            },
+
+            success: function (response) {
+
+                $('#cover-spin').hide();
+
+                if (response && response.success && response.url) {
+
+                    var omyFrame = document.getElementById("myFrame");
+
+                    omyFrame.src = response.url;
+
+                    omyFrame.style.display = "block";
+
+                    $('#PdfModal').modal('show');
+
+                } else {
+
+                    alert(response.message || "This file is not available.");
+
+                }
+
+            },
+
+            error: function (xhr) {
+
+                $('#cover-spin').hide();
+
+                alert("Error loading file. Please try again.");
+
+            }
+
+        });
+
+    }
+
+    function handleshowImages(element) {
+
+        $('#cover-spin').show();
+
+        debugger
+
+        var attachmentName = $(element).data('src');
+
+        var directory = $(element).data('directory');
+
+        if (!directory || directory === 'null' || directory === 'undefined') {
+
+            directory = 'default';
+
+        }
+
+        if (!attachmentName || !directory) {
+
+            $('#cover-spin').hide();
+
+            alert("Image data missing.");
+
+            return false;
+
+        }
+
+        $.ajax({
+
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+
+            type: 'POST',
+
+            data: {
+
+                attachmentName: attachmentName,
+
+                dir: directory
+
+            },
+
+            success: function (response) {
+
+                $('#cover-spin').hide();
+
+                if (response && response.success && response.url) {
+
+                    $('#imgName').attr('src', response.url);     // Bind image URL
+
+                    $('#ImageModal').modal('show');              // Show Bootstrap modal
+
+                } else {
+
+                    alert(response.message || "Image not available.");
+
+                }
+
+            },
+
+            error: function (xhr) {
+
+                $('#cover-spin').hide();
+
+                alert("Error loading image.");
+
+            }
+
+        });
+
+        return false;
+
+    }
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.ropeUsedIn').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            nonSelectedText: 'None selected',
+            buttonWidth: '180px',
+            maxHeight: 250,
+            onChange: toggleDownloadButton,
+            onSelectAll: toggleDownloadButton,
+            onDeselectAll: toggleDownloadButton
+        });
+
+
+        toggleDownloadButton();
+
+
+        // Fix for Bootstrap tabs
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+            $('.ropeUsedIn').multiselect('rebuild');
+            toggleDownloadButton();
+        });
+
+
+        function toggleDownloadButton() {
+            var selected = $('.ropeUsedIn').val();
+            $('#activeRT_cert_Download').prop('disabled', !selected || selected.length === 0);
+        }
+
+
+    });
+
+</script>
+
+
+<script>
+
+    @*$('#activeRT_cert_Download').on('click', function () {debugger
+
+        var statusIds = $('.ropeUsedIn').val(); // array
+
+        if (!statusIds || statusIds.length === 0) {
+            alert('Please select Rope Used In');
+            return;
+        }
+
+        // Redirect with querystring
+         var url = '@Url.Action("DownloadTailAttachments", "singleVesselSummary", new { area = "VesselSummary" })';
+
+        window.location.href = url + '?statusIds=' + statusIds.join(',');
+
+
+    });*@
+
+    $('#activeRT_cert_Download').on('click', function () {
+
+      var statusIds = $('.ropeUsedIn').val();
+
+      if (!statusIds || statusIds.length === 0) {
+          alert('Please select Rope Used In');
+          return;
+      }
+
+      $.ajax({
+          url: '@Url.Action("CheckTailCertificates", "singleVesselSummary")',
+          type: 'POST',
+          data: { statusIds: statusIds.join(',') },
+          success: function (res) {
+
+              if (!res.success) {
+                  alert(res.message);   // ❌ No certificate available
+                  return;
+              }
+
+              // ✅ Trigger file download
+              var downloadUrl = '@Url.Action("DownloadTailAttachments", "singleVesselSummary")';
+              window.location.href = downloadUrl + '?statusIds=' + statusIds.join(',');
+
+              // ✅ Show success message
+              alert(res.message);
+          }
+      });
+  });
+
+</script>
+
+
+<script>
+
+    @*$('#discardRT_cert_Download').on('click', function () {debugger
+
+        // Redirect with querystring
+         var url = '@Url.Action("DownloadDiscardTailsAttachments", "singleVesselSummary", new { area = "VesselSummary" })';
+
+        window.location.href = url;
+
+
+    });*@
+
+
+
+    $('#discardRT_cert_Download').on('click', function () {
+
+       $.ajax({
+           url: '@Url.Action("CheckTailDiscardCertificates", "singleVesselSummary")',
+           type: 'POST',
+           success: function (res) {
+
+               if (!res.success) {
+                   alert(res.message);   // ❌ No certificate available
+                   return;
+               }
+
+               // ✅ Trigger download
+               var url = '@Url.Action("DownloadDiscardTailsAttachments", "singleVesselSummary")';
+               window.location.href = url;
+
+               // ✅ Success message
+               alert(res.message);
+
+           }
+       });
+   });
+
+
+</script>
+
