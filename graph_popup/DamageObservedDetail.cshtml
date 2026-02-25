@@ -1,0 +1,1044 @@
+﻿@model Shipment49Web.Common.ResidualLabFilter
+
+@{
+    ViewBag.Title = "Damage | Parting | Incident Records";
+    Layout = "~/Views/Shared/_LeftSideBar.cshtml";
+}
+
+<link href="~/css/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/Chart.css" rel="stylesheet" />
+<script src="~/js/CommonScriptFunctions.js"></script>
+<script src="~/Scripts/Chart.min.js"></script>
+
+<style>
+    th {
+        padding-top: 18px !important;
+        padding-bottom: 19px !important;
+        font-size: 14px;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .hover-text {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        /*font-size: 18px;*/
+    }
+
+        .hover-text:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    .tooltip {
+        visibility: hidden;
+        background-color: #fff; /* White background */
+        color: #000; /* Black text */
+        border: 1px solid #000; /* Black border */
+        text-align: center;
+        border-radius: 4px;
+        padding: 5px 8px;
+        position: absolute;
+        z-index: 111;
+        bottom: 125%; /* Slightly above the icon */
+        left: 50%;
+        transform: translateX(-50%); /* Properly center */
+        white-space: nowrap; /* Keeps it compact */
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.2); /* Optional: subtle shadow */
+    }
+
+    .content {
+        min-height: 244px;
+        margin-right: auto;
+        margin-left: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .table-responsive {
+        min-height: .01%;
+        overflow-x: auto;
+    }
+
+    td {
+        border: 1px solid #e8e8e8;
+        text-align: center;
+        vertical-align: middle !important;
+        line-height: 1.3 !important;
+    }
+
+    th {
+        text-align: center;
+        border: 1px solid #e8e8e8;
+        line-height: 0.428571 !important;
+        font-weight: 600;
+        font-size: 15px;
+        color: #333333 !important;
+    }
+
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    thead {
+        background: #bcd7f2;
+        position: sticky;
+        top: 0;
+    }
+
+    .content {
+        min-height: 244px;
+        margin-right: auto;
+        margin-left: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .table-responsive {
+        min-height: .01%;
+        overflow-x: auto;
+    }
+
+    td {
+        border: 1px solid #e8e8e8;
+        text-align: center;
+        vertical-align: middle !important;
+        line-height: 1.3 !important;
+    }
+
+    th {
+        text-align: center;
+        border: 1px solid #e8e8e8;
+        line-height: 13.5px !important;
+        font-weight: 600;
+        font-size: 15px;
+        color: #333333 !important;
+    }
+
+    .content {
+        padding-top: 0px !important;
+    }
+
+    .table-responsive {
+        min-height: .01%;
+        overflow-x: auto;
+    }
+
+    .modal.in .modal-dialog {
+        top: 10% !important;
+    }
+
+    @@media (max-width: 768px) {
+        .modal-dialog {
+            margin: 30px auto;
+        }
+    }
+	.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.chart-box {
+    width: 100%;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    /* Drop Shadow */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    transition: 0.3s ease;
+}
+
+/* 50% on desktop */
+@@media (min-width: 768px) {
+    .chart-box {
+        width: calc(50% - 10px);
+    }
+}
+
+/* Optional hover effect */
+
+</style>
+
+
+<style>
+    @*CR01*@
+    #cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(100,88,124,0.42);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    #cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+
+    body {
+        height: 100%;
+        overflow-y: auto !important;
+    }
+
+.modal-body {
+    position: relative;
+    padding: 15px;
+    min-height: 200px;
+	max-height:700px;
+    overflow-y: scroll;
+}
+.modal.in .modal-dialog {
+    top: 2% !important;
+}
+.modal.in .modal-dialog {
+    top: 0% !important;
+}
+.modal-body {
+    position: relative;
+    padding: 15px;
+    min-height: 200px;
+    max-height: 650px;
+    overflow-y: scroll;
+}
+.modal-body {
+    position: relative;
+    padding: 15px;
+    min-height: 200px;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+.nav-tabs-custom > .tab-content {
+    background: #fff;
+    padding: 10px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    cursor: pointer;
+}
+div#damageReasonModal {
+    z-index: 111111!important;
+}
+.modal-body {
+    position: relative;
+    padding: 15px;
+    min-height: 200px;
+    max-height: 650px;
+    overflow-y: scroll;
+}
+
+/*    .box.box-default {
+        overflow-x: hidden !important;
+    }*/
+
+    /*.box-body .table-responsive {*/
+        /* min-height: .01%; */
+        /* overflow-x: auto; */
+        /*max-height: 700px;
+        width: 97vw !important;
+        overflow-x: scroll !important;
+    }*/
+   /* .tab-content {
+        min-width:1900px!important;
+    }*/
+	div#ImageModal .modal-content {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 0% !important;
+}
+</style>
+
+
+<div id="cover-spin"></div>
+<div class="loader" style="align-items:center" id="loader">
+</div>
+
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Damage Observed Details
+        </h1>
+    </section>
+    <section class="content">
+        <div class="box box-info">
+            <div class="box-body">
+                <div class="row">
+                    @using (Html.BeginForm("DamageObservedDetail", "Reports", FormMethod.Post, new { area = "data" }))
+                    {
+                        <div class="col-md-2">
+                            @Html.Label("Fleet Name")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.FleetNameIDs, new SelectList(Model.FleetNameList, "Id", "Name"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.Label("Fleet Type")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.FleetTypeIDs, new SelectList(Model.FleetTypeList, "Id", "Name"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.Label("Trade")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.TradeIDs, new SelectList(Model.TradePlatformList, "Id", "Name"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+                        @*<div class="col-md-2">
+                                @Html.Label("Vessel Age Range From")
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.AgeRangeFrom, new { @class = "form-control", type = "number", min = "0", max = "50" })
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.Label("Vessel Age Range To")
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.AgeRangeTo, new { @class = "form-control", type = "number", min = "0", max = "50" })
+                                </div>
+                            </div>*@
+                        <div class="col-md-2">
+                            @Html.Label("Vessel")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.VesselIDs, new SelectList(Model.VesselList, "ImoNo", "VesselName"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.Label("Manufacturer")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.ManufacturerIDs, new SelectList(Model.ManufacturerList, "Id", "Name"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.Label("Rope Type")
+                            <div class="form-group">
+                                @Html.ListBoxFor(m => m.RopeTypeIDs, new SelectList(Model.RopeTypeList, "Id", "RopeType"), new { @class = "form-control listbox" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.Label("Damage Date from")
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.TestDateFrom, "{0:dd-MMM-yyyy}", new { @class = "form-control dtpicker", @placeholder = "Date From" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.Label("Damage Date To")
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.TestDateTo, "{0:dd-MMM-yyyy}", new { @class = "form-control dtpicker", @placeholder = "Date To" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.Label("Rope Status")
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.StatusName, new SelectList(Model.Status(), "Value", "Text"), null, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.Label("Incident Report")
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.IncidentReportS, new SelectList(Model.IncidentReporting(), "Value", "Text"), null, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.Label("Line/Rope-Tail")
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.Line_RopeTail, new SelectList(Model.LineRopeTail(), "Value", "Text"), null, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.Label("Line/Rope-Tail Parted")
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.IsLineParted, new SelectList(Model.IsLineParteds(), "Value", "Text"), null, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <button type="submit" id="btnSearch" name="btnSearch" value="Action" class="btn btn-danger" style="margin-right: 4px; width: 75px;">Search</button>
+                                <a name="btnReset" id="btnReset" href="~/Data/reports/DamageObservedDetail" class="btn btn-primary btn-width" style=" width: 75px;">Reset</a>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <p style="float:right">
+                                @Html.ActionLink("Download List", "DownloadDamageObservedDetail")
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        @{ int count = 0; int count2 = 0;}
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#unsatisfactory" class="tablinks" data-toggle="tab">Damage Observed Details</a>
+                                </li>
+
+                                <li>
+                                    <a href="#GraphView" class="tablinks" data-toggle="tab">Graphical View</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content">
+
+                                <div class="tab-pane active" id="unsatisfactory">
+                                    @{
+                                        count = Model.DamagedObservedList.Count;
+                                        if (count == 0)
+                                        {
+                                            <div class="panel-group">
+                                                <div class="panel panel-info">
+                                                    <div class="panel-body">
+                                                        <p class="text-center">
+                                                            No Records Found!
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="table-responsive table-striped">
+                                                <table class="table no-margin" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Fleet Type</th>
+                                                            <th>Fleet Name</th>
+                                                            <th>Vessel</th>
+                                                            <th>Manufacturer</th>
+                                                            <th>Rope Type</th>
+                                                            <th>Certificate Number</th>
+                                                            <th>Line / Rope-Tail</th>
+                                                            <th>Is Parted</th>
+                                                            <th>Status</th>
+
+                                                            <th>Wind Speed (kts)</th>
+                                                            <th>Range of Tide (mtrs)</th>
+                                                            <th>Surging Observed</th>
+                                                            <th>Height of Swell (mtrs)</th>
+                                                            <th>Swell Direction</th>
+                                                            <th>Wind Direction</th>
+
+
+
+                                                            <th>Damage Date & Time</th>
+                                                            <th>Running Hrs when Damaged</th>
+                                                            <th>Age(In Month) when Damage</th>
+                                                            <th>Damage Observed</th>
+                                                            <th>Damage Reason</th>
+                                                            <th>Attachment</th>
+                                                            <th>Incident Report</th>
+                                                            <th>Action After Damage</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            foreach (var record in Model.DamagedObservedList)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-justify">@record.FleetType</td>
+                                                                    <td class="text-justify">@record.FleetName</td>
+                                                                    <td class="text-justify">@record.VesselName</td>
+                                                                    <td class="text-justify">@record.ManufacturerName</td>
+                                                                    <td class="text-justify">@record.RopeType</td>
+                                                                    <td class="text-justify">@record.CertificateNumber</td>
+                                                                    <td class="text-justify">
+                                                                        @{
+                                                                            if (record.RopeTail == 0)
+                                                                            {
+                                                                                @Html.Raw("Line")
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @Html.Raw("Rope-Tail")
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                    <td class="text-justify">
+                                                                        @(string.IsNullOrWhiteSpace(record.IsLineParted) ? "-" : record.IsLineParted)
+                                                                    </td>
+                                                                    <td class="text-justify">
+                                                                        @{
+                                                                            if (record.OutofServiceDate == null)
+                                                                            {
+                                                                                @Html.Raw("INSERVICE")
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @Html.Raw("DISCARDED")
+                                                                            }
+                                                                        }
+                                                                    </td>
+
+                                                                    @if (record.DamageObserved == "Inspection")
+                                                                    {
+                                                                        <td> N/A </td>
+                                                                        <td> N/A </td>
+                                                                        <td> N/A </td>
+                                                                        <td> N/A </td>
+                                                                        <td> N/A </td>
+                                                                        <td> N/A </td>
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        if (record.WindSpeedKts == "0" || record.WindSpeedKts == null)
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.WindSpeedKts</td>
+                                                                        }
+
+
+                                                                        if (record.RangeOfTideMeters == "0" || record.RangeOfTideMeters == null)
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.RangeOfTideMeters</td>
+                                                                        }
+
+
+
+                                                                        if (string.IsNullOrEmpty(record.SurgingObserved))
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.SurgingObserved</td>
+                                                                        }
+
+
+                                                                        if (record.HeightOfSwell == "0" || record.HeightOfSwell == null)
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.HeightOfSwell</td>
+                                                                        }
+
+                                                                        if (record.SwellDirection == null || record.SwellDirection == 0)
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.SwellDirection</td>
+                                                                        }
+                                                                        if (record.WindDirection == null || record.WindDirection == 0)
+                                                                        {
+                                                                            <td class="text-justify"> - </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="text-justify">@record.WindDirection</td>
+                                                                        }
+                                                                    }
+
+                                                                    <td class="text-justify">
+                                                                        @{
+                                                                            DateTime? DamageDate = record.DamageDate;
+                                                                            if (DamageDate != null)
+                                                                            {
+                                                                                @Html.Raw(DamageDate.Value.ToString("dd-MMM-yyyy HHmm"))
+                                                                            }
+                                                                        }
+                                                                        @*@record.DamageDate*@
+                                                                    </td>
+                                                                    <td class="text-justify">@record.Runninghrs</td>
+                                                                    <td class="text-justify">@Math.Round(record.RopeAge, 2)</td>
+                                                                    <td>@(record.DamageObserved == null ? "N/A" : record.DamageObserved)</td>
+                                                                    <td class="text-justify">@record.DamageReason</td>
+
+
+                                                                    <td>
+
+
+                                                                        @{
+                                                                            string folderPath = "images/" + record.VesselID + "/AttachFiles";
+
+                                                                            string fileFromS3 = null;
+                                                                            string extn = null;
+
+                                                                            if (record.Attachment != null)
+                                                                            {
+                                                                                fileFromS3 = Shipment49Web.Common.S3CommonMethod.GetImageUrlIfExists(folderPath, record.Attachment);
+                                                                                extn = record.Attachment.Split('.').Last().ToLower();
+                                                                            }
+
+                                                                            bool fileExists = record.Attachment != null && fileFromS3 != null && fileFromS3 != "Not Found";
+                                                                        }
+
+                                                                        @if (fileExists)
+                                                                        {
+                                                                            string attachmentType = "";
+
+                                                                            if (new[] { "jpg", "jpeg", "png", "tiff", "raw", "bmp", "svg", "psd" }.Contains(extn))
+                                                                            {
+                                                                                attachmentType = "image";
+                                                                            }
+                                                                            else if (new[] { "pdf", "doc", "docx" }.Contains(extn))
+                                                                            {
+                                                                                attachmentType = "document";
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                attachmentType = "other";
+                                                                            }
+                                                                            <button type="button" class="btn btn-sm btn-light btn-view StopOnline">
+                                                                                <a class="StopOnline"
+                                                                                   href="#"
+                                                                                   data-src="@record.Attachment"
+                                                                                   data-type="@attachmentType"
+                                                                                   data-directory="@folderPath"
+                                                                                   onclick="return handleViewAttachment(this)">
+                                                                                    View Attachment
+                                                                                </a>
+                                                                            </button>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span class="StopOnline">No Attachment</span>
+                                                                        }
+
+
+                                                                    </td>
+
+
+
+
+                                                                    <td class="text-justify">@record.IncidentReport</td>
+                                                                    <td class="text-justify">
+                                                                        @{
+                                                                            if (record.IncidentActlion == "")
+                                                                            {
+                                                                                @Html.Raw("N/A")
+                                                                            }
+                                                                            else if (record.IncidentActlion == "Others")
+                                                                            {
+                                                                                @record.IncidentActlion
+                                                                                <p class="hover-text" style="position: relative;">
+                                                                                    <i class="fa fa-info" style="color: blue;" aria-hidden="false">
+                                                                                        <span class="tooltip">@record.IncidentActionOther</span>
+                                                                                    </i>
+                                                                                </p>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @Html.Raw(record.IncidentActlion)
+                                                                            }
+                                                                        }
+                                                                    </td>
+
+
+                                                                    @*<td class="text-justify">
+                                                                            <a href="~/Data/Reports/Damaged/?vessel=@record.VesselID&status=INSERVICE" target="_blank">@record.Damaged</a>
+
+                                                                        </td>
+                                                                        <td class="text-justify">
+                                                                            <a href="~/Data/Reports/Cropped/?vessel=@record.VesselID" target="_blank">@record.Cropped</a>
+
+                                                                        </td>
+                                                                        <td class="text-justify">
+                                                                            <a href="~/Data/Reports/Spliced/?vessel=@record.VesselID" target="_blank">@record.Spliced</a>
+                                                                        </td>*@
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+                                            <div class="text-center">
+                                                <ul class="pagination">
+                                                    @{
+                                                        int totalRecords = Convert.ToInt32(TempData.Peek("TotalRecords"));
+
+                                                        int tot_pages = totalRecords / Shipment49Web.Common.CommonMethods.PAGESIZE;
+                                                        int remainder = totalRecords % Shipment49Web.Common.CommonMethods.PAGESIZE;
+
+                                                        tot_pages = remainder > 0 ? (tot_pages + 1) : tot_pages;
+
+                                                        int currPage = Convert.ToInt32(TempData.Peek("CurrentPage"));
+
+                                                        if (totalRecords > 0)
+                                                        {
+                                                            if (currPage == 0)
+                                                            {
+                                                                currPage = 1;
+                                                            }
+
+                                                            if (currPage != 1)
+                                                            {
+                                                                <li>@Html.ActionLink("First", "DamageObservedDetail", "Reports", new { o = 1, tab = "tab0" }, null)</li>
+                                                            }
+
+                                                            if (currPage != tot_pages)
+                                                            {
+                                                                int starter = 1;
+                                                                if (currPage >= 3)
+                                                                {
+                                                                    starter = currPage - 2;
+                                                                }
+                                                                for (int cnt = starter; cnt < (currPage + 10); cnt++)
+                                                                {
+                                                                    if (cnt == currPage)
+                                                                    {
+                                                                        <li class="active"><a href="#">@cnt</a></li>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li>@Html.ActionLink(cnt.ToString(), "DamageObservedDetail", "Reports", new { o = cnt, tab = "tab0" }, null)</li>
+                                                                    }
+
+                                                                    if (cnt == tot_pages)
+                                                                    {
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if (currPage == tot_pages)
+                                                            {
+                                                                <li class="active"><a href="#">@tot_pages</a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li>@Html.ActionLink("Last", "DamageObservedDetail", "Reports", new { o = tot_pages, tab = "tab0" }, null)</li>
+                                                            }
+                                                        }
+
+                                                        @*for (int cnt = 1; cnt <= tot_pages; cnt++)
+                                                            {
+                                                                if (cnt == currPage)
+                                                                {
+                                                                    <li class="active"><a href="#">@cnt</a></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li>@Html.ActionLink(cnt.ToString(), "DamageObservedDetail", "Reports", new { o = cnt }, null)</li>
+                                                                }
+                                                            }*@
+
+                                                    }
+                                                </ul>
+                                            </div>
+
+                                        }
+                                    }
+                                </div>
+
+                                <div class="tab-pane" id="GraphView">
+
+                                    @{
+                                        count = Model.DamagedObservedList.Count;
+                                        // count2 = Model.TailDiscardDetails.Count;
+                                        if (count == 0)
+                                        {
+                                            <div class="panel-group">
+                                                <div class="panel panel-info">
+                                                    <div class="panel-body">
+                                                        <p class="text-center">
+                                                            No Records Found!
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+
+                                         <div class="chart-container">
+
+    <div class="chart-box">
+        @Html.Partial("_makerDiscardChart", (Shipment49Web.Common.GraphData)@ViewBag.makerDiscardedCharts_RTW)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_RopeTailsDiscardChart", (Shipment49Web.Common.GraphData)@ViewBag.RopeTailsDiscardedCharts_RTW)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_DamagedReasonPieChart", (Shipment49Web.Common.GraphData)@ViewBag.PieChartData)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_RopeTailsYearWiseDiscardChart", (Shipment49Web.Common.GraphData)@ViewBag.DiscardedChartYearWise)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_RopeTailsRunningHrsWiseDiscardChart", (Shipment49Web.Common.GraphData)@ViewBag.DiscardedChartRunninghrsWise)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_RopeTailsPortWiseDiscardChart", (Shipment49Web.Common.GraphData)@ViewBag.RopeTailsPortWiseDiscardgraph)
+    </div>
+
+    <div class="chart-box">
+        @Html.Partial("_RopeTailsYearwiseTrendChart", (Shipment49Web.Common.GraphData)@ViewBag.RopeDamageYearWisegraph)
+    </div>
+
+</div>
+
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+
+<div id="ImageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="margin-top:2%!important">
+        <div class="modal-content"style="width: 100% !important;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center;  ">
+                        <img style="max-width:100%" id="imgName" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center">
+                        <iframe id="myFrame" style="display:none;width:100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showImages(param) {
+        // var imgSrc = $(param).attr("src");
+        //alert(imgSrc);
+        $('#imgName').attr('src', param);
+        $('#ImageModal').modal('show');
+    }
+</script>
+
+<script>
+    function showpdf(param) {
+        // var imgSrc = $(param).attr("src");
+        // alert(param);
+
+        // /images/AttachFiles / _49 Web Street, Grey Box Web Application Vulnerability Assessment Report3798.pdf
+        var omyFrame = document.getElementById("myFrame");
+        omyFrame.style.display = "block";
+        omyFrame.src = param;
+        // omyFrame.load();
+        // $('#ifrID').attr('src', param);
+        $('#PdfModal').modal('show');
+    }
+</script>
+@*cr01*@
+
+<script>
+    function handleViewAttachment(element) {
+        debugger
+        $('#cover-spin').show();
+        var attachmentName = $(element).data('src');
+        var directory = $(element).data('directory');
+
+        // Check if directory is null, undefined, or empty string
+        if (!directory || directory === 'null' || directory === 'undefined') {
+            directory = 'default';
+        }
+
+
+        var fileType = $(element).data('type');
+
+        if (!attachmentName) {
+            $('#cover-spin').hide();
+            alert("No attachment found.");
+            return false;
+        }
+
+        if (fileType === "image") {
+            handleshowImages(element);
+            $('#cover-spin').hide();
+        }
+        else if (fileType === "document") {
+            getfilesfroms3showpdf(attachmentName, directory); // Pass directory here
+        }
+        else {
+            $.post('/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+                { attachmentName: attachmentName, dir: directory },
+                function (response) {
+                    $('#cover-spin').hide();
+                    if (response && response.success && response.url) {
+                        window.open(response.url, '_blank');
+                    } else {
+                        alert(response.message || "File not available.");
+                    }
+                });
+        }
+
+        return false;
+    }
+
+
+    function getfilesfroms3showpdf(attachmentName, directory) {
+        $.ajax({
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+            type: 'POST',
+            data: {
+                attachmentName: attachmentName,
+                dir: directory
+            },
+            success: function (response) {
+                $('#cover-spin').hide();
+                if (response && response.success && response.url) {
+                    var omyFrame = document.getElementById("myFrame");
+                    omyFrame.src = response.url;
+                    omyFrame.style.display = "block";
+                    $('#PdfModal').modal('show');
+                } else {
+                    alert(response.message || "This file is not available.");
+                }
+            },
+            error: function (xhr) {
+                $('#cover-spin').hide();
+                alert("Error loading file. Please try again.");
+            }
+        });
+    }
+
+    function handleshowImages(element) {
+        $('#cover-spin').show();
+        debugger
+        var attachmentName = $(element).data('src');
+        var directory = $(element).data('directory');
+        if (!directory || directory === 'null' || directory === 'undefined') {
+            directory = 'default';
+        }
+
+        if (!attachmentName || !directory) {
+            $('#cover-spin').hide();
+            alert("Image data missing.");
+            return false;
+        }
+
+        $.ajax({
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+            type: 'POST',
+            data: {
+                attachmentName: attachmentName,
+                dir: directory
+            },
+            success: function (response) {
+                $('#cover-spin').hide();
+                if (response && response.success && response.url) {
+                    $('#imgName').attr('src', response.url);     // Bind image URL
+                    $('#ImageModal').modal('show');              // Show Bootstrap modal
+                } else {
+                    alert(response.message || "Image not available.");
+                }
+            },
+            error: function (xhr) {
+                $('#cover-spin').hide();
+                alert("Error loading image.");
+            }
+        });
+
+        return false;
+    }
+</script>

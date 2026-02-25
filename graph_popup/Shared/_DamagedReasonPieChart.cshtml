@@ -1,0 +1,373 @@
+﻿
+
+@model Shipment49Web.Common.GraphData
+@{
+    bool ropetailIsused = Shipment49Web.Common.CommonClass.GetIsRopeTail_Using();
+}
+
+
+<style>
+
+
+    .modal-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        width: 100% !important;
+    }
+
+    .modal-lg .btn {
+        color: white;
+        background-color: White !important;
+        border-color: White !important;
+    }
+	div#damageReasonModal {
+    z-index: 9999;
+   
+}
+div#damageReasonModal .modal-content {
+    margin-top: 2% !important;
+}
+div#damageReasonModal .modal-lg {
+    width: 100% !important;
+     max-width: 1800px!important;
+    max-height: 96vh !important;
+    margin: auto!important;
+    overflow: hidden;
+    margin-top: 2%!important;
+}
+/* Let content decide height automatically */
+div#damageReasonModal .modal-content {
+    height: auto!important;
+}
+
+/* Scroll only inside modal body if content is large */
+div#damageReasonModal .modal-body {
+    max-height: 100%!important;
+    overflow-y: auto!important;
+}
+div#damageReasonModal .modal-content {
+    width: 100% !important;
+    max-width: 1800px !important;
+    max-height: 100% !important;
+    margin: auto;
+    overflow: hidden;
+    margin-top: 2% !important;
+}
+.modal.in .modal-dialog {
+    top: 0% !important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+.modal-content {
+   
+    margin-top: 0% !important;
+}
+div#damageReasonModall .modal-content {
+    width: 100% !important;
+ 
+    margin-top: 0% !important;
+}
+
+.box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#damageReasonModal .modal-content {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 0% !important;
+}
+div#damageReasonModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+div#damageReasonModal .modal-content {
+    height: 100vh!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#damageReasonModal {
+    padding-right: 0px!important;
+}
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: hidden!important;
+}
+div#ImageModal .modal-lg{
+margin-top: 0% !important;
+}
+</style>
+
+
+<div class="col-md-10">
+    <canvas id="pie-chart" width="800" height="350"></canvas>
+    @*<canvas id="@string.Format("myChart{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>*@
+    <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("ropetailIsused{0}", Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
+    @*<input type="hidden" id="@string.Format("lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables_RTW" />
+        <input type="hidden" id="@string.Format("TTL{0}", Model.chartId)" class="hdn" value="@ViewBag.TitleHead_RTW" />*@
+    <hr />
+</div>
+
+
+
+<script>
+
+    var currentReason = "";
+
+     var data = $("@string.Format("#hdn{0}", Model.chartId)").val();
+    var ropetailIsused = $("@string.Format("#ropetailIsused{0}", Model.chartId)").val() === 'true';
+    data = JSON.parse(data);
+    //console.log(data);
+
+    // Filter data based on ropetailIsused condition
+    // If ropetailIsused is false, filter out tail-related entries
+    var filteredLabels = [];
+    var filteredData = [];
+    var filteredBackgroundColor = [];
+
+    if (!ropetailIsused && data.labels && data.data) {
+        // Filter out entries that contain "tail" in the label (case-insensitive)
+        for (var i = 0; i < data.labels.length; i++) {
+            var label = data.labels[i].toLowerCase();
+            if (label.indexOf('tail') === -1) {
+                filteredLabels.push(data.labels[i]);
+                filteredData.push(data.data[i]);
+                if (data.backgroundColor && data.backgroundColor[i]) {
+                    filteredBackgroundColor.push(data.backgroundColor[i]);
+                }
+            }
+        }
+    } else {
+        // If ropetailIsused is true, filter out zero values
+        if (data.labels && data.data) {
+            for (var j = 0; j < data.labels.length; j++) {
+                if (data.data[j] > 0) {
+                    filteredLabels.push(data.labels[j]);
+                    filteredData.push(data.data[j]);
+                    if (data.backgroundColor && data.backgroundColor[j]) {
+                        filteredBackgroundColor.push(data.backgroundColor[j]);
+                    }
+                }
+            }
+        } else {
+            filteredLabels = data.labels || [];
+            filteredData = data.data || [];
+            filteredBackgroundColor = data.backgroundColor || [];
+        }
+    }
+
+    new Chart(document.getElementById("pie-chart"), {
+        type: 'doughnut',
+        data:{
+            labels: filteredLabels,
+            datasets: [{
+                label: 'Number of Reasons Count',
+                backgroundColor: filteredBackgroundColor.length > 0 ? filteredBackgroundColor : data.backgroundColor,
+                data: filteredData,
+                borderColor: 'white',
+                borderWidth: 5,
+                hoverBackgroundColor: filteredBackgroundColor.length > 0 ? filteredBackgroundColor : data.backgroundColor,
+
+            }]
+        },
+        showDatapoints: true,
+        options: {
+            title: {
+                display: true,
+                text: data.label
+            },
+            tooltips: {
+                enabled: true,
+                intersect: false
+            },
+
+            onClick: function (evt) {
+
+                var activePoint = this.getElementAtEvent(evt);
+
+                if (activePoint.length > 0) {
+
+                    var chart = this;
+
+                    var firstPoint = activePoint[0];
+                    var datasetIndex = firstPoint._datasetIndex;
+                    var elementIndex = firstPoint._index;
+
+                    var reason = chart.data.labels[elementIndex];
+
+                    // Get correct dataset label
+
+                    currentDReason = reason;
+
+                    loadDamageReasonPage(1);
+
+                }
+            }
+
+        }
+
+
+    });
+
+
+</script>
+
+
+<script>
+
+
+    function loadDamageReasonPage(pageNumber) {
+
+        $("#damageReasonModal").modal('show')
+
+        $("#damageReasonmodalLoader").show();
+
+        var dateFrom = $("#TestDateFrom").val();
+
+        var dateTo = $("#TestDateTo").val();
+
+
+          $.ajax({
+              url: '@Url.Action("GetDamageObservedGDetails", "Reports")',
+              type: 'GET',
+              data: {
+                  Filter: currentDReason,
+                  RopeTail: null,
+                  GType: "DamageReason",
+                  DateFrom: dateFrom,
+                  DateTo: dateTo,
+                  pn: pageNumber
+              },
+              success: function (response) {
+
+                  //$("#manufacturerModalBody").html(response);
+                  //$("#manufacturerModal").modal('show');
+                  $("#damageReasonmodalContentArea").html(response);
+
+              },
+              error: function () {
+                  alert("Error loading data.");
+              },
+              complete: function () {
+
+                  // 🔥 Hide loader after success OR error
+                  $("#damageReasonmodalLoader").hide();
+              }
+          });
+    }
+
+
+
+</script>
+
+
+<div class="modal fade" id="damageReasonModal" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width:95%;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center;">Reason Wise Damage Observed</h4>
+                <button type="button" class="close" style="margin-top: -20px; margin-right: 15px; opacity: 1;" data-dismiss="modal">&times;</button>
+
+                @*<p style="float: right; margin-right: 30px;">
+                     @Html.ActionLink("Download List", "DownloadDamageObservedGDetail")
+                    </p>*@
+
+
+                <div style="text-align: right; margin-right: 52px; margin-top: -27px; ">
+
+                    <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
+                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body position-relative" id="damageReasonModalBody">
+
+                <!-- 🔥 LOADER -->
+                <div id="damageReasonmodalLoader" class="modal-loader" style="display:none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="damageReasonmodalContentArea">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+body.scroll-lock {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+</style>
+
+<script>
+
+var scrollPosition = 0;
+var modalCount = 0; // tracks how many modals are open
+
+function lockScroll() {
+    if (modalCount === 0) {
+        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        $('body').addClass('scroll-lock');
+        $('body').css('top', -scrollPosition + 'px');
+    }
+    modalCount++;
+}
+
+function unlockScroll() {
+    modalCount--;
+
+    if (modalCount <= 0) {
+        modalCount = 0;
+        $('body').removeClass('scroll-lock');
+        $('body').css('top', '');
+        window.scrollTo(0, scrollPosition);
+    }
+}
+
+// Apply to BOTH modals
+$('#damageReasonModal, #ImageModal').on('show.bs.modal', function () {
+    lockScroll();
+});
+
+$('#damageReasonModal, #ImageModal').on('hidden.bs.modal', function () {
+    unlockScroll();
+});
+
+</script>
