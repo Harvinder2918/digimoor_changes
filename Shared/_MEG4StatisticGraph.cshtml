@@ -1,0 +1,572 @@
+﻿
+
+@model Shipment49Web.Common.GraphData
+
+
+
+
+@*<canvas id="myChart"></canvas>
+
+    <script>
+        var years = [2021,2022];
+        var percentages = [30,40];
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Yearly Percentages',
+                    data: percentages,
+                    backgroundColor: 'rgba(0, 123, 255, 0.7)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: function (value, context) {
+                            return value + '%';
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 10,
+                        max: 100,
+                        ticks: {
+                            stepSize: 10,
+                            callback: function (value, index, values) {
+                                return value + '%';
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Percentage'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    }
+                }
+            }
+        });
+    </script>*@
+
+
+<style>
+    .line-breaks {
+        white-space: pre-line;
+        background-color: lemonchiffon;
+        color: black;
+        text-align:center;
+        font-size:large;
+        font-weight:bold;
+    }
+</style>
+
+<div class="col-md-12">
+    <br /><br />
+    <span class="line-breaks col-md-12">Compliance Wires </span>
+    <br /><br /><br />
+    <canvas id="@string.Format("myChart{0}", Model.chartId)" style="display: block;width: 480px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables" />
+
+    <br /><br /><br />
+    <span class="line-breaks col-md-12">Compliance HMPE Rope </span>
+    <br /><br /><br />
+
+    <canvas id="@string.Format("myChart1{0}", Model.chartId)" style="display: block;width: 480px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdn1{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lbl1{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables" />
+
+    <br /><br /><br />
+    <span class="line-breaks col-md-12">Compliance Synthetic Ropes </span>
+    <br /><br /><br />
+
+    <canvas id="@string.Format("myChart2{0}", Model.chartId)" style="display: block;width: 480px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdn2{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lbl2{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables" />
+
+    <br /><br /><br />
+    <span class="line-breaks col-md-12">Compliance Synthetic Tails </span>
+    <br /><br /><br />
+
+    <canvas id="@string.Format("myChart3{0}", Model.chartId)" style="display: block;width: 480px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdn3{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lbl3{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables" />
+    <hr />
+</div>
+
+
+
+<script>
+
+    debugger;
+
+         var lbls = $("@string.Format("#lbl{0}", Model.chartId)").val().replace(/\u200B/g, '');
+        var data = $("@string.Format("#hdn{0}", Model.chartId)").val();
+
+
+
+    var WireP = '@ViewBag.WireP';
+
+    //alert(ddd);
+        data = JSON.parse(data);
+    //console.log(data);
+
+    //alert(data);
+
+    data = [{
+        type: 'bar',
+        label: 'MEG 4 compliance status for Wires',
+       // data: [45, 65],
+        data: WireP.split(','),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(36, 107, 179, 0.5)'
+    }, {
+        type: 'line',
+        label: 'Line Dataset',
+        data: WireP.split(','),
+        //data: [45, 65],
+        fill: false,
+        borderColor: 'rgb(54, 162, 235)'
+    }];
+    debugger;
+
+        var ctx = $("@string.Format("#myChart{0}", Model.chartId)");
+
+        //alert(data);
+        //  var abcksdfk = Math.max(data.datasets[0].data) + 100,
+        var maxval = @Model.chartId;
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+                labels: lbls.split(','),
+                datasets: data
+
+            },
+            //type: 'line',
+            //data: {
+            //    //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+            //    labels: lbls.split(','),
+            //    datasets: data
+
+            //},
+            options: {
+                "hover": {
+                    "animationDuration": 0
+                },
+                "animation": {
+                    "duration": 1,
+                    "onComplete": function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset, i) {
+                            debugger;
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                    }
+                },
+                legend: {
+                    "display": true,
+                     align: 'left'
+                },
+                tooltips: {
+                    "enabled": true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            max: maxval,
+                            display: true,
+                            beginAtZero: true,
+                            callback: function (value) { return value + "%" }
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+
+        });
+
+</script>
+
+
+<script>
+
+    debugger;
+
+         var lbls = $("@string.Format("#lbl1{0}", Model.chartId)").val().replace(/\u200B/g, '');
+        var data = $("@string.Format("#hdn1{0}", Model.chartId)").val();
+
+
+
+    var HmpeP = '@ViewBag.HmpeP';
+
+    //alert(ddd);
+        data = JSON.parse(data);
+    //console.log(data);
+
+    //alert(data);
+
+    data = [{
+        type: 'bar',
+        label: 'MEG 4 compliance status for HMPE rope',
+       // data: [45, 65],
+        data: HmpeP.split(','),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(232, 179, 197, 0.8)'
+    }, {
+        type: 'line',
+        label: 'Line Dataset',
+        data: HmpeP.split(','),
+        //data: [45, 65],
+        fill: false,
+        borderColor: 'rgb(54, 162, 235)'
+    }];
+    debugger;
+
+        var ctx = $("@string.Format("#myChart1{0}", Model.chartId)");
+
+        //alert(data);
+        //  var abcksdfk = Math.max(data.datasets[0].data) + 100,
+        var maxval = @Model.chartId;
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+                labels: lbls.split(','),
+                datasets: data
+
+            },
+            //type: 'line',
+            //data: {
+            //    //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+            //    labels: lbls.split(','),
+            //    datasets: data
+
+            //},
+            options: {
+                "hover": {
+                    "animationDuration": 0
+                },
+                "animation": {
+                    "duration": 1,
+                    "onComplete": function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset, i) {
+                            debugger;
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                    }
+                },
+                legend: {
+                    "display": true,
+                     align: 'left'
+                },
+                tooltips: {
+                    "enabled": true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            max: maxval,
+                            display: true,
+                            beginAtZero: true,
+                            callback: function (value) { return value + "%" }
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+
+        });
+
+</script>
+
+<script>
+
+    debugger;
+
+         var lbls = $("@string.Format("#lbl2{0}", Model.chartId)").val().replace(/\u200B/g, '');
+        var data = $("@string.Format("#hdn2{0}", Model.chartId)").val();
+
+
+
+    var SyntheticP = '@ViewBag.SyntheticP';
+
+    //alert(ddd);
+        data = JSON.parse(data);
+    //console.log(data);
+
+    //alert(data);
+
+    data = [{
+        type: 'bar',
+        label: 'MEG 4 compliance status for Conventional ropes',
+       // data: [45, 65],
+        data: SyntheticP.split(','),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(210, 232, 179, 0.8)'
+    }, {
+        type: 'line',
+        label: 'Line Dataset',
+        data: SyntheticP.split(','),
+        //data: [45, 65],
+        fill: false,
+        borderColor: 'rgb(54, 162, 235)'
+    }];
+    debugger;
+
+        var ctx = $("@string.Format("#myChart2{0}", Model.chartId)");
+
+        //alert(data);
+        //  var abcksdfk = Math.max(data.datasets[0].data) + 100,
+        var maxval = @Model.chartId;
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+                labels: lbls.split(','),
+                datasets: data
+
+            },
+            //type: 'line',
+            //data: {
+            //    //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+            //    labels: lbls.split(','),
+            //    datasets: data
+
+            //},
+            options: {
+                "hover": {
+                    "animationDuration": 0
+                },
+                "animation": {
+                    "duration": 1,
+                    "onComplete": function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset, i) {
+                            debugger;
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                    }
+                },
+                legend: {
+                    "display": true,
+                     align: 'left'
+                },
+                tooltips: {
+                    "enabled": true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            max: maxval,
+                            display: true,
+                            beginAtZero: true,
+                            callback: function (value) { return value + "%" }
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+
+        });
+
+</script>
+
+<script>
+
+    debugger;
+
+         var lbls = $("@string.Format("#lbl3{0}", Model.chartId)").val().replace(/\u200B/g, '');
+        var data = $("@string.Format("#hdn3{0}", Model.chartId)").val();
+
+
+
+    var SyntheticTailP = '@ViewBag.SyntheticTailP';
+
+    //alert(ddd);
+        data = JSON.parse(data);
+    //console.log(data);
+
+    //alert(data);
+
+    data = [{
+        type: 'bar',
+        label: 'MEG 4 compliance status for Tails',
+       // data: [45, 65],
+        data: SyntheticTailP.split(','),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(232, 205, 179, 0.8)'
+    }, {
+        type: 'line',
+        label: 'Line Dataset',
+        data: SyntheticTailP.split(','),
+        //data: [45, 65],
+        fill: false,
+        borderColor: 'rgb(54, 162, 235)'
+    }];
+    debugger;
+
+        var ctx = $("@string.Format("#myChart3{0}", Model.chartId)");
+
+        //alert(data);
+        //  var abcksdfk = Math.max(data.datasets[0].data) + 100,
+        var maxval = @Model.chartId;
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+                labels: lbls.split(','),
+                datasets: data
+
+            },
+            //type: 'line',
+            //data: {
+            //    //labels: ['Tidal range more than 2 mtrs', 'Current more than 1.5 kts', 'Wind force more than 22', 'Experienced Squall', 'Experienced Surging', 'Berth exposed to swell', 'Affect of passing Traffic', 'Ship not in contact with fender continuosly', 'Air Tepm <15, OR >40 Deg C'],
+            //    labels: lbls.split(','),
+            //    datasets: data
+
+            //},
+            options: {
+                "hover": {
+                    "animationDuration": 0
+                },
+                "animation": {
+                    "duration": 1,
+                    "onComplete": function () {
+                        var chartInstance = this.chart,
+                            ctx = chartInstance.ctx;
+
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset, i) {
+                            debugger;
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        });
+                    }
+                },
+                legend: {
+                    "display": true,
+                     align: 'left'
+                },
+                tooltips: {
+                    "enabled": true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            max: maxval,
+                            display: true,
+                            beginAtZero: true,
+                            callback: function (value) { return value + "%" }
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+
+        });
+
+</script>

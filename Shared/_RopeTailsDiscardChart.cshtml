@@ -1,0 +1,481 @@
+﻿
+
+@model Shipment49Web.Common.GraphData
+@{
+    bool ropetailIsused = Shipment49Web.Common.CommonClass.GetIsRopeTail_Using();
+}
+
+<style>
+
+
+    .modal-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        width: 100% !important;
+    }
+
+    .modal-lg .btn {
+        color: white;
+        background-color: White !important;
+        border-color: White !important;
+    }
+	div#ropeModal {
+    z-index: 9999;
+   
+}
+#div#ropeModal .modal-content {
+    margin-top: 2% !important;
+}
+#div#ropeModal .modal-lg {
+    width: 100% !important;
+     max-width: 1800px!important;
+    max-height: 96vh !important;
+    margin: auto!important;
+    overflow: hidden;
+    margin-top: 1%;
+}
+/* Let content decide height automatically */
+#div#ropeModal .modal-content {
+    height: auto!important;
+}
+
+/* Scroll only inside modal body if content is large */
+#div#ropeModal .modal-body {
+    max-height: 100%!important;
+    overflow-y: auto!important;
+}
+div#ropeModal .modal-content {
+    width: 100% !important;
+    max-width: 1800px !important;
+    max-height: 100% !important;
+    margin: auto;
+    overflow: hidden;
+    margin-top: 2% !important;
+}
+.modal.in .modal-dialog {
+    top: 0% !important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+.modal-content {
+   
+    margin-top: 0% !important;
+}
+div#ImageModal .modal-content {
+    width: 100% !important;
+ 
+    margin-top: 0% !important;
+}
+
+.box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#ImageModal .modal-content {
+    width: 60% !important;
+    height: auto !important;
+    margin-top: 0% !important;
+}
+div#ropeModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+div#ropeModal .modal-content {
+    height: 100vh!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#ropeModal {
+    padding-right: 0px!important;
+}
+div#ropeModal .modal-lg{
+ width: 100% !important;
+ max-width: 1800px !important;
+}
+</style>
+
+
+<div class="col-md-10">
+    <canvas id="@string.Format("myChart{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables_RTW" />
+    <input type="hidden" id="@string.Format("TTL{0}", Model.chartId)" class="hdn" value="@ViewBag.TitleHead_RTW" />
+    <input type="hidden" id="@string.Format("ropetailIsused{0}", Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
+    <hr />
+</div>
+
+<script>
+
+    var currentRope = "";
+    var currentRopeTail = "";
+
+  var Titles = $("@string.Format("#TTL{0}", Model.chartId)").val();
+    var lbls = $("@string.Format("#lbl{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var data = $("@string.Format("#hdn{0}", Model.chartId)").val();
+    var ropetailIsused = $("@string.Format("#ropetailIsused{0}", Model.chartId)").val() === 'true';
+    //var arr=  @ViewBag.ChartLables;
+
+
+    data = JSON.parse(data);
+    console.log(data);
+
+    // Filter out tail conditions where value is 0 and conditionally show/hide Tails dataset
+    var labelsArray = lbls.split(',').filter(function(label) { return label.trim() !== ''; });
+    var filteredLabels = [];
+    var filteredData = [];
+
+    // Find the "Tails" dataset
+    var tailsDatasetIndex = -1;
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].label && (data[i].label.toLowerCase() === 'tails' || data[i].label.toLowerCase() === 'tail')) {
+            tailsDatasetIndex = i;
+            break;
+        }
+    }
+
+    // If ropetailIsused is false, remove Tails dataset completely but keep all items
+    if (!ropetailIsused && tailsDatasetIndex !== -1) {
+        // Remove Tails dataset from data array
+        for (var m = 0; m < data.length; m++) {
+            if (m !== tailsDatasetIndex) {
+                filteredData.push(data[m]);
+            }
+        }
+        filteredLabels = labelsArray;
+    }
+    // If ropetailIsused is true and Tails dataset exists, show ALL items (don't filter)
+    else if (ropetailIsused && tailsDatasetIndex !== -1) {
+        // Show all items regardless of Tails value - don't filter out any
+        filteredLabels = labelsArray;
+        filteredData = data;  // Use all datasets as-is
+    } else {
+        // If no Tails dataset found or condition not met, use original data
+        filteredLabels = labelsArray;
+        filteredData = data;
+    }
+
+    var ctx = $("@string.Format("#myChart{0}", Model.chartId)");
+
+    @*var maxval = @Model.chartId;*@
+
+    // Calculate highest value from all datasets
+    var highestValue = 0;
+
+    filteredData.forEach(function (dataset) {
+        dataset.data.forEach(function (val) {
+            if (val > highestValue) {
+                highestValue = val;
+            }
+        });
+    });
+
+
+    // Determine dynamic step size
+    var stepSize;
+
+    // Decide grid division based on maxval range
+    if (highestValue > 1 && highestValue <= 10) {
+        stepSize = 1;     // 2,4,6,8,10
+    }
+    else if (highestValue > 10 && highestValue <= 50) {
+        stepSize = 5;    // 10,20,30,40,50
+    }
+    else if (highestValue > 50 && highestValue <= 100) {
+        stepSize = 10;    // 20,40,60,80,100
+    }
+    else if (highestValue > 100 && highestValue <= 250) {
+        stepSize = 20;    // 50,100,150,200,250
+    }
+    else if (highestValue > 250) {
+        stepSize = 50;   // 100,200,300,400...
+    }
+    else {
+        stepSize = 1;
+    }
+
+    var maxval = (Math.floor(highestValue / stepSize) * stepSize) + stepSize;
+
+
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: filteredLabels,
+            datasets: filteredData
+        },
+        options: {
+            "hover": {
+                "animationDuration": 0
+            },
+            "animation": {
+                "duration": 1,
+                "onComplete": function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+
+                        // Only draw values if the dataset is visible
+                        if (!meta.hidden) {
+                            meta.data.forEach(function (bar, index) {
+                                var data = dataset.data[index];
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            });
+                        }
+                    });
+                }
+            },
+            title: {
+                display: true,
+                text: Titles
+            },
+            legend: {
+                "display": true,
+                align: 'left'
+            },
+            tooltips: {
+                "enabled": true
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: true,
+                        drawBorder: false,   // prevents double border line
+                        lineWidth: 1
+                    },
+                    ticks: {
+                        max: maxval,
+                        display: true,
+                        beginAtZero: true,
+                        stepSize: stepSize,
+                        precision: 0
+                    }
+
+
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+
+            onClick: function (evt) {
+
+                var activePoint = this.getElementAtEvent(evt);
+
+                if (activePoint.length > 0) {
+
+                    var chart = this;
+
+                    var firstPoint = activePoint[0];
+                    var datasetIndex = firstPoint._datasetIndex;
+                    var elementIndex = firstPoint._index;
+
+                    var rope = chart.data.labels[elementIndex];
+
+                    // Get correct dataset label
+                    var ropeTail = chart.data.datasets[datasetIndex].label;
+
+                    if (ropeTail.toLowerCase() === "tails" || ropeTail.toLowerCase() === "tail") {
+                        ropeTail = 1;
+                    }
+                    else {
+                        ropeTail = 0;
+                    }
+
+                    currentRope = rope;
+                    currentRopeTail = ropeTail;
+
+                    loadRopePage(1);
+
+                }
+            }
+
+        }
+    });
+
+
+</script>
+
+
+<script>
+
+
+    function loadRopePage(pageNumber) {
+
+        $("#ropeModal").modal('show')
+
+        $("#ropemodalLoader").show();
+
+        var dateFrom = $("#TestDateFrom").val();
+
+        var dateTo = $("#TestDateTo").val();
+ 
+
+          $.ajax({
+              url: '@Url.Action("GetDamageObservedGDetails", "Reports")',
+              type: 'GET',
+              data: {
+                  Filter: currentRope,
+                  RopeTail: currentRopeTail,
+                  GType: "Rope",
+                  DateFrom: dateFrom,
+                  DateTo: dateTo,
+                  pn: pageNumber
+              },
+              success: function (response) {
+
+                  $("#ropemodalContentArea").html(response);
+
+              },
+              error: function () {
+                  alert("Error loading data.");
+              },
+              complete: function () {
+
+                  // 🔥 Hide loader after success OR error
+                  $("#ropemodalLoader").hide();
+              }
+          });
+    }
+
+
+
+</script>
+
+
+<div class="modal fade" id="ropeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width:95%;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center;">Rope Damage Observed</h4>
+                <button type="button" class="close" style="margin-top: -20px; margin-right: 15px; opacity: 1;" data-dismiss="modal">&times;</button>
+
+                @*<p style="float: right; margin-right: 30px;">
+                     @Html.ActionLink("Download List", "DownloadDamageObservedGDetail")
+                    </p>*@
+
+
+                <div style="text-align: right; margin-right: 52px; margin-top: -27px; ">
+
+                    <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
+                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body position-relative" id="ropeModalBody">
+
+                <!-- 🔥 LOADER -->
+                <div id="ropemodalLoader" class="modal-loader" style="display:none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="ropemodalContentArea">
+                    Loading...
+                </div>
+
+            </div>
+             <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+body.scroll-lock {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+div#unsatisfactory.box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+
+body.scroll-lock {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+div#ropemodalContentArea div#ImageModal .modal-content {
+    width: 100%!important;
+	margin-top:1%!important;
+}
+
+</style>
+
+<script>
+
+var scrollPosition = 0;
+var modalCount = 0; // tracks how many modals are open
+
+function lockScroll() {
+    if (modalCount === 0) {
+        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        $('body').addClass('scroll-lock');
+        $('body').css('top', -scrollPosition + 'px');
+    }
+    modalCount++;
+}
+
+function unlockScroll() {
+    modalCount--;
+
+    if (modalCount <= 0) {
+        modalCount = 0;
+        $('body').removeClass('scroll-lock');
+        $('body').css('top', '');
+        window.scrollTo(0, scrollPosition);
+    }
+}
+
+// Apply to BOTH modals
+$('#ropeModal, #ImageModal').on('show.bs.modal', function () {
+    lockScroll();
+});
+
+$('#ropeModal, #ImageModal').on('hidden.bs.modal', function () {
+    unlockScroll();
+});
+
+</script>

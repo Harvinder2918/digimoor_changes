@@ -1,0 +1,522 @@
+﻿@model Shipment49Web.Common.GraphData
+@{
+    bool ropetailIsused = Shipment49Web.Common.CommonClass.GetIsRopeTail_Using();
+}
+
+
+<style>
+
+
+    .modal-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        width: 100% !important;
+    }
+
+    .modal-lg .btn {
+        color: white;
+        background-color: White !important;
+        border-color: White !important;
+    }
+	div#yearlyTrendModal {
+    z-index: 9999!important;
+} 
+div#yearlyTrendModal .modal-content {
+    margin-top: 2% !important;
+}
+div#yearlyTrendModal .modal-lg {
+    width: 100% !important;
+     max-width: 1800px!important;
+    max-height: 96vh !important;
+    margin: auto!important;
+    overflow: hidden;
+    margin-top: 2%!important;
+}
+/* Let content decide height automatically */
+div#yearlyTrendModal .modal-content {
+    height: auto!important;
+}
+
+/* Scroll only inside modal body if content is large */
+div#yearlyTrendModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+}
+div#yearlyTrendModal .modal-content {
+    width: 100% !important;
+    max-width: 1800px !important;
+    max-height: 100% !important;
+    margin: auto;
+    overflow: hidden;
+    margin-top: 2% !important;
+}
+.modal.in .modal-dialog {
+    top: 0% !important;
+}
+div#yearlyTrendModal .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+.modal-content {
+   
+    margin-top: 0% !important;
+}
+div#yearlyTrendModal .modal-content {
+    width: 100% !important;
+ 
+    margin-top: 0% !important;
+}
+
+.box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#yearlyTrendModal .modal-content {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 0% !important;
+}
+yearlyTrendModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+div#yearlyTrendModal .modal-content {
+    height: 93vh!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: 100%!important;
+}
+div#unsatisfactory .box-body .table-responsive {
+    min-height: .01%;
+    overflow-x: auto;
+    max-height: auto!important;
+}
+div#yearlyTrendModal {
+    padding-right: 0px!important;
+}
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: hidden!important;
+}
+div#ImageModal .modal-lg{
+margin-top: 0% !important;
+}
+</style>
+
+
+<div class="col-md-10">
+    <canvas id="@string.Format("Trendgraph{0}", @Model.chartId)" style="display: block;width: 1200px;height: 500px;"></canvas>
+    <input type="hidden" id="@string.Format("Trendgraph_lin{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLines" />
+    <input type="hidden" id="@string.Format("Trendgraph_tail{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartTails" />
+    <input type="hidden" id="@string.Format("Trendgraph_lbl{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLables" />
+    <input type="hidden" id="@string.Format("Trendgraph__TTL{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageTitleHead" />
+    <input type="hidden" id="@string.Format("Trendgraph_ropetailIsused{0}", @Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
+    <hr />
+</div>
+
+<script>
+
+    var currentYear = "";
+    var currentRopeTail = "";
+
+    var Titles = $("@string.Format("#Trendgraph__TTL{0}", Model.chartId)").val();
+    var lbls = $("@string.Format("#Trendgraph_lbl{0}", Model.chartId)").val().replace(/\u200B/g, '');
+
+    var Lines = $("@string.Format("#Trendgraph_lin{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var tails = $("@string.Format("#Trendgraph_tail{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var ropetailIsused = $("@string.Format("#Trendgraph_ropetailIsused{0}", Model.chartId)").val() === 'true';
+
+    var LinesnumberArray = Lines.split(',').map(Number);
+    var tailsnumberArray = tails.split(',').map(Number);
+    var lblssnumberArray = lbls.split(',').map(Number);
+
+    /* ======================================
+   FIX: START GRAPH FROM FIRST VALID YEAR
+   ====================================== */
+    if (lblssnumberArray.length > 0 && lblssnumberArray[0] === 0) {
+        lblssnumberArray.shift();     // remove year 0
+        LinesnumberArray.shift();     // remove matching Lines value
+        if (tailsnumberArray.length > 0) {
+            tailsnumberArray.shift(); // remove matching Tails value
+        }
+    }
+
+    // Show all items regardless of Tails value - don't filter out any
+    if (!ropetailIsused) {
+        // If ropetailIsused is false, remove tails dataset completely but keep all labels
+        tailsnumberArray = [];
+    }
+    // If ropetailIsused is true, show ALL items (don't filter based on Tails value)
+    // Keep all original arrays as-is
+
+    @*var maxval = @Model.chartId;*@
+
+    //// Calculate highest value from all datasets
+    var highestValue = 0;
+
+    filteredData.forEach(function (dataset) {
+        dataset.data.forEach(function (val) {
+            if (val > highestValue) {
+                highestValue = val;
+            }
+        });
+    });
+
+    // Determine dynamic step size
+    var stepSize;
+
+    // Decide grid division based on maxval range
+    if (highestValue > 1 && highestValue <= 10) {
+        stepSize = 1;     // 2,4,6,8,10
+    }
+    else if (highestValue > 10 && highestValue <= 50) {
+        stepSize = 5;    // 10,20,30,40,50
+    }
+    else if (highestValue > 50 && highestValue <= 100) {
+        stepSize = 10;    // 20,40,60,80,100
+    }
+    else if (highestValue > 100 && highestValue <= 250) {
+        stepSize = 20;    // 50,100,150,200,250
+    }
+    else if (highestValue > 250) {
+        stepSize = 50;   // 100,200,300,400...
+    }
+    else {
+        stepSize = 1;
+    }
+
+    var maxval = (Math.floor(highestValue / stepSize) * stepSize) + stepSize;
+
+    // Build datasets array conditionally
+    var datasetsArray = [
+        {
+            label: 'Lines', // Label for the first dataset
+            data: LinesnumberArray, // Y values for lines
+            borderColor: 'rgba(102, 187, 172)', // Color for the line
+            fill: false // Do not fill under the line
+        }
+    ];
+
+    // Only add Tails dataset if ropetailIsused is true and there are tail values
+    if (ropetailIsused && tailsnumberArray.length > 0) {
+        datasetsArray.push({
+            label: 'Tails', // Label for the second dataset
+            data: tailsnumberArray, // Y values for tails
+            borderColor: 'rgba(246, 134, 90)', // Color for the line
+            fill: false // Do not fill under the line
+        });
+    }
+
+    var ctx4 = $("@string.Format("#Trendgraph{0}", Model.chartId)");
+    const myChart32 = new Chart(ctx4, {
+        type: 'line', // Specify that we want a line chart
+        data: {
+            labels: lblssnumberArray, // X-axis labels
+            datasets: datasetsArray
+        },
+        options: {
+            responsive: true,
+            hover: {
+                animationDuration: 1
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    const chartInstance = this.chart;
+                    const ctx = chartInstance.ctx;
+
+                    ctx.font = Chart.helpers.fontString(
+                        Chart.defaults.global.defaultFontSize,
+                        Chart.defaults.global.defaultFontStyle,
+                        Chart.defaults.global.defaultFontFamily
+                    );
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function (dataset, i) {
+                        const meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (point, index) {
+                            const data = dataset.data[index];
+                            ctx.fillText(data, point._model.x, point._model.y - 5);
+                        });
+                    });
+                }
+            },
+            title: {
+                display: true,
+                text: Titles // Ensure Titles is defined
+            },
+            legend: {
+                display: true,
+                align: 'left'
+            },
+            tooltips: {
+                enabled: true
+            },
+            scales: {
+                y: { // For Chart.js 3.x and later
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    },
+                    ticks: {
+                        max: maxval, // Set max value if needed
+                        display: true,
+                        beginAtZero: true,
+                        stepSize: stepSize,
+                        precision: 0
+                    }
+                },
+                x: { // For Chart.js 3.x and later
+                    title: {
+                        display: true,
+                        text: 'Year'
+                    },
+                    ticks: {
+                        autoSkip: false // Show all labels
+                    }
+                }
+            },
+
+            onClick: function (evt) {
+
+                var activePoint = this.getElementAtEvent(evt);
+
+                if (activePoint.length > 0) {
+
+                    var chart = this;
+
+                    var firstPoint = activePoint[0];
+                    var datasetIndex = firstPoint._datasetIndex;
+                    var elementIndex = firstPoint._index;
+
+                    var Year = chart.data.labels[elementIndex];
+
+                    // Get correct dataset label
+                    var ropeTail = chart.data.datasets[datasetIndex].label;
+
+                    if (ropeTail.toLowerCase() === "tails" || ropeTail.toLowerCase() === "tail") {
+                        ropeTail = 1;
+                    }
+                    else {
+                        ropeTail = 0;
+                    }
+
+                    currentYear = Year;
+                    currentRopeTail = ropeTail;
+
+                    loadYearlyTrendPage(1);
+
+                }
+            }
+
+        }
+    });
+
+
+
+
+
+    //const myChart32 = new Chart(ctx4, {
+    //    type: 'bar', // Specify that we want a bar chart
+    //    data: {
+    //        labels: lblssnumberArray, // X-axis labels
+    //        datasets: [
+    //            {
+    //                label: 'Lines', // Label for the first dataset
+    //                data: LinesnumberArray, // Y values for lines
+    //                backgroundColor: 'rgba(255,228,181)', // Color for the bars
+    //                /*borderColor: 'rgba(75, 192, 192, 1)',*/ // Color for the border
+    //                borderWidth: 1 // Width of the bar border
+    //            },
+    //            {
+    //                label: 'Tails', // Label for the second dataset
+    //                data: tailsnumberArray, // Y values for tails
+    //                backgroundColor: 'rgba(188, 143, 143, 0.5)', // Color for the bars
+    //                /*borderColor: 'rgba(188, 143, 143, 1)',*/ // Color for the border
+    //                borderWidth: 1 // Width of the bar border
+    //            }
+    //        ]
+    //    },
+    //    options: {
+    //        responsive: false,
+    //        scales: {
+    //            y: {
+    //                beginAtZero: true,
+    //                title: {
+    //                    display: true,
+    //                    text: 'Count'
+    //                }
+    //            },
+    //            x: {
+    //                title: {
+    //                    display: true,
+    //                    text: 'Year'
+    //                }
+    //            }
+    //        },
+    //        plugins: {
+    //            legend: {
+    //                display: true,
+    //                position: 'top'
+    //            },
+    //            title: {
+    //                display: true,
+    //                text: 'Trend Graph: Lines and Tails'
+    //            }
+    //        }
+    //    }
+    //});
+
+</script>
+
+
+<script>
+
+
+    function loadYearlyTrendPage(pageNumber) {
+
+        $("#yearlyTrendModal").modal('show')
+
+        $("#yearlyTrendmodalLoader").show();
+
+        var dateFrom = $("#TestDateFrom").val();
+
+        var dateTo = $("#TestDateTo").val();
+
+
+          $.ajax({
+              url: '@Url.Action("GetDamageObservedGDetails", "Reports")',
+              type: 'GET',
+              data: {
+                  Filter: currentYear,
+                  RopeTail: currentRopeTail,
+                  GType: "YearlyTrend",
+                  DateFrom: dateFrom,
+                  DateTo: dateTo,
+                  pn: pageNumber
+              },
+              success: function (response) {
+
+                  $("#yearlyTrendmodalContentArea").html(response);
+
+              },
+              error: function () {
+                  alert("Error loading data.");
+              },
+              complete: function () {
+
+                  // 🔥 Hide loader after success OR error
+                  $("#yearlyTrendmodalLoader").hide();
+              }
+          });
+    }
+
+
+
+</script>
+
+
+<div class="modal fade" id="yearlyTrendModal" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="max-width:95%;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-align: center;">Yearly Trend Damage Observed</h4>
+                <button type="button" class="close" style="margin-top: -20px; margin-right: 15px; opacity: 1;" data-dismiss="modal">&times;</button>
+
+                @*<p style="float: right; margin-right: 30px;">
+                     @Html.ActionLink("Download List", "DownloadDamageObservedGDetail")
+                    </p>*@
+
+
+                <div style="text-align: right; margin-right: 60px; margin-top: -15px; ">
+
+                    <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
+                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body position-relative" id="yearlyTrendModalBody">
+
+                <!-- 🔥 LOADER -->
+                <div id="yearlyTrendmodalLoader" class="modal-loader" style="display:none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="yearlyTrendmodalContentArea">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+body.scroll-lock {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+</style>
+
+<script>
+
+var scrollPosition = 0;
+var modalCount = 0; // tracks how many modals are open
+
+function lockScroll() {
+    if (modalCount === 0) {
+        scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        $('body').addClass('scroll-lock');
+        $('body').css('top', -scrollPosition + 'px');
+    }
+    modalCount++;
+}
+
+function unlockScroll() {
+    modalCount--;
+
+    if (modalCount <= 0) {
+        modalCount = 0;
+        $('body').removeClass('scroll-lock');
+        $('body').css('top', '');
+        window.scrollTo(0, scrollPosition);
+    }
+}
+
+// Apply to BOTH modals
+$('#yearlyTrendModal, #ImageModal').on('show.bs.modal', function () {
+    lockScroll();
+});
+
+$('#yearlyTrendModal, #ImageModal').on('hidden.bs.modal', function () {
+    unlockScroll();
+});
+
+</script>
+

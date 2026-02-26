@@ -1,0 +1,185 @@
+@model Shipment49Web.Common.GraphData
+@{
+    bool ropetailIsused = Shipment49Web.Common.CommonClass.GetIsRopeTail_Using();
+}
+
+<div class="col-md-10">
+    <canvas id="@string.Format("Trendgraph{0}", @Model.chartId)" style="display: block;width: 1200px;height: 500px;"></canvas>
+    <input type="hidden" id="@string.Format("Trendgraph_lin{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLines" />
+    <input type="hidden" id="@string.Format("Trendgraph_tail{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartTails" />
+    <input type="hidden" id="@string.Format("Trendgraph_lbl{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLables" />
+    <input type="hidden" id="@string.Format("Trendgraph__TTL{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageTitleHead" />
+    <input type="hidden" id="@string.Format("Trendgraph_ropetailIsused{0}", @Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
+    <hr />
+</div>
+
+<script>
+    var Titles = $("@string.Format("#Trendgraph__TTL{0}", Model.chartId)").val();
+    var lbls = $("@string.Format("#Trendgraph_lbl{0}", Model.chartId)").val().replace(/\u200B/g, '');
+
+    var Lines = $("@string.Format("#Trendgraph_lin{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var tails = $("@string.Format("#Trendgraph_tail{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var ropetailIsused = $("@string.Format("#Trendgraph_ropetailIsused{0}", Model.chartId)").val() === 'true';
+
+    var LinesnumberArray = Lines.split(',').map(Number);
+    var tailsnumberArray = tails.split(',').map(Number);
+    var lblssnumberArray = lbls.split(',').map(Number);
+    
+    // Show all items regardless of Tails value - don't filter out any
+    if (!ropetailIsused) {
+        // If ropetailIsused is false, remove tails dataset completely but keep all labels
+        tailsnumberArray = [];
+    }
+    // If ropetailIsused is true, show ALL items (don't filter based on Tails value)
+    // Keep all original arrays as-is
+    
+    var maxval = @Model.chartId;
+    
+    // Build datasets array conditionally
+    var datasetsArray = [
+        {
+            label: 'Lines', // Label for the first dataset
+            data: LinesnumberArray, // Y values for lines
+            borderColor: 'rgba(102, 187, 172)', // Color for the line
+            fill: false // Do not fill under the line
+        }
+    ];
+    
+    // Only add Tails dataset if ropetailIsused is true and there are tail values
+    if (ropetailIsused && tailsnumberArray.length > 0) {
+        datasetsArray.push({
+            label: 'Tails', // Label for the second dataset
+            data: tailsnumberArray, // Y values for tails
+            borderColor: 'rgba(246, 134, 90)', // Color for the line
+            fill: false // Do not fill under the line
+        });
+    }
+    
+    var ctx4 = $("@string.Format("#Trendgraph{0}", Model.chartId)");
+    const myChart32 = new Chart(ctx4, {
+        type: 'line', // Specify that we want a line chart
+        data: {
+            labels: lblssnumberArray, // X-axis labels
+            datasets: datasetsArray
+        },
+        options: {
+            responsive: true,
+            hover: {
+                animationDuration: 1
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    const chartInstance = this.chart;
+                    const ctx = chartInstance.ctx;
+
+                    ctx.font = Chart.helpers.fontString(
+                        Chart.defaults.global.defaultFontSize,
+                        Chart.defaults.global.defaultFontStyle,
+                        Chart.defaults.global.defaultFontFamily
+                    );
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function (dataset, i) {
+                        const meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (point, index) {
+                            const data = dataset.data[index];
+                            ctx.fillText(data, point._model.x, point._model.y - 5);
+                        });
+                    });
+                }
+            },
+            title: {
+                display: true,
+                text: Titles // Ensure Titles is defined
+            },
+            legend: {
+                display: true,
+                align: 'left'
+            },
+            tooltips: {
+                enabled: true
+            },
+            scales: {
+                y: { // For Chart.js 3.x and later
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    },
+                    ticks: {
+                        max: maxval // Set max value if needed
+                    }
+                },
+                x: { // For Chart.js 3.x and later
+                    title: {
+                        display: true,
+                        text: 'Year'
+                    },
+                    ticks: {
+                        autoSkip: false // Show all labels
+                    }
+                }
+            }
+        }
+    });
+
+
+
+
+
+    //const myChart32 = new Chart(ctx4, {
+    //    type: 'bar', // Specify that we want a bar chart
+    //    data: {
+    //        labels: lblssnumberArray, // X-axis labels
+    //        datasets: [
+    //            {
+    //                label: 'Lines', // Label for the first dataset
+    //                data: LinesnumberArray, // Y values for lines
+    //                backgroundColor: 'rgba(255,228,181)', // Color for the bars
+    //                /*borderColor: 'rgba(75, 192, 192, 1)',*/ // Color for the border
+    //                borderWidth: 1 // Width of the bar border
+    //            },
+    //            {
+    //                label: 'Tails', // Label for the second dataset
+    //                data: tailsnumberArray, // Y values for tails
+    //                backgroundColor: 'rgba(188, 143, 143, 0.5)', // Color for the bars
+    //                /*borderColor: 'rgba(188, 143, 143, 1)',*/ // Color for the border
+    //                borderWidth: 1 // Width of the bar border
+    //            }
+    //        ]
+    //    },
+    //    options: {
+    //        responsive: false,
+    //        scales: {
+    //            y: {
+    //                beginAtZero: true,
+    //                title: {
+    //                    display: true,
+    //                    text: 'Count'
+    //                }
+    //            },
+    //            x: {
+    //                title: {
+    //                    display: true,
+    //                    text: 'Year'
+    //                }
+    //            }
+    //        },
+    //        plugins: {
+    //            legend: {
+    //                display: true,
+    //                position: 'top'
+    //            },
+    //            title: {
+    //                display: true,
+    //                text: 'Trend Graph: Lines and Tails'
+    //            }
+    //        }
+    //    }
+    //});
+    
+</script>
+
+

@@ -1,0 +1,695 @@
+﻿@model Shipment49Web.Common.ResidualLabFilter
+
+<style>
+
+    .modal-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        width: 100% !important;
+    }
+
+    .modal-lg .btn {
+        color: white;
+        background-color: White !important;
+        border-color: White !important;
+    }
+</style>
+
+<div id="cover-spin"></div>
+<div class="loader" style="align-items:center" id="loader">
+</div>
+
+<div>
+    @{ int count = 0; int count2 = 0;}
+    <div class="nav-tabs-custom">
+
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="unsatisfactory">
+                @{
+                    count = Model.DamagedObservedList.Count;
+                    if (count == 0)
+                    {
+                        <div class="panel-group">
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <p class="text-center">
+                                        No Records Found!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+
+                        <div class="table-responsive table-striped">
+                            <table class="table no-margin" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Fleet Type</th>
+                                        <th>Fleet Name</th>
+                                        <th>Vessel</th>
+                                        <th>Manufacturer</th>
+                                        <th>Rope Type</th>
+                                        <th>Certificate Number</th>
+                                        <th>Line / Rope-Tail</th>
+                                        <th>Is Parted</th>
+                                        <th>Status</th>
+
+                                        <th>Wind Speed (kts)</th>
+                                        <th>Range of Tide (mtrs)</th>
+                                        <th>Surging Observed</th>
+                                        <th>Height of Swell (mtrs)</th>
+                                        <th>Swell Direction</th>
+                                        <th>Wind Direction</th>
+
+                                        <th>Damage Date & Time</th>
+                                        <th>Running Hrs when Damaged</th>
+                                        <th>Age(In Month) when Damage</th>
+                                        <th>Damage Observed</th>
+                                        <th>Damage Reason</th>
+                                        @{
+                                            string G_Type = TempData.Peek("GPage").ToString();
+
+                                            if (G_Type == "Port")
+                                            {
+                                                <th>Port Name</th>
+                                            }
+                                        }
+                                        <th>Attachment</th>
+                                        <th>Incident Report</th>
+                                        <th>Action After Damage</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var record in Model.DamagedObservedList)
+                                        {
+                                            <tr>
+                                                <td class="text-justify">@record.FleetType</td>
+                                                <td class="text-justify">@record.FleetName</td>
+                                                <td class="text-justify">@record.VesselName</td>
+                                                <td class="text-justify">@record.ManufacturerName</td>
+                                                <td class="text-justify">@record.RopeType</td>
+                                                <td class="text-justify">@record.CertificateNumber</td>
+                                                <td class="text-justify">
+                                                    @{
+                                                        if (record.RopeTail == 0)
+                                                        {
+                                                            @Html.Raw("Line")
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw("Rope-Tail")
+                                                        }
+                                                    }
+                                                </td>
+                                                <td class="text-justify">
+                                                    @(string.IsNullOrWhiteSpace(record.IsLineParted) ? "-" : record.IsLineParted)
+                                                </td>
+                                                <td class="text-justify">
+                                                    @{
+                                                        if (record.OutofServiceDate == null)
+                                                        {
+                                                            @Html.Raw("INSERVICE")
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw("DISCARDED")
+                                                        }
+                                                    }
+                                                </td>
+
+                                                @if (record.DamageObserved == "Inspection")
+                                                {
+                                                    <td> N/A </td>
+                                                    <td> N/A </td>
+                                                    <td> N/A </td>
+                                                    <td> N/A </td>
+                                                    <td> N/A </td>
+                                                    <td> N/A </td>
+                                                }
+                                                else
+                                                {
+
+                                                    if (record.WindSpeedKts == "0" || record.WindSpeedKts == null)
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.WindSpeedKts</td>
+                                                    }
+
+
+                                                    if (record.RangeOfTideMeters == "0" || record.RangeOfTideMeters == null)
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.RangeOfTideMeters</td>
+                                                    }
+
+
+
+                                                    if (string.IsNullOrEmpty(record.SurgingObserved))
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.SurgingObserved</td>
+                                                    }
+
+
+                                                    if (record.HeightOfSwell == "0" || record.HeightOfSwell == null)
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.HeightOfSwell</td>
+                                                    }
+
+                                                    if (record.SwellDirection == null || record.SwellDirection == 0)
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.SwellDirection</td>
+                                                    }
+                                                    if (record.WindDirection == null || record.WindDirection == 0)
+                                                    {
+                                                        <td class="text-justify"> - </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-justify">@record.WindDirection</td>
+                                                    }
+                                                }
+
+                                                <td class="text-justify">
+                                                    @{
+                                                        DateTime? DamageDate = record.DamageDate;
+                                                        if (DamageDate != null)
+                                                        {
+                                                            @Html.Raw(DamageDate.Value.ToString("dd-MMM-yyyy HHmm"))
+                                                        }
+                                                    }
+
+                                                </td>
+                                                <td class="text-justify">@record.Runninghrs</td>
+                                                <td class="text-justify">@Math.Round(record.RopeAge, 2)</td>
+                                                <td>@(record.DamageObserved == null ? "N/A" : record.DamageObserved)</td>
+                                                <td class="text-justify">@record.DamageReason</td>
+                                                @{
+                                                    string _GType = TempData.Peek("GPage").ToString();
+
+                                                    if (_GType == "Port")
+                                                    {
+                                                        <td class="text-justify">@record.PortName</td>
+                                                    }
+
+                                                }
+
+
+
+                                                <td>
+
+
+                                                    @{
+                                                        string folderPath = "images/" + record.VesselID + "/AttachFiles";
+
+                                                        string fileFromS3 = null;
+                                                        string extn = null;
+
+                                                        if (record.Attachment != null)
+                                                        {
+                                                            fileFromS3 = Shipment49Web.Common.S3CommonMethod.GetImageUrlIfExists(folderPath, record.Attachment);
+                                                            extn = record.Attachment.Split('.').Last().ToLower();
+                                                        }
+
+                                                        bool fileExists = record.Attachment != null && fileFromS3 != null && fileFromS3 != "Not Found";
+                                                    }
+
+                                                    @if (fileExists)
+                                                    {
+                                                        string attachmentType = "";
+
+                                                        if (new[] { "jpg", "jpeg", "png", "tiff", "raw", "bmp", "svg", "psd" }.Contains(extn))
+                                                        {
+                                                            attachmentType = "image";
+                                                        }
+                                                        else if (new[] { "pdf", "doc", "docx" }.Contains(extn))
+                                                        {
+                                                            attachmentType = "document";
+                                                        }
+                                                        else
+                                                        {
+                                                            attachmentType = "other";
+                                                        }
+                                                        <button type="button" class="btn btn-sm btn-light btn-view StopOnline">
+                                                            <a class="StopOnline"
+                                                               href="#"
+                                                               data-src="@record.Attachment"
+                                                               data-type="@attachmentType"
+                                                               data-directory="@folderPath"
+                                                               onclick="return handleViewAttachment(this)">
+                                                                View Attachment
+                                                            </a>
+                                                        </button>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="StopOnline">No Attachment</span>
+                                                    }
+
+
+                                                </td>
+
+                                                <td class="text-justify">@record.IncidentReport</td>
+                                                <td class="text-justify">
+                                                    @{
+                                                        if (record.IncidentActlion == "")
+                                                        {
+                                                            @Html.Raw("N/A")
+                                                        }
+                                                        else if (record.IncidentActlion == "Others")
+                                                        {
+                                                            @record.IncidentActlion
+                                                            <p class="hover-text" style="position: relative;">
+                                                                <i class="fa fa-info" style="color: blue;" aria-hidden="false">
+                                                                    <span class="tooltip">@record.IncidentActionOther</span>
+                                                                </i>
+                                                            </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw(record.IncidentActlion)
+                                                        }
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                        <div class="text-center">
+                            <ul class="pagination">
+
+                                @{
+                                    int totalRecords = Convert.ToInt32(TempData.Peek("TotalRecords"));
+                                    int currPage = Convert.ToInt32(TempData.Peek("CurrentPage"));
+                                    string GType = TempData.Peek("GPage").ToString();
+
+                                    int pageSize = Shipment49Web.Common.CommonMethods.PAGESIZE;
+                                    int tot_pages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                                    if (tot_pages > 1)
+                                    {
+                                        if (currPage > 1)
+                                        {
+                                            if (GType == "Manufacturer")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadManufacturerPage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "Rope")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadRopePage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "Port")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadPortPage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "DamageReason")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadDamageReasonPage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "RunningHrs")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadRunningHrsPage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "AgeBased")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadAgeBasedPage(1)">First</a>
+                                                </li>
+                                            }
+                                            else if (GType == "YearlyTrend")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadYearlyTrendPage(1)">First</a>
+                                                </li>
+                                            }
+
+                                        }
+
+                                        for (int i = 1; i <= tot_pages; i++)
+                                        {
+                                            if (i == currPage)
+                                            {
+                                                <li class="active"><a href="#">@i</a></li>
+                                            }
+                                            else
+                                            {
+                                                if (GType == "Manufacturer")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadManufacturerPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "Rope")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadRopePage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "Port")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadPortPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "DamageReason")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadDamageReasonPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "RunningHrs")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadRunningHrsPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "AgeBased")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadAgeBasedPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+                                                else if (GType == "YearlyTrend")
+                                                {
+                                                    <li>
+                                                        <a href="javascript:void(0);" onclick="loadYearlyTrendPage(@i)"> @i </a>
+                                                    </li>
+                                                }
+
+                                            }
+                                        }
+
+                                        if (currPage < tot_pages)
+                                        {
+                                            if (GType == "Manufacturer")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadManufacturerPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "Rope")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadRopePage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "Port")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadPortPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "DamageReason")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadDamageReasonPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "RunningHrs")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadRunningHrsPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "AgeBased")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadAgeBasedPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                            else if (GType == "YearlyTrend")
+                                            {
+                                                <li>
+                                                    <a href="javascript:void(0);" onclick="loadYearlyTrendPage(@tot_pages)"> Last </a>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+
+
+                    }
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="ImageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closeImageModal()">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center;  ">
+                        <img style="max-width:100%" id="imgName" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closeImageModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="PdfModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="closePDFModal()">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div style="text-align:center">
+                        <iframe id="myFrame" style="display:none;width:100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closePDFModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showImages(param) {
+        // var imgSrc = $(param).attr("src");
+        //alert(imgSrc);
+        $('#imgName').attr('src', param);
+        $('#ImageModal').modal('show');
+    }
+</script>
+
+<script>
+    function showpdf(param) {
+        // var imgSrc = $(param).attr("src");
+        // alert(param);
+
+        // /images/AttachFiles / _49 Web Street, Grey Box Web Application Vulnerability Assessment Report3798.pdf
+        var omyFrame = document.getElementById("myFrame");
+        omyFrame.style.display = "block";
+        omyFrame.src = param;
+        // omyFrame.load();
+        // $('#ifrID').attr('src', param);
+        $('#PdfModal').modal('show');
+    }
+</script>
+@*cr01*@
+
+<script>
+    function handleViewAttachment(element) {
+        debugger
+        $('#cover-spin').show();
+        var attachmentName = $(element).data('src');
+        var directory = $(element).data('directory');
+
+        // Check if directory is null, undefined, or empty string
+        if (!directory || directory === 'null' || directory === 'undefined') {
+            directory = 'default';
+        }
+
+
+        var fileType = $(element).data('type');
+
+        if (!attachmentName) {
+            $('#cover-spin').hide();
+            alert("No attachment found.");
+            return false;
+        }
+
+        if (fileType === "image") {
+            handleshowImages(element);
+            $('#cover-spin').hide();
+        }
+        else if (fileType === "document") {
+            getfilesfroms3showpdf(attachmentName, directory); // Pass directory here
+        }
+        else {
+            $.post('/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+                { attachmentName: attachmentName, dir: directory },
+                function (response) {
+                    $('#cover-spin').hide();
+                    if (response && response.success && response.url) {
+                        window.open(response.url, '_blank');
+                    } else {
+                        alert(response.message || "File not available.");
+                    }
+                });
+        }
+
+        return false;
+    }
+
+
+    function getfilesfroms3showpdf(attachmentName, directory) {
+        $.ajax({
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+            type: 'POST',
+            data: {
+                attachmentName: attachmentName,
+                dir: directory
+            },
+            success: function (response) {
+                $('#cover-spin').hide();
+                if (response && response.success && response.url) {
+                    var omyFrame = document.getElementById("myFrame");
+                    omyFrame.src = response.url;
+                    omyFrame.style.display = "block";
+                    $('#PdfModal').modal('show');
+                } else {
+                    alert(response.message || "This file is not available.");
+                }
+            },
+            error: function (xhr) {
+                $('#cover-spin').hide();
+                alert("Error loading file. Please try again.");
+            }
+        });
+    }
+
+    function handleshowImages(element) {
+        $('#cover-spin').show();
+        debugger
+        var attachmentName = $(element).data('src');
+        var directory = $(element).data('directory');
+        if (!directory || directory === 'null' || directory === 'undefined') {
+            directory = 'default';
+        }
+
+        if (!attachmentName || !directory) {
+            $('#cover-spin').hide();
+            alert("Image data missing.");
+            return false;
+        }
+
+        $.ajax({
+            url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
+            type: 'POST',
+            data: {
+                attachmentName: attachmentName,
+                dir: directory
+            },
+            success: function (response) {
+                $('#cover-spin').hide();
+                if (response && response.success && response.url) {
+                    $('#imgName').attr('src', response.url);     // Bind image URL
+                    $('#ImageModal').modal('show');              // Show Bootstrap modal
+                } else {
+                    alert(response.message || "Image not available.");
+                }
+            },
+            error: function (xhr) {
+                $('#cover-spin').hide();
+                alert("Error loading image.");
+            }
+        });
+
+        return false;
+    }
+</script>
+
+<script>
+
+    function closeImageModal() {
+        debugger
+        $('#ImageModal').modal('hide');
+    }
+
+</script>
+
+
+<script>
+
+    function closePDFModal() {
+        debugger
+        $('#PdfModal').modal('hide');
+    }
+
+</script>

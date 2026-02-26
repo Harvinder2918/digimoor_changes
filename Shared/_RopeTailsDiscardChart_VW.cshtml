@@ -1,0 +1,142 @@
+﻿
+
+@model Shipment49Web.Common.GraphData
+@{
+    bool ropetailIsused = Shipment49Web.Common.CommonClass.GetIsRopeTail_Using();
+}
+
+<div class="col-md-10">
+    <canvas id="@string.Format("myChartVW{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>
+    <input type="hidden" id="@string.Format("hdnVW{0}", Model.chartId)" class="hdn" value="@Model.data" />
+    <input type="hidden" id="@string.Format("lblVW{0}", Model.chartId)" class="hdn" value="@ViewBag.ChartLables_VW" />
+    <input type="hidden" id="@string.Format("TTLVW{0}", Model.chartId)" class="hdn" value="@ViewBag.TitleHead_VW" />
+    <input type="hidden" id="@string.Format("ropetailIsusedVW{0}", Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
+    <hr />
+</div>
+
+<script>
+  var Titles = $("@string.Format("#TTLVW{0}", Model.chartId)").val();
+    var lbls = $("@string.Format("#lblVW{0}", Model.chartId)").val().replace(/\u200B/g, '');
+    var data = $("@string.Format("#hdnVW{0}", Model.chartId)").val();
+    var ropetailIsused = $("@string.Format("#ropetailIsusedVW{0}", Model.chartId)").val() === 'true';
+    //var arr=  @ViewBag.ChartLables;
+
+    data = JSON.parse(data);
+    console.log(data);
+
+    // Filter out tail conditions where value is 0 and conditionally show/hide Tails dataset
+    var labelsArray = lbls.split(',').filter(function(label) { return label.trim() !== ''; });
+    var filteredLabels = [];
+    var filteredData = [];
+    
+    // Find the "Tails" dataset
+    var tailsDatasetIndex = -1;
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].label && (data[i].label.toLowerCase() === 'tails' || data[i].label.toLowerCase() === 'tail')) {
+            tailsDatasetIndex = i;
+            break;
+        }
+    }
+    
+    // If ropetailIsused is false, remove Tails dataset completely but keep all items
+    if (!ropetailIsused && tailsDatasetIndex !== -1) {
+        // Remove Tails dataset from data array
+        for (var m = 0; m < data.length; m++) {
+            if (m !== tailsDatasetIndex) {
+                filteredData.push(data[m]);
+            }
+        }
+        filteredLabels = labelsArray;
+    }
+    // If ropetailIsused is true and Tails dataset exists, show ALL items (don't filter)
+    else if (ropetailIsused && tailsDatasetIndex !== -1) {
+        // Show all items regardless of Tails value - don't filter out any
+        filteredLabels = labelsArray;
+        filteredData = data;  // Use all datasets as-is
+    } else {
+        // If no Tails dataset found or condition not met, use original data
+        filteredLabels = labelsArray;
+        filteredData = data;
+    }
+
+    var ctx = $("@string.Format("#myChartVW{0}", Model.chartId)");
+
+   var maxval = @Model.chartId;
+
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: filteredLabels,
+            datasets: filteredData
+        },
+        options: {
+            "hover": {
+                "animationDuration": 0
+            },
+            "animation": {
+                "duration": 1,
+                "onComplete": function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        // Only draw values if the dataset is visible
+                        if (!meta.hidden) {
+
+                            meta.data.forEach(function (bar, index) {
+
+                                var data = dataset.data[index];
+
+                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+
+                            });
+
+                        }
+                    });
+                }
+            },
+            title: {
+                display: true,
+                text: Titles
+            },
+            legend: {
+                "display": true,
+                 align: 'left'
+            },
+            tooltips: {
+                "enabled": true
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        max: maxval,
+                        display: true,
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+
+
+    });
+
+</script>
+
+
