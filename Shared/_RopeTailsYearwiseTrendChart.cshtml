@@ -117,11 +117,73 @@ div#yearlyTrendModal {
 div#ImageModal .modal-lg{
 margin-top: 0% !important;
 }
+.chart-wrapper1 {
+    width: 100%;
+    overflow-x: hidden;
+ overflow-y: auto; 	/* default: no scroll */
+}
+
+.chart-wrapper1 canvas {
+    width: 100% !important;
+    height: 50vh !important;
+}
+
+/* Only enable scroll on small screens */
+@@media (max-width: 768px) {
+    .chart-wrapper canvas {
+        height: 65vh !important;
+    }
+}
+@@media (max-width: 768px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 12px;
+        font-weight: 600;
+}
+}
+@@media (max-width: 395px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 10px;
+        font-weight: 600;
+}
+}
+@@media (max-width: 395px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 11px;
+        font-weight: 600;
+}
+a.StopOnline {
+    font-size: 11px;
+}
+}
+div#yearlyTrendModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+.table-responsive.table-striped {
+    height: 70vh;
+    overflow-y: scroll;
+}
+@@media (max-width: 1366px) {
+div#ImageModal .modal-body {
+    max-height: 78vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+}
 </style>
 
 
-<div class="col-md-10">
-    <canvas id="@string.Format("Trendgraph{0}", @Model.chartId)" style="display: block;width: 1200px;height: 500px;"></canvas>
+<div class="">
+    <div class="chart-wrapper1">
+        <canvas id="@string.Format("Trendgraph{0}", Model.chartId)"></canvas>
+    </div>
     <input type="hidden" id="@string.Format("Trendgraph_lin{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLines" />
     <input type="hidden" id="@string.Format("Trendgraph_tail{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartTails" />
     <input type="hidden" id="@string.Format("Trendgraph_lbl{0}", @Model.chartId)" class="hdn" value="@ViewBag.DamageChartLables" />
@@ -134,7 +196,8 @@ margin-top: 0% !important;
 
     var currentYear = "";
     var currentRopeTail = "";
-
+ var isMobile = window.innerWidth <= 768;
+    var valueFontSize = isMobile ? 8 : 12;
     var Titles = $("@string.Format("#Trendgraph__TTL{0}", Model.chartId)").val();
     var lbls = $("@string.Format("#Trendgraph_lbl{0}", Model.chartId)").val().replace(/\u200B/g, '');
 
@@ -231,37 +294,47 @@ margin-top: 0% !important;
             datasets: datasetsArray
         },
         options: {
-            responsive: true,
+             responsive: true,
+            maintainAspectRatio: false,
             hover: {
                 animationDuration: 1
             },
-            animation: {
-                duration: 1,
-                onComplete: function () {
-                    const chartInstance = this.chart;
-                    const ctx = chartInstance.ctx;
+           animation: {
+    duration: 1,
+    onComplete: function () {
 
-                    ctx.font = Chart.helpers.fontString(
-                        Chart.defaults.global.defaultFontSize,
-                        Chart.defaults.global.defaultFontStyle,
-                        Chart.defaults.global.defaultFontFamily
-                    );
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
+        const chart = this.chart;
+        const ctx = chart.ctx;
 
-                    this.data.datasets.forEach(function (dataset, i) {
-                        const meta = chartInstance.controller.getDatasetMeta(i);
-                        meta.data.forEach(function (point, index) {
-                            const data = dataset.data[index];
-                            ctx.fillText(data, point._model.x, point._model.y - 5);
-                        });
-                    });
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = "#111"; 
+        ctx.font = "bold " + valueFontSize + "px Arial";
+
+        chart.data.datasets.forEach(function (dataset, i) {
+
+            const meta = chart.getDatasetMeta(i);
+
+            meta.data.forEach(function (point, index) {
+
+                const value = dataset.data[index];
+
+                if (value !== null && value !== 0) {
+                    ctx.fillText(value, point.x, point.y - 8);
                 }
-            },
-            title: {
+
+            });
+
+        });
+
+    }
+},
+           title: {
                 display: true,
-                text: Titles // Ensure Titles is defined
+                text: Titles,
+                fontSize: isMobile ? 14 : 18
             },
+
             legend: {
                 display: true,
                 align: 'left'
@@ -269,30 +342,21 @@ margin-top: 0% !important;
             tooltips: {
                 enabled: true
             },
-            scales: {
-                y: { // For Chart.js 3.x and later
-                    beginAtZero: false,
-                    title: {
-                        display: true,
-                        text: 'Count'
-                    },
+              scales: {
+                yAxes: [{
                     ticks: {
-                        max: maxval, // Set max value if needed
-                        display: true,
                         beginAtZero: true,
+                        max: maxval,
                         stepSize: stepSize,
-                        precision: 0
+                        fontSize: isMobile ? 9 : 12
                     }
-                },
-                x: { // For Chart.js 3.x and later
-                    title: {
-                        display: true,
-                        text: 'Year'
-                    },
+                }],
+                xAxes: [{
                     ticks: {
-                        autoSkip: false // Show all labels
+                        autoSkip: false,
+                        fontSize: isMobile ? 9 : 12
                     }
-                }
+                }]
             },
 
             onClick: function (evt) {
@@ -334,56 +398,6 @@ margin-top: 0% !important;
 
 
 
-    //const myChart32 = new Chart(ctx4, {
-    //    type: 'bar', // Specify that we want a bar chart
-    //    data: {
-    //        labels: lblssnumberArray, // X-axis labels
-    //        datasets: [
-    //            {
-    //                label: 'Lines', // Label for the first dataset
-    //                data: LinesnumberArray, // Y values for lines
-    //                backgroundColor: 'rgba(255,228,181)', // Color for the bars
-    //                /*borderColor: 'rgba(75, 192, 192, 1)',*/ // Color for the border
-    //                borderWidth: 1 // Width of the bar border
-    //            },
-    //            {
-    //                label: 'Tails', // Label for the second dataset
-    //                data: tailsnumberArray, // Y values for tails
-    //                backgroundColor: 'rgba(188, 143, 143, 0.5)', // Color for the bars
-    //                /*borderColor: 'rgba(188, 143, 143, 1)',*/ // Color for the border
-    //                borderWidth: 1 // Width of the bar border
-    //            }
-    //        ]
-    //    },
-    //    options: {
-    //        responsive: false,
-    //        scales: {
-    //            y: {
-    //                beginAtZero: true,
-    //                title: {
-    //                    display: true,
-    //                    text: 'Count'
-    //                }
-    //            },
-    //            x: {
-    //                title: {
-    //                    display: true,
-    //                    text: 'Year'
-    //                }
-    //            }
-    //        },
-    //        plugins: {
-    //            legend: {
-    //                display: true,
-    //                position: 'top'
-    //            },
-    //            title: {
-    //                display: true,
-    //                text: 'Trend Graph: Lines and Tails'
-    //            }
-    //        }
-    //    }
-    //});
 
 </script>
 
@@ -447,10 +461,10 @@ margin-top: 0% !important;
                     </p>*@
 
 
-                <div style="text-align: right; margin-right: 60px; margin-top: -15px; ">
+                <div style="text-align: right; margin-right: 60px; margin-top: -20px; ">
 
                     <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
-                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                       Download List
                     </a>
 
                 </div>

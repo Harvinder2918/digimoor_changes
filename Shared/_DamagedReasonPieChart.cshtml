@@ -123,11 +123,62 @@ margin-top: 0% !important;
 div#damageReasonModal .modal-content {
     height: 93vh!important;
 }
+.pie-wrapper{
+    width:100%;
+    max-width:500px;
+    margin:auto;
+}
+.pie-wrapper canvas{
+    width:100% !important;
+    height:auto !important;
+}
+@@media (max-width:480px){
+    .pie-wrapper{
+        height:40vh;
+    }
+}
+@@media (max-width: 768px) {
+    
+	h4.modal-title {
+        text-align: left !important;
+        font-size: 12px;
+        font-weight: 600;
+}
+}
+@@media (max-width: 395px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 11px;
+        font-weight: 600;
+}
+a.StopOnline {
+    font-size: 11px;
+}
+}
+div#ropeModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+.table-responsive.table-striped {
+    height: 70vh;
+    overflow-y: scroll;
+}
+@@media (max-width: 1366px) {
+div#ImageModal .modal-body {
+    max-height: 78vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+}
 </style>
 
 
-<div class="col-md-10">
-    <canvas id="pie-chart" width="800" height="350"></canvas>
+<div class="">
+<div class="pie-wrapper">
+    <canvas id="pie-chart"></canvas>
+</div>
     @*<canvas id="@string.Format("myChart{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>*@
     <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
     <input type="hidden" id="@string.Format("ropetailIsused{0}", Model.chartId)" class="hdn" value="@ropetailIsused.ToString().ToLower()" />
@@ -139,9 +190,15 @@ div#damageReasonModal .modal-content {
 
 
 <script>
-
+var isMobile = window.innerWidth <= 768;
+	var isMobile2 = window.matchMedia("(max-width: 768px)").matches;
+var valueFontSize = isMobile ? 7 : 12;  // 👈 adjust as needed
+	
+var legendFontSize = isMobile ? 10 : 12;
+var axisFontSize   = isMobile ? 9  : 12;
+var dataFontSize   = isMobile ? 9  : 12;
     var currentReason = "";
-
+var titleFontSize  = isMobile ? 16 : 21;
      var data = $("@string.Format("#hdn{0}", Model.chartId)").val();
     var ropetailIsused = $("@string.Format("#ropetailIsused{0}", Model.chartId)").val() === 'true';
     data = JSON.parse(data);
@@ -200,10 +257,16 @@ div#damageReasonModal .modal-content {
         },
         showDatapoints: true,
         options: {
-            title: {
-                display: true,
-                text: data.label
-            },
+	responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1.2,  
+             title: {
+        display: true,
+        text: data.label,
+        fontSize: titleFontSize,
+        fontStyle: 'bold',
+        fontColor: '#666666'
+    },
             tooltips: {
                 enabled: true,
                 intersect: false
@@ -302,10 +365,11 @@ div#damageReasonModal .modal-content {
                     </p>*@
 
 
-                <div style="text-align: right; margin-right: 52px; margin-top: -27px; ">
+                <div style="text-align: right; margin-right: 52px; margin-top: -20px; ">
 
                     <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
-                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                        <!-- <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i> -->
+						  Download List
                     </a>
 
                 </div>

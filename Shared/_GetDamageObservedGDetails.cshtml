@@ -1,4 +1,4 @@
-﻿@model Shipment49Web.Common.ResidualLabFilter
+@model Shipment49Web.Common.ResidualLabFilter
 
 <style>
 
@@ -565,7 +565,6 @@
 
 <script>
     function handleViewAttachment(element) {
-        debugger
         $('#cover-spin').show();
         var attachmentName = $(element).data('src');
         var directory = $(element).data('directory');
@@ -589,7 +588,7 @@
             $('#cover-spin').hide();
         }
         else if (fileType === "document") {
-            getfilesfroms3showpdf(attachmentName, directory); // Pass directory here
+            getfilesfroms3showpdf(attachmentName, directory, element); // Pass element so correct PdfModal is used
         }
         else {
             $.post('/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
@@ -608,7 +607,7 @@
     }
 
 
-    function getfilesfroms3showpdf(attachmentName, directory) {
+    function getfilesfroms3showpdf(attachmentName, directory, triggerElement) {
         $.ajax({
             url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
             type: 'POST',
@@ -619,10 +618,12 @@
             success: function (response) {
                 $('#cover-spin').hide();
                 if (response && response.success && response.url) {
-                    var omyFrame = document.getElementById("myFrame");
-                    omyFrame.src = response.url;
-                    omyFrame.style.display = "block";
-                    $('#PdfModal').modal('show');
+                    var $pdfModal = triggerElement ? $(triggerElement).closest('.modal').find('#PdfModal').first() : null;
+                    if (!$pdfModal || !$pdfModal.length) { $pdfModal = $('#PdfModal').first(); }
+                    var $frame = $pdfModal.find('#myFrame');
+                    $frame.attr('src', response.url);
+                    $frame.css('display', 'block');
+                    $pdfModal.modal('show');
                 } else {
                     alert(response.message || "This file is not available.");
                 }
@@ -636,7 +637,7 @@
 
     function handleshowImages(element) {
         $('#cover-spin').show();
-        debugger
+
         var attachmentName = $(element).data('src');
         var directory = $(element).data('directory');
         if (!directory || directory === 'null' || directory === 'undefined') {
@@ -649,6 +650,13 @@
             return false;
         }
 
+        // Prefer the ImageModal within the same drill-down modal; fall back to the first one on the page
+        var $imageModal = element ? $(element).closest('.modal').find('#ImageModal').first() : $('#ImageModal').first();
+        if (!$imageModal || !$imageModal.length) {
+            $imageModal = $('#ImageModal').first();
+        }
+        var $img = $imageModal.find('#imgName');
+
         $.ajax({
             url: '/MooringLine/LineInspection/GetPdfUrlFromS3Fordynamic',
             type: 'POST',
@@ -659,10 +667,10 @@
             success: function (response) {
                 $('#cover-spin').hide();
                 if (response && response.success && response.url) {
-                    $('#imgName').attr('src', response.url);     // Bind image URL
-                    $('#ImageModal').modal('show');              // Show Bootstrap modal
+                    $img.attr('src', response.url);
+                    $imageModal.modal('show');
                 } else {
-                    alert(response.message || "Image not available.");
+                    alert(response && response.message ? response.message : "Image not available.");
                 }
             },
             error: function (xhr) {
@@ -678,8 +686,7 @@
 <script>
 
     function closeImageModal() {
-        debugger
-        $('#ImageModal').modal('hide');
+        $('.modal.in#ImageModal').modal('hide');
     }
 
 </script>
@@ -688,8 +695,7 @@
 <script>
 
     function closePDFModal() {
-        debugger
-        $('#PdfModal').modal('hide');
+        $('.modal.in#PdfModal').modal('hide');
     }
 
 </script>

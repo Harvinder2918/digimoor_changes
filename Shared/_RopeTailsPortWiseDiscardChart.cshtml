@@ -119,16 +119,67 @@ div#portModal {
 div#ImageModal .modal-lg{
 margin-top: 0% !important;
 }
+.chart-wrapper {
+    width: 100%;
+    overflow-x: auto;      /* horizontal scroll */
+    overflow-y: auto;    /* no vertical scroll */
+}
+
+.chart-wrapper canvas {
+    min-width: 600px;      /* keeps horizontal scroll working */
+    width: auto !important;
+    height: 60vh !important;   /* responsive height */
+}
+@@media (max-width: 768px) {
+    .chart-wrapper canvas {
+        height: 65vh !important;
+    }
+}
+@@media (max-width: 768px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 12px;
+        font-weight: 600;
+}
+}
+@@media (max-width: 395px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 11px;
+        font-weight: 600;
+}
+a.StopOnline {
+    font-size: 11px;
+}
+}
+div#portModal .modal-body {
+    max-height: 80vh!important;
+     overflow-y: auto!important;
+    /* width: 50%; */
+}
+.table-responsive.table-striped {
+    height: 70vh;
+    overflow-y: scroll;
+}
+@@media (max-width: 1366px) {
+div#ImageModal .modal-body {
+    max-height: 78vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+}
 </style>
 
 
-<div class="col-md-10">
+<div class="">
     @*<canvas id="@string.Format("myChart{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>
         <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
         <input type="hidden" id="@string.Format("lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.RunninghrsChartLables" />
         <input type="hidden" id="@string.Format("TTL{0}", Model.chartId)" class="hdn" value="@ViewBag.RunninghrsTitleHead" />*@
 
-    <canvas id="@string.Format("ports{0}", Model.chartId)" style="display: block;width: 300px;height: 180px;"></canvas>
+    <div class="chart-wrapper"> <canvas id="@string.Format("ports{0}", Model.chartId)" ></canvas></div>
     <input type="hidden" id="@string.Format("ports_hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
     <input type="hidden" id="@string.Format("ports_lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.PortChartLables" />
     <input type="hidden" id="@string.Format("ports_TTL{0}", Model.chartId)" class="hdn" value="@ViewBag.PortTitleHead" />
@@ -226,13 +277,15 @@ margin-top: 0% !important;
 
     var maxval = (Math.floor(highestValue / stepSize) * stepSize) + stepSize;
 
-    var myChart = new Chart(ctx, {
+      var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: filteredLabels,
             datasets: filteredData
         },
         options: {
+              responsive: true,
+              maintainAspectRatio: false,
             "hover": {
                 "animationDuration": 0
             },
@@ -242,7 +295,12 @@ margin-top: 0% !important;
                     var chartInstance = this.chart,
                         ctx = chartInstance.ctx;
 
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.font = Chart.helpers.fontString(
+    valueFontSize,
+    Chart.defaults.global.defaultFontStyle,
+    Chart.defaults.global.defaultFontFamily
+);
+					//ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'bottom';
 
@@ -253,47 +311,79 @@ margin-top: 0% !important;
                         if (!meta.hidden) {
                             meta.data.forEach(function (bar, index) {
                                 var data = dataset.data[index];
-                                ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                if (data > 0) {
+                                    // Calculate label position - ensure it's always visible
+                                    var chartArea = chartInstance.chartArea;
+                                    var barHeight = chartArea.bottom - bar._model.y;
+
+                                    // For very small bars (height less than 15 pixels), always show label above
+                                    // For larger bars, show label 5 pixels above the bar
+                                    var labelY;
+                                    if (barHeight < 15) {
+                                        // Small bars: position label higher to ensure visibility
+                                        labelY = bar._model.y - 10;
+                                        // But ensure it's not too close to top
+                                        if (labelY < chartArea.top + 12) {
+                                            labelY = Math.max(chartArea.top + 12, bar._model.y - 3);
+                                        }
+                                    } else {
+                                        // Normal bars: standard positioning
+                                        labelY = bar._model.y - 5;
+                                        // Ensure label is never too close to top of chart
+                                        if (labelY < chartArea.top + 15) {
+                                            labelY = chartArea.top + 15;
+                                        }
+                                    }
+
+                                    // Final safety check: ensure label is never below the bar
+                                    if (labelY >= bar._model.y) {
+                                        labelY = bar._model.y - 3;
+                                    }
+
+                                    // Draw the label - always visible for all non-zero values
+                                    ctx.save();
+ctx.fillStyle = '#333';
+ctx.font = valueFontSize + "px Arial";   // 👈 FORCE exact size
+ctx.textAlign = 'center';
+ctx.textBaseline = 'bottom';
+ctx.fillText(data, bar._model.x, labelY);
+ctx.restore();
+                                }
                             });
                         }
                     });
                 }
             },
             title: {
-                display: true,
-                text: Titles
+                 display: true,
+                 text: Titles,
+                 fontSize: titleFontSize
             },
-            legend: {
-                "display": true,
-                align: 'left'
-            },
+           legend: {
+        display: true,
+        align: 'left',
+        labels: {
+            fontSize: legendFontSize
+        }
+    },
             tooltips: {
                 "enabled": true
             },
             scales: {
-                yAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true
-                    },
-                    ticks: {
-                        max: maxval,
-                        display: true,
-                        beginAtZero: true,
-                        stepSize: stepSize,
-                        precision: 0
-                        
-                    }
-                }],
-                xAxes: [{
-                    gridLines: {
-                        display: false
-                    },
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
+        yAxes: [{
+            ticks: {
+                fontSize: axisFontSize,
+                max: maxval,
+                beginAtZero: true,
+                stepSize: stepSize
+            }
+        }],
+        xAxes: [{
+            ticks: {
+                fontSize: axisFontSize
+            }
+        }]
+    },
 
             onClick: function (evt) {
 
@@ -392,10 +482,10 @@ margin-top: 0% !important;
                     </p>*@
 
 
-                <div style="text-align: right;  margin-right: 52px; margin-top: -23px;">
+                <div style="text-align: right;  margin-right: 52px; margin-top: -20px;">
 
                     <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
-                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                       Download List
                     </a>
 
                 </div>

@@ -110,10 +110,69 @@ div#ImageModal .modal-content {
     height: auto !important;
     margin-top: 0% !important;
 }
+.chart-wrapper{
+    width:100%;
+    overflow-x:auto;      /* horizontal scroll */
+    overflow-y:hidden;
+}
+
+.chart-wrapper canvas{
+    min-width:600px;      /* enables horizontal scroll for large datasets */
+    width:auto !important;
+    height:60vh !important;
+}
+
+/* Tablet / Mobile */
+@@media (max-width:768px){
+
+    .chart-wrapper{
+        height:320px;
+    }
+
+    .chart-wrapper canvas{
+        min-width:500px;
+        height:300px !important;
+    }
+
+    h4.modal-title{
+        text-align:left !important;
+        font-size:12px;
+        font-weight:600;
+    }
+}
+@@media (max-width: 395px) {
+    
+	h4.modal-title {
+    text-align: left !important;
+        font-size: 11px;
+        font-weight: 600;
+}
+a.StopOnline {
+    font-size: 11px;
+}
+}
+#manufacturerModal .modal-body {
+    max-height: 80vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+.table-responsive.table-striped {
+    height: 70vh;
+    overflow-y: scroll;
+}
+@@media (max-width: 1366px) {
+#manufacturerModal .modal-body {
+    max-height: 78vh!important;
+    overflow-y: auto!important;
+    /* width: 50%; */
+}
+}
 </style>
 
-<div class="col-md-10">
-    <canvas id="@string.Format("myChart_MAK{0}", Model.chartId)" style="display: block;width: 300px;height: 200px;"></canvas>
+<div class="">
+    <div class="chart-wrapper">
+    <canvas id="@string.Format("myChart_MAK{0}", Model.chartId)"></canvas>
+</div>
     <input type="hidden" id="@string.Format("hdn{0}", Model.chartId)" class="hdn" value="@Model.data" />
     <input type="hidden" id="@string.Format("lbl{0}", Model.chartId)" class="hdn" value="@ViewBag.makerChartLables_RTW" />
     <input type="hidden" id="@string.Format("TTL{0}", Model.chartId)" class="hdn" value="@ViewBag.makerTitleHead_RTW" />
@@ -122,6 +181,14 @@ div#ImageModal .modal-content {
 </div>
 
 <script>
+     var isMobile = window.innerWidth <= 768;
+	var isMobile2 = window.matchMedia("(max-width: 768px)").matches;
+var valueFontSize = isMobile ? 7 : 12;  // 👈 adjust as needed
+	 var titleFontSize  = isMobile ? 14 : 18;
+var legendFontSize = isMobile ? 10 : 12;
+var axisFontSize   = isMobile ? 9  : 12;
+var dataFontSize   = isMobile ? 9  : 12;
+
 
     var currentManufacturer = "";
     var currentRopeTail = "";
@@ -219,6 +286,8 @@ div#ImageModal .modal-content {
             datasets: filteredData
         },
         options: {
+              responsive: true,
+              maintainAspectRatio: false,
             "hover": {
                 "animationDuration": 0
             },
@@ -228,7 +297,12 @@ div#ImageModal .modal-content {
                     var chartInstance = this.chart,
                         ctx = chartInstance.ctx;
 
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.font = Chart.helpers.fontString(
+    valueFontSize,
+    Chart.defaults.global.defaultFontStyle,
+    Chart.defaults.global.defaultFontFamily
+);
+					//ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'bottom';
 
@@ -270,12 +344,12 @@ div#ImageModal .modal-content {
 
                                     // Draw the label - always visible for all non-zero values
                                     ctx.save();
-                                    ctx.fillStyle = '#333';
-                                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                                    ctx.textAlign = 'center';
-                                    ctx.textBaseline = 'bottom';
-                                    ctx.fillText(data, bar._model.x, labelY);
-                                    ctx.restore();
+ctx.fillStyle = '#333';
+ctx.font = valueFontSize + "px Arial";   // 👈 FORCE exact size
+ctx.textAlign = 'center';
+ctx.textBaseline = 'bottom';
+ctx.fillText(data, bar._model.x, labelY);
+ctx.restore();
                                 }
                             });
                         }
@@ -283,39 +357,36 @@ div#ImageModal .modal-content {
                 }
             },
             title: {
-                display: true,
-                text: Titles
+                 display: true,
+                 text: Titles,
+                 fontSize: titleFontSize
             },
-            legend: {
-                "display": true,
-                align: 'left'
-            },
+           legend: {
+        display: true,
+        align: 'left',
+        labels: {
+            fontSize: legendFontSize
+        }
+    },
             tooltips: {
                 "enabled": true
             },
             scales: {
-                yAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true
-                    },
-                    ticks: {
-                        max: maxval,
-                        display: true,
-                        beginAtZero: true,
-                        stepSize: stepSize,
-                        precision: 0
-                    }
-                }],
-                xAxes: [{
-                    gridLines: {
-                        display: false
-                    },
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
+        yAxes: [{
+            ticks: {
+                fontSize: axisFontSize,
+                max: maxval,
+                beginAtZero: true,
+                stepSize: stepSize
+            }
+        }],
+        xAxes: [{
+            ticks: {
+                fontSize: axisFontSize
+            }
+        }]
+    },
+
 
 
             onClick: function (evt) {
@@ -418,10 +489,10 @@ div#ImageModal .modal-content {
                 </p>*@
 
 
-                <div style="text-align: right; margin-right: 52px; margin-top: -27px; ">
+                <div style="text-align: right; margin-right: 52px; margin-top: -20px; ">
 
                     <a href="@Url.Action("DownloadDamageObservedGDetail", "Reports")" class="StopOnline" title="Download Excel">
-                        <i class="fa fa-file-excel-o fa-2x" style="color:#1D6F42; transition:0.3s;"></i>
+                        Download List
                     </a>
 
                 </div>
