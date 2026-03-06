@@ -1,0 +1,2643 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="description" content="Digimoor X7 is a versatile MEG4-compliant software that helps Management make data-backed decisions to order new mooring ropes for their fleet Vessels" />
+    <meta http-equiv="Cache-control" content="no-cache">
+    <title>@ViewBag.Title - DigimoorX7</title>
+
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+
+
+    @*<script src="~/assetsv/js/jquery-3.2.1.min.js"></script>*@
+    <!-- jQuery 3 -->
+    @*<script src="~/TemplateFiles/bower_components/jquery/dist/jquery.min.js"></script>*@
+    <link href="~/css/CustomStyles.css?@DateTime.UtcNow.Ticks.ToString()" rel="stylesheet" />
+    <script src="~/Scripts/toastr.min.js"></script>
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/TemplateFiles/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/TemplateFiles/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="~/TemplateFiles/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/TemplateFiles/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="~/TemplateFiles/dist/css/skins/_all-skins.min.css">
+    <!-- Local Font Fallback -->
+    <link rel="stylesheet" href="~/css/local-fonts.css">
+    <link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+    <link rel="manifest" href="~/manifest.json">
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+    <meta name="theme-color" content="#2196f3" />
+
+    <style type="text/css">
+        .multiselect-container > li > a > label.checkbox {
+            width: 250px;
+        }
+
+
+        i.fa.fa-angle-down {
+            color: black !important;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: white;
+            color: red;
+            border: 1px solid red; /* Corrected border property */
+            border-radius: 50%;
+            padding: 0 6px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 20px;
+            max-width: 50px; /* Maximum width before the number overflows */
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adds ellipsis when the text overflows */
+        }
+
+
+        .main-header {
+            position: fixed;
+            z-index: 1111;
+            top: 0;
+            width: 100%;
+        }
+
+        section.content-header {
+            margin-top: 56px;
+        }
+
+        span.logo-here {
+            display: inline-block !important;
+            visibility: visible !important;
+            padding: 5px;
+        }
+
+            span.logo-here img {
+                padding: 5px;
+                border-radius: 15px;
+                display: block !important;
+                visibility: visible !important;
+                max-width: 100%;
+                height: auto;
+            }
+
+        /* Ensure navbar shows the logo */
+        .navbar-static-top .logo-here {
+            display: inline-block !important;
+         
+            margin-right: 15px;
+        }
+
+
+        aside.main-sidebar {
+            position: fixed;
+            top: 0px;
+        }
+
+        .dropdown-menu > .active > a,
+        .dropdown-menu > .active > a:focus,
+        .dropdown-menu > .active > a:hover {
+            background-color: #eaeef3 !important; /* your custom color */
+            color: #262626 !important;
+        }
+
+        #txtchatbot {
+            height: auto;
+        }
+
+
+
+        .find-button {
+            display: flex;
+            align-items: center;
+            background-color: #1e3352;
+            color: white;
+            padding: 8px 25px 10px 1px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            width: 235px;
+            height: 68px;
+            box-shadow: 5px 1px 17.9px 1.5px rgba(0, 160, 228, 0.8);
+            animation: glowing-button 4s ease-in-out infinite alternate;
+        }
+
+
+
+        .plus-container {
+            width: 90px;
+            height: 90px;
+            background: #213556;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: -46px;
+            top: -11px;
+            z-index: 2;
+            border: 3px solid #00A0E4;
+            box-shadow: 5px 1px 17.9px 1.5px rgba(0,160,228,0.8);
+            animation: glowing-plus 2s ease-in-out infinite alternate;
+        }
+
+        /* The plus shape */
+        .plus-icon {
+            width: 48px; /* overall size of the plus */
+            height: 48px;
+            position: relative;
+            display: block;
+        }
+
+            .plus-icon::before,
+            .plus-icon::after {
+                content: "";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                background: #fff;
+                border-radius: 3px;
+                transform: translate(-50%, -50%);
+            }
+
+            /* horizontal bar */
+            .plus-icon::before {
+                width: 60%;
+                height: 6px; /* thickness */
+            }
+
+            /* vertical bar */
+            .plus-icon::after {
+                width: 6px;
+                height: 60%;
+            }
+
+
+
+        .button-text {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            padding-left: 54px;
+            animation: glowing-text 3s ease-in-out infinite alternate;
+        }
+
+
+
+        /* Subtle glow for entire button */
+
+        /* Subtle glow for entire button */
+
+        @@keyframes glowing-button {
+
+            0% {
+                box-shadow: 5px 1px 18px 1.5px rgba(0, 160, 228, 0.6);
+            }
+
+            50% {
+                box-shadow: 5px 1px 24px 3px rgba(0, 160, 228, 0.85);
+            }
+
+            100% {
+                box-shadow: 5px 1px 18px 1.5px rgba(0, 160, 228, 0.6);
+            }
+        }
+
+
+
+
+
+
+
+        /* Strong glow animation for plus-container */
+
+        @@keyframes glowing-plus {
+
+            0% {
+                box-shadow: 0 0 10px rgba(0, 160, 228, 0.6), 0 0 20px rgba(0, 160, 228, 0.4), 0 0 5px #00A0E4;
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(0, 160, 228, 1), 0 0 50px rgba(0, 160, 228, 0.8), 0 0 12px #00A0E4;
+            }
+
+            100% {
+                box-shadow: 0 0 10px rgba(0, 160, 228, 0.6), 0 0 20px rgba(0, 160, 228, 0.4), 0 0 5px #00A0E4;
+            }
+        }
+
+
+
+
+
+        /* Light glow animation for text */
+
+        @@keyframes glowing-text {
+
+            0% {
+                text-shadow: 0 0 4px rgba(0, 160, 228, 0.4), 0 0 8px rgba(0, 160, 228, 0.2);
+            }
+
+            50% {
+                text-shadow: 0 0 6px rgba(0, 160, 228, 0.6), 0 0 12px rgba(0, 160, 228, 0.4);
+            }
+
+            100% {
+                text-shadow: 0 0 4px rgba(0, 160, 228, 0.4), 0 0 8px rgba(0, 160, 228, 0.2);
+            }
+        }
+
+
+
+
+
+
+
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            min-height: 66px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .visited-pages.mt-4 h3 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        button#show-all-visited {
+            background: transparent;
+            font-size: 16px;
+            color: #4999CC;
+            font-weight: 700;
+        }
+
+        ul#bookmarked-pages li {
+            margin-bottom: 0px !important;
+        }
+
+        .modal-content {
+            width: 900px;
+            margin: 0 auto;
+            margin-top: 2%;
+        }
+
+        #ui-datepicker-div {
+            z-index: 1111 !IMPORTANT;
+        }
+        /* ---------- external tiny controls ---------- */
+        .chat-external-controls {
+            position: absolute;
+            top: -14px; /* lifts the controls above the pot */
+            right: 6px; /* align visually over your circle */
+            display: flex;
+            gap: 6px;
+            z-index: 5;
+            pointer-events: auto;
+        }
+
+        .external-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #00A0E4;
+            background: #1e3352;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,160,228,0.45);
+            cursor: pointer;
+            padding: 0;
+            line-height: 0;
+            outline: none;
+        }
+
+            .external-btn i {
+                font-size: 14px;
+            }
+
+            .external-btn:hover {
+                transform: translateY(-1px);
+                transition: transform .12s ease;
+            }
+
+        /* keep your existing plus-container & plus icon look */
+        .plus-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plus-icon {
+            width: 48px;
+            height: 48px;
+            position: relative;
+            display: block;
+        }
+
+            .plus-icon::before,
+            .plus-icon::after {
+                content: "";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                background: #fff;
+                border-radius: 3px;
+                transform: translate(-50%,-50%);
+            }
+
+            .plus-icon::before {
+                width: 60%;
+                height: 6px;
+            }
+            /* horizontal */
+            .plus-icon::after {
+                width: 6px;
+                height: 60%;
+            }
+        /* vertical */
+
+        /* ---------- two visual states ---------- */
+        /* default: EXPANDED state (big pill visible, external minus shown) */
+        #chatbot {
+            width: auto;
+            height: auto;
+        }
+
+            #chatbot.expanded .find-button {
+                display: flex;
+                width: 235px;
+                height: 68px;
+                align-items: center;
+            }
+
+            #chatbot.expanded .chat-external-controls .min-btn {
+                display: inline-flex;
+            }
+
+            #chatbot.expanded .chat-external-controls .max-btn {
+                display: none;
+            }
+
+            /* COLLAPSED state: hide the main button completely, only show plus-container */
+            #chatbot.collapsed .find-button {
+                display: none !important;
+            }
+
+            /* Show collapsed circle button only when collapsed */
+            #chatbot.collapsed .collapsed-circle-btn {
+                display: flex !important;
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: #213556;
+                border: 3px solid #00A0E4;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 1112 !important; /* Higher than main-header (1111) to appear above menu */
+                overflow: visible !important;
+                clip: auto !important;
+                clip-path: none !important;
+            }
+
+                #chatbot.collapsed .collapsed-circle-btn .plus-container {
+                    width: 48px;
+                    height: 48px;
+                    position: static;
+                    background: transparent;
+                    border: none;
+                    box-shadow: none;
+                    animation: none;
+                }
+
+            #chatbot.expanded .collapsed-circle-btn {
+                display: none !important;
+            }
+
+            #chatbot.collapsed .chat-external-controls .min-btn {
+                display: none;
+            }
+            /* hide minus when compact */
+            #chatbot.collapsed .chat-external-controls .max-btn {
+                display: inline-flex;
+            }
+        /* show external plus when compact */
+
+        /* small transitions for smoothness */
+        .find-button, .plus-container {
+            transition: all .18s ease;
+        }
+
+        /* mobile tweak */
+        @@media (max-width:460px) {
+            .chat-external-controls {
+                right: 2px;
+                top: -12px;
+            }
+
+            .external-btn {
+                width: 26px;
+                height: 26px;
+            }
+
+            #chatbot.collapsed .find-button .plus-container {
+                width: 66px;
+                height: 66px;
+            }
+        }
+
+
+        /* Make sure the collapsed state uses the transparent background you want */
+        #chatbot.collapsed .find-button {
+            background: transparent !important;
+        }
+
+        /* Keep the inner plus white and visible (adjust if you want different look) */
+        #chatbot.collapsed .plus-icon::before,
+        #chatbot.collapsed .plus-icon::after {
+            background: #fff !important;
+        }
+
+        #chatbot {
+            position: fixed !important;
+            bottom: 30px;
+            right: 30px;
+            overflow: visible !important;
+            z-index: 1112 !important; /* Higher than main-header (1111) to appear above menu */
+        }
+
+            /* Keep size same so no slide/movement happens */
+            #chatbot.collapsed {
+                width: auto !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            /* Dragging state - prevent text selection during drag */
+            #chatbot.dragging {
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                cursor: move !important;
+            }
+
+                /* Hide tooltip text during drag */
+                #chatbot.dragging .button-text1 {
+                    display: none !important;
+                    opacity: 0 !important;
+                }
+
+            /* Prevent native tooltips on collapsed button during interaction */
+            #chatbot.collapsed .collapsed-circle-btn[title],
+            #chatbot.collapsed .collapsed-circle-btn *[title] {
+                position: relative;
+            }
+
+        /* Cursor styles - move for draggable areas, pointer for interactive elements */
+        #chatbot {
+            cursor: move;
+        }
+
+            /* Reset cursor for interactive elements inside chatbot */
+            #chatbot .external-btn,
+            #chatbot .button-text,
+            #chatbot .button-text1,
+            #chatbot span:not(.collapsed-circle-btn span),
+            #chatbot i {
+                cursor: pointer;
+            }
+
+            /* Collapsed circle button should be draggable */
+            #chatbot.collapsed .collapsed-circle-btn {
+                cursor: move !important;
+            }
+
+                /* Plus icon inside collapsed button should also be move cursor - override any span rules */
+                #chatbot.collapsed .collapsed-circle-btn .plus-container,
+                #chatbot.collapsed .collapsed-circle-btn .plus-icon,
+                #chatbot.collapsed .collapsed-circle-btn span {
+                    cursor: move !important;
+                }
+
+        /* Tooltip for plus-icon - modern, polished design */
+        .collapsed-circle-btn .plus-icon-tooltip {
+            display: none;
+            position: fixed !important;
+            background: linear-gradient(135deg, #213556 0%, #1a2a42 100%);
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            text-align: left;
+            white-space: nowrap !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 160, 228, 0.2);
+            z-index: 99999999 !important;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            width: max-content !important;
+            min-width: 240px !important;
+            max-width: 350px !important;
+            overflow: visible !important;
+            word-wrap: normal !important;
+            text-overflow: clip !important;
+            box-sizing: border-box;
+            clip: auto !important;
+            clip-path: none !important;
+            border: 1px solid rgba(0, 160, 228, 0.3);
+            /* Position will be calculated by JavaScript */
+        }
+
+        /* Show tooltip with smooth animation */
+        .collapsed-circle-btn:hover .plus-icon-tooltip,
+        .collapsed-circle-btn .plus-icon:hover ~ .plus-icon-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Arrow pointing down to the icon - positioned at bottom center, pointing to button */
+        .collapsed-circle-btn .plus-icon-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: var(--arrow-left, 50%);
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #213556;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            transition: left 0.2s ease;
+        }
+
+        /* Arrow border for depth */
+        .collapsed-circle-btn .plus-icon-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            left: var(--arrow-left, 50%);
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 9px solid rgba(0, 160, 228, 0.3);
+            z-index: -1;
+            transition: left 0.2s ease;
+        }
+
+        /* When tooltip is below the button, arrow points up */
+        .collapsed-circle-btn .plus-icon-tooltip.tooltip-below::after {
+            bottom: auto;
+            top: -8px;
+            left: var(--arrow-left, 50%);
+            transform: translateX(-50%);
+            border-top: none;
+            border-bottom: 8px solid #213556;
+        }
+
+        .collapsed-circle-btn .plus-icon-tooltip.tooltip-below::before {
+            bottom: auto;
+            top: -9px;
+            left: var(--arrow-left, 50%);
+            transform: translateX(-50%);
+            border-top: none;
+            border-bottom: 9px solid rgba(0, 160, 228, 0.3);
+        }
+
+        /* Show tooltip ONLY when hovering over the plus-icon or plus-container */
+        .collapsed-circle-btn .plus-icon:hover ~ .plus-icon-tooltip,
+        .collapsed-circle-btn:hover .plus-icon-tooltip,
+        .collapsed-circle-btn:has(.plus-icon:hover) .plus-icon-tooltip,
+        .collapsed-circle-btn:has(.plus-container:hover) .plus-icon-tooltip {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hide tooltip during drag */
+        #chatbot.dragging .plus-icon-tooltip {
+            display: none !important;
+            opacity: 0 !important;
+        }
+
+        /* Ensure parent containers don't clip the tooltip
+        body, html, .wrapper, .content-wrapper, #chatbot, #chatbot.collapsed {
+            overflow-x: visible !important;
+        }*/
+
+        /* Override any table or container overflow that might clip tooltip */
+        table, .table, .container, .row, .col-md-*, [class*="container"] {
+            position: relative;
+        }
+
+        /* Ensure tooltip can escape any overflow hidden containers */
+        .plus-icon-tooltip {
+            position: fixed !important;
+            transform: none !important;
+        }
+
+        /* Make the plus-container and main chatbot area draggable */
+        #chatbot .plus-container,
+        #chatbot .find-button:not(:hover) {
+            cursor: move;
+        }
+
+        #chatbot .chat-external-controls .button-text1 {
+            display: none;
+            position: absolute;
+            right: 6px; /* aligns with external controls */
+            top: -29px; /* above the pot; adjust as needed */
+            background: #213556;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 6px 18px rgba(0,160,228,0.22);
+            z-index: 9999;
+            transform-origin: 50% 100%;
+            opacity: 0;
+            transition: opacity .18s ease, transform .18s ease;
+            pointer-events: none; /* tooltip doesn't capture pointer (so clicks go to buttons) */
+        }
+
+
+
+        /* Hide tooltip completely - both collapsed and expanded states */
+        #chatbot.collapsed .chat-external-controls .button-text1,
+        #chatbot.expanded .chat-external-controls .button-text1 {
+            display: none !important;
+            opacity: 0 !important;
+        }
+
+        /* Prevent tooltip from showing on hover in any state */
+        #chatbot:hover .chat-external-controls .button-text1,
+        #chatbot .find-button:hover ~ .chat-external-controls .button-text1 {
+            display: none !important;
+            opacity: 0 !important;
+        }
+
+
+        /* small responsiveness tweaks */
+        @@media (max-width:460px) {
+            #chatbot .chat-external-controls .button-text1 {
+                top: -48px;
+                font-size: 13px;
+                right: 4px;
+            }
+        }
+
+        .chatbot-open {
+            min-height: 797px;
+            display: block !important;
+        }
+    </style>
+
+
+
+    @*<link href="~/css/select2.min.css" rel="stylesheet">
+
+        <link href="~/css/style.css" rel="stylesheet">
+        <script src="~/js/select2.full.min.js"></script>*@
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <input type="hidden" id="ipadd" />
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <!--<a href="/home/Dashboard" class="logo">-->
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <!--<span class="logo-mini" title="DigimoorX7"><b>X7</b></span>-->
+            <!-- logo for regular state and mobile devices -->
+            <!--<span class="logo-lg" title="DigimoorX7"><b>Digimoor</b>X7</span>
+            </a>-->
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <div class="logo-here" styel="display:flex;">
+                    <img style="height:60px;" src="~/images/49web.png?@DateTime.UtcNow.Ticks.ToString()">
+					 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                </div>
+               
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                                <span class="hidden-xs">@HttpContext.Current.User.Identity.Name</span>
+                                <i class="fa fa-angle-down" aria-hidden="true" styel="color:black!important;"></i>
+                            </a>
+                            <ul class="dropdown-menu" style="min-width:300px;">
+                                <li class="user-body">
+                                    <div class="row">
+                                        <div class="col-xs-6 text-center">
+                                            <a style="font-size: 14px !important;" href="~/Setting/UserDetails/EditProfile">Edit Profile</a>
+                                        </div>
+                                        <div class="col-xs-6 text-center">
+                                            <a style="font-size: 14px !important;" href="~/Setting/UserDetails/ChangePassword">Change Password</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-right">
+                                        <a style="font-size: 14px !important;" href="~/Account/Signout" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="sidebar-menu" id="ulLeftMenu">
+                    <li><a href="~/home/Dashboard"><i class="fa fa-tachometer" aria-hidden="true"></i><span style="white-space:normal">Dashboard</span></a></li>
+                    <li><a href="~/ReportingDashboard/Pro_Dashboard" target="_blank"><i class="fa fa-ship" aria-hidden="true"></i><span style="white-space:normal">Fleet Overview</span></a></li>
+                    <li><a href="~/VesselSummary/AllVesselSummary/index" target="_blank"><i class="fa fa-bookmark-o"></i><span style="white-space: normal"> Vessel Summary</span></a></li>
+                    @*<li><a href="~/MSPS/DetailsView?id=0" target="_blank"><i class="fa fa-calendar"></i><span style="white-space: normal">MSMP / LMP</span></a></li>*@
+                    <li><a href="~/MSPS/DetailsView?id=@Shipment49Web.Common.CommonClass.MSMP_Mid" target="_blank"><i class="fa fa-calendar"></i><span style="white-space: normal">MSMP / LMP</span></a></li>
+
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-file-text-o"></i><span style="white-space: normal">LMP Reports</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                        <ul class="dropdown-menu dropdown-menu-custom-settings">
+                            @*<li><a href="~/data/reports/vessels"><i class="fa fa-circle-o"></i><span style="white-space: normal">Onboard Lifecycle records</span></a></li>*@
+                            <li><a href="~/Data/Reports/AllVesselsRopeDetail"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Line Detail</span></a></li>
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                            {
+                                <li><a href="~/Data/Reports/AllVesselsRopetailDetail"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Ropetail Detail</span></a></li>
+                            }
+                            <li><a href="~/Data/Analysis/RopeStatus"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Rope Status</span></a></li>
+                            @{
+                                Shipment49Web.Common.CommonMethods.GetResidualPolicySetting();
+                                if (@Shipment49Web.Common.CommonMethods.LineResidualFrequency > 0 || @Shipment49Web.Common.CommonMethods.TailResidualFrequency > 0)
+                                {
+                                    <li><a href="~/Data/Analysis/RopeLabResults"><i class="fa fa-circle-o"></i><span style="white-space: normal ">Residual Strength Test Details</span></a></li>
+                                    if (@Shipment49Web.Common.CommonMethods.LineResidualFrequency > 0)
+                                    {
+                                        <li><a href="~/Data/Analysis/RopeResidualStrengthTest"><i class="fa fa-circle-o"></i><span style="white-space: normal ">Line Residual Strength Test: Due/Overdue</span></a></li>
+                                    }
+
+                                    if (@Shipment49Web.Common.CommonMethods.TailResidualFrequency > 0)
+                                    {
+                                        if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                                        {
+                                            <li><a href="~/Data/Analysis/RopeTailResidualStrengthTest"><i class="fa fa-circle-o"></i><span style="white-space: normal ">Rope Tail Residual Strength Test: Due/Overdue</span></a></li>
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            @*<li><a href="~/Data/Reports/Anomalies"><i class="fa fa-circle-o"></i><span style="white-space: normal">Anomalies Reported By Vessels In Mooring Operations</span></a></li>*@
+                            <li><a href="~/Data/Reports/AbrasionReport"><i class="fa fa-circle-o"></i><span style="white-space: normal">Abrasion Details</span></a></li>
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                            {
+                                <li><a href="~/Data/Reports/RopesRequiringDiscard"><i class="fa fa-circle-o"></i><span style="white-space: normal">Lines/Tails Requiring Discard</span></a></li>
+                            }
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == false)
+                            {
+                                <li><a href="~/Data/Reports/RopesRequiringDiscard"><i class="fa fa-circle-o"></i><span style="white-space: normal">Lines Requiring Discard</span></a></li>
+                            }
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                            {
+                                <li><a href="~/Data/Reports/UpComingDiscard"><i class="fa fa-circle-o"></i><span style="white-space: normal">Upcoming Lines/Tails Discard</span></a></li>
+                            }
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == false)
+                            {
+                                <li><a href="~/Data/Reports/UpComingDiscard"><i class="fa fa-circle-o"></i><span style="white-space: normal">Upcoming Lines Discard</span></a></li>
+                            }
+                            <li><a href="~/Data/Reports/End2EndDetail"><i class="fa fa-circle-o"></i><span style="white-space: normal">End to End Detail</span></a></li>
+                            @if (@Shipment49Web.Common.CommonClass.EnableLineInnerOuter == true)
+                            {
+                                <li><a href="~/Data/Reports/InBoardOutBoardDetail"><i class="fa fa-circle-o"></i><span style="white-space: normal">In-Board Out-Board Detail</span></a></li>
+                            }
+                            <li><a href="~/Data/Reports/WinchRotationDetail"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Winch Rotation Detail</span></a></li>
+                            <li><a href="~/Data/Analysis/BHCTestResult"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Winch Brake Test Records</span></a></li>
+                            <li><a href="~/Data/Analysis/DTIResult"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Detailed Inspection Records</span></a></li>
+                            <li><a href="~/Data/Reports/DamageObservedDetail"><i class="fa fa-circle-o"></i><span style="white-space: normal">Damage Observed</span></a></li>
+                            <li><a href="~/Data/Reports/RopesDiscarded"><i class="fa fa-circle-o"></i><span style="white-space: normal">Ropes Discarded</span></a></li>
+                            <li><a href="~/Data/Reports/meg4compstatusNew"><i class="fa fa-circle-o"></i><span style="white-space: normal">MEG4 Compliance Status</span></a></li>
+                            <li><a href="~/Data/Reports/AllVesselsMinInventoryDetails"><i class="fa fa-circle-o"></i><span style="white-space: normal">Minimum Inventory Detail</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-file-text-o"></i><span style="white-space: normal">Loose Equipment Reports</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                        <ul class="dropdown-menu dropdown-menu-custom-settings">
+
+                            <li><a href="~/Data/LE_Reports/AllVesselsLooseEDetails"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Loose Equipment Details</span></a></li>
+
+                            <li><a href="~/Data/LE_Reports/Discarded_LE"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Loose Equipment Discard Details</span></a></li>
+                            <li><a href="~/Data/LE_Reports/LE_Inspectiondueoverd"><i class="fa fa-circle-o"></i><span style="white-space: normal ">Loose Equipment Inspection Due/Overdue</span></a></li>
+                            <li><a href="~/Data/LE_Reports/LE_Damage"><i class="fa fa-circle-o"></i><span style="white-space: normal">Loose Equipment Damage</span></a></li>
+                            <li><a href="~/Data/LE_Reports/All_LEInspection"><i class="fa fa-circle-o"></i><span style="white-space: normal">Loose Equipment Inspection Details</span></a></li>
+
+                            @if (Shipment49Web.Common.S3CommonMethod.IsLooseTypeVisible(17))
+                            {
+                                <li><a href="~/Data/LE_Reports/AnchorLashingWireMinMBLDetails"><i class="fa fa-circle-o"></i><span style="white-space: normal">Anchor Lashing Wire Min. MBL Details</span></a></li>
+                            }
+
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-bar-chart"></i><span style="white-space: normal">Analysis</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a><ul class="dropdown-menu dropdown-menu-custom-settings">
+
+                            @*<li><a href="~/Analysis/RopeAnalysis"><i class="fa fa-circle-o"></i><span style="white-space: normal">Rope Analysis</span></a></li>*@
+
+                            <li><a href="~/Data/Analysis/VesselWise"><i class="fa fa-circle-o"></i><span style="white-space: normal">Vessel Wise Analysis</span></a></li>
+                            <li><a href="~/Data/Analysis/ExpenseDuration"><i class="fa fa-circle-o"></i><span style="white-space: normal">Expense Duration Analysis</span></a></li>
+                            <li><a href="~/Data/Analysis/AverageRunningHours"><i class="fa fa-circle-o"></i><span style="white-space: normal">Average Running Hours</span></a></li>
+
+                            @*<li><a href="~/Data/Reports/PredictionExpectency"><i class="fa fa-circle-o"></i><span style="white-space: normal">Prediction Expectency</span></a></li>*@
+                            <li><a href="~/Data/Analysis/ManufacturerPerformanceComparison"><i class="fa fa-circle-o"></i><span style="white-space: normal">Manufacturer Performance Comparison</span></a></li>
+                            <li><a href="~/Data/Analysis/FleetWideIncidents"><i class="fa fa-circle-o"></i><span style="white-space: normal">Fleet Wide Incidents</span></a></li>
+                            <li><a href="~/Data/Analysis/ResidualStrenghtPredictor"><i class="fa fa-circle-o"></i><span style="white-space: normal">Residual Strength Predictor</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="~/importexport/importexport" target="_blank"><i class="fa fa-circle-o"></i><span style="white-space:normal">Export Full History</span></a></li>
+                    <li><a href="~/PortCompliance/PortComplianceMO/index" target="_blank"><i class="fa fa-check-circle"></i><span style="white-space:normal">Port Compliance Mooring</span></a></li>
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-anchor"></i><span style="white-space: normal">Mooring Operations</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                        <ul class="dropdown-menu dropdown-menu-custom-settings">
+                            <li><a href="~/Data/Reports/Anomalies"><i class="fa fa-circle-o"></i><span style="white-space: normal">Anomalies Reported by Own Fleet</span></a></li>
+                            <li><a href="~/Data/Analysis/operationrecords"><i class="fa fa-circle-o"></i><span style="white-space: normal">Own Fleet All Operation</span></a></li>
+                            <li><a href="~/PortAnalysis/Port"><i class="fa fa-circle-o"></i><span style="white-space:normal">Global Ports Shared Data</span></a></li>
+
+                        </ul>
+                    </li>
+
+
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-cog"></i><span style="white-space:normal">General Settings</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a><ul class="dropdown-menu dropdown-menu-custom-settings" style="display: none;">
+                            <li><a href="~/CommonTypes/VesselInfo"><i class="fa fa-circle-o"></i><span style="white-space: break-spaces">Vessel List</span></a></li>
+                            @{
+                                var UserTypeRole = (Reports.UserInfo)Session["UserInformation"];
+                                if (UserTypeRole.UserRole == "ADMIN")
+                                {
+                                    <li><a href="~/Setting/UserDetails"><i class="fa fa-circle-o"></i><span style="white-space: normal">User Management</span></a></li>
+                                    <li><a href="~/CommonTypes/CommonType?type=1"><i class="fa fa-circle-o"></i><span style="white-space: normal">Manufacturer Name</span></a></li>
+                                    <li><a href="~/CommonTypes/CommonType?type=2"><i class="fa fa-circle-o"></i><span style="white-space: normal">Fleet Name list</span></a></li>
+                                    <li><a href="~/CommonTypes/CommonType?type=3"><i class="fa fa-circle-o"></i><span style="white-space: normal">Fleet Type list</span></a></li>
+                                    <li><a href="~/CommonTypes/CommonType?type=4"><i class="fa fa-circle-o"></i><span style="white-space: normal">Trade Pattern</span></a></li>
+                                    <li><a href="~/CommonTypes/CommonType?type=5"><i class="fa fa-circle-o"></i><span style="white-space: normal">Sister Vessels Group</span></a></li>
+                                    <li><a href="~/dynamicmenus/menus"><i class="fa fa-circle-o"></i><span style="white-space: normal">Menu Settings</span></a></li>
+                                    <li><a href="~/CommonTypes/residualpolicy"><i class="fa fa-circle-o"></i><span style="white-space: normal">Residual Policy</span></a></li>
+                                }
+                            }
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#"><i class="fa fa-check-square-o"></i><span style="white-space:normal"> Pre-Set Criteria</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                        <ul class="dropdown-menu dropdown-menu-custom-settings" style="display: none;">
+
+                            <li><a href="~/RopeInspectionSettings/RopeInspection"><i class="fa fa-circle-o"></i><span style="white-space: normal">Line Criteria</span></a></li>
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                            {
+                                <li><a href="~/RopeTailInspectionSettings/RopeTailInspection"><i class="fa fa-circle-o"></i><span style="white-space: normal">Ropetail Criteria</span></a></li>
+                            }
+                            <li><a href="~/LooseEquipInspectionSettings/LooseEquipInspectionSetting"><i class="fa fa-circle-o"></i><span style="white-space: normal">Loose Equip Criteria</span></a></li>
+                            <li><a href="~/WinchRotationSettings/WinchRotation/index"><i class="fa fa-circle-o"></i><span style="white-space: normal">Winch Rotation Criteria</span></a></li>
+
+                            <li><a href="~/RopeInspectionSettings/RopeInspection/AddCriteria_ForAllVessel"><i class="fa fa-circle-o"></i><span style="white-space: normal">Not Inserted Line Criteria</span></a></li>
+                            @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                            {
+                                <li><a href="~/RopeTailInspectionSettings/RopeTailInspection/AddTailCriteria_ForAllVessel"><i class="fa fa-circle-o"></i><span style="white-space: normal">Not Inserted Ropetail Criteria</span></a></li>
+                            }
+                            @if (Shipment49Web.Common.CommonMethods.GetMakerInspectionSetting())
+                            {
+                                <li><a href="~/ManufacturesInstruction/AllManufacturesInstruction/index"><i class="fa fa-circle-o"></i><span style="white-space: normal">Manufacturer Instruction</span></a></li>
+
+                            }
+
+                            @if (Shipment49Web.Common.S3CommonMethod.IsLooseTypeVisible(17))
+                            {
+                                <li><a href="~/AnchorLashingWire/AnchorLashingWireMinMBL/index"><i class="fa fa-circle-o"></i><span style="white-space: normal">Anchor Lashing Wire Min. MBL</span></a></li>
+
+                            }
+
+
+                        </ul>
+                    </li>
+
+
+
+                    @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                    {
+                        <li>
+                            <a href="~/ExtensionLineTail/Extension/Index">
+                                <i class="fa fa-circle-o-notch"></i>
+                                <span style="white-space: normal">Line/Rope-Tail Life Extension</span>
+
+                                @* Assuming you have a function to get the notification count *@
+                                @{
+                                    int notificationCount = @Shipment49Web.Common.CommonClass.GetVerifylinetailawaitingcount(); // Your function to fetch the count
+                                }
+
+                                @if (notificationCount > 0)
+                                {
+                                    <span class="notification-badge" title="Awaiting Lines/RopeTail for Approval">@notificationCount</span>
+                                }
+                            </a>
+                        </li>
+                    }
+
+
+
+                    @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == false)
+                    {
+                        <li><a href="~/ExtensionLineTail/Extension/Index"><i class="fa fa-circle-o-notch"></i><span style="white-space: normal">Line Extension</span></a></li>
+                    }
+
+                    @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == true)
+                    {
+                        <li><a href="~/VerifyLineCompatibility/VerifyLineCompatibility/Index"><i class="fa fa-check-circle"></i><span style="white-space: normal">Verify Line/Rope Tail Compatibility</span></a></li>
+                    }
+                    @if (@Shipment49Web.Common.CommonClass.IsRopeTail_Using == false)
+                    {
+                        <li><a href="~/VerifyLineCompatibility/VerifyLineCompatibility/Index"><i class="fa fa-check-circle"></i><span style="white-space: normal">Verify Line Compatibility</span></a></li>
+                    }
+
+                    <li><a href="~/trainingcontent/trainingc"><i class="fa fa-graduation-cap"></i><span style="white-space: normal">Training Content</span></a></li>
+
+                    <li><a href="~/Helps/Help/Index"><i class="fa fa-comment-o"></i><span style="white-space: normal">Support</span></a></li>
+
+
+                    <li class="company-logo"><a><span style="white-space: normal"> <img src="~/images/Digimoor-color-logo1.png"></span></a></li>
+
+
+                </ul>
+            </section>
+        </aside>
+
+        @*<div id="chatbot"
+                 style="position: fixed; bottom: 30px; right: 30px; cursor: pointer; z-index: 1000;">
+                <i class="fa fa-comments"
+                   style="font-size: 50px; color: #008CBA; background-color: #fff; border-radius: 50%; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);"></i>
+            </div>*@
+
+        @*<div id="chatbot" style="position: fixed; bottom: 30px; right: 30px; cursor: pointer; z-index: 1000;">
+                <img src="~/images/Chatbot_Icon2.png" alt="Chatbot Icon"
+                     style="width: 50px; height: 50px; border-radius: 50%; background-color: #fff; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+            </div>*@
+        <div id="chatbot" class="chatbotlisting" style="position: fixed; bottom: 30px; right: 30px; cursor: pointer; z-index: 1112;">
+            <!-- External tiny controls sitting above/outside the chat pot -->
+            <div class="chat-external-controls" aria-hidden="false">
+                <span class="button-text1">Click here to <br>find what you need</span>
+                <!-- external MINUS (visible when in expanded state) -->
+                <button class="external-btn min-btn" title="Minimize chat" aria-label="Minimize chat">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <!-- external PLUS (visible when in collapsed state) -->
+                <button class="external-btn max-btn" title="Open chat" aria-label="Open chat" style="display:none">
+                    <i class="fa fa-plus"></i>
+
+                </button>
+            </div>
+
+            <!-- The chat pot visual (your existing element) -->
+            <div class="find-button chatbotlisting" id="chat-fab" aria-label="Chat button">
+                <div class="plus-container">
+                    <span class="plus-icon"></span>
+                </div>
+                <span class="button-text" style=" font-size: 18px!important;font-weight:500!important">Click here to <br>find what you need</span>
+            </div>
+
+            <!-- Collapsed state button - only shows when collapsed -->
+            <div class="collapsed-circle-btn" style="display: none;">
+                <div class="plus-container">
+                    <span class="plus-icon"></span>
+                </div>
+                <span class="plus-icon-tooltip">Click here to find what you need</span>
+            </div>
+        </div>
+
+
+        <div id="chatbotrealtions">
+            @RenderBody()
+
+        </div>
+
+
+
+
+    </div>
+
+
+    <!-- Styling for layout improvements -->
+    <style>
+                .search-bar-container {
+                    position: relative;
+                }
+            .btncloser {
+                position: absolute;
+                top: 71px;
+                right: 100px !important;
+            }
+                .star-blackicon {
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+
+                .search-bar {
+                    padding-right: 30px;
+                }
+
+                .container {
+                    margin-top: 30px;
+                }
+
+                .search-container {
+                    text-align:center;
+                    padding: 20px;
+                    border-radius: 8px;
+					margin-top: 30px;
+
+                }
+
+               .search-bar {
+                    width: 100%;
+                    max-width: 760px; /* ✅ Correct unit added */
+                    padding-left: 30px;
+                    border-radius: 5px;
+                      border: 1px solid #ccc;
+                     animation-fill-mode: backwards;
+                     box-sizing: border-box; /* ✅ Keeps padding inside width */
+                       }
+
+                .search-suggestions {
+                    background-color: #fff;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    max-height: 400px;
+                    overflow-y: auto;
+					margin: 0 auto;
+					width: 100%;
+                    max-width: 760px;
+                }
+
+                    .search-suggestions ul {
+                        list-style-type: none;
+                        padding: 0;
+						width: 100%;
+                      max-width: 760px;
+                    }
+
+                    .search-suggestions ul li {
+    padding: 4px;
+    cursor: pointer;
+    border-bottom: 1px solid #CEDBE2;
+    text-align: left;
+
+}
+
+                            .search-suggestions ul li:hover {
+                                background-color:#EAEEF3;
+                            }
+
+                .bookmarked-pages, .visited-pages {
+                    padding: 15px;
+
+                    border-radius: 8px;
+
+                }
+
+                    .bookmarked-pages h3, .visited-pages h3 {
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+
+                    .bookmarked-pages ul, .visited-pages ul {
+                        list-style-type: none;
+                        padding: 0;
+						margin-bottom:10px!important;
+                    }
+
+                        .bookmarked-pages ul li, .visited-pages ul li {
+                            padding: 8px;
+                            border-bottom: 1px solid #ddd;
+							margin-bottom:10px!important;
+                        }
+
+                            .bookmarked-pages ul li:hover, .visited-pages ul li:hover {
+                                background-color: transparent;
+                            }
+
+                .main-footer {
+                    text-align: center;
+                    padding: 10px;
+                    background-color: #f1f1f1;
+                }
+
+                @@media (max-width: 768px) {
+                    .col-md-8, .col-md-4 {
+                        width: 100%;
+                        margin-bottom: 20px;
+                    }
+
+                    .bookmarked-pages, .visited-pages {
+                        margin-bottom: 20px;
+                    }
+                }
+
+                    .suggestion-item {
+                        display: flex;
+                        align-items: center; /* Ensures text and icon are in the same row */
+                        margin-bottom: 10px;
+                        cursor: pointer;
+                    }
+
+                    /* Styling for the text */
+                    .text-item {
+                        margin-right: 10px; /* Adds space between text and star */
+                        font-weight: bold;
+                        flex-grow: 1; /* Ensures the text takes up the remaining space */
+                    }
+
+                    /* Styling for the star icon */
+                    .star-icon {
+                        font-size: 24px; /* Size of the star */
+                        /* color: lightgray;  Empty star color (light gray) */
+                        cursor: pointer;
+                    }
+
+                        .star-icon:hover {
+                            color: gray; /* Change color on hover */
+                        }
+
+@*CR01*@
+#cover-spin {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(100,88,124,0.42);
+    z-index: 9999;
+    display: none;
+}
+
+@@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#cover-spin::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 48%;
+    top: 40%;
+    width: 40px;
+    height: 40px;
+    border-style: solid;
+    border-color: black;
+    border-top-color: transparent;
+    border-width: 4px;
+    border-radius: 50%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+}
+
+#txtchatbot{
+background:#ecf0f5;
+}
+
+.search-container h2{
+color:#0B284F;
+font-size:36px!important
+}
+.bookmarked-pages h3{
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+button#show-all-bookmarked {
+    background: transparent;
+    font-size: 16px;
+    color: #4999CC;
+    font-weight: 700;
+}
+
+        .btncloser {
+            position: absolute;
+            top: 71px;
+            right: 17px !important;
+            width: 103px;
+            height: 37px;
+            font-size: 16px;
+            font-weight: 500;
+            top: 68px !important;
+            border-radius: 47px;
+            letter-spacing: 0.5px;
+        }
+
+        ul#most-visited-pages li a {
+            color: #6B6E70;
+        }
+
+        .search-container h2 {
+            text-align: Left !important;
+            margin-left: 14%;
+        }
+
+        button#close-btn {
+            z-index: 11 !important
+        }
+
+        ul#bookmarked-pages li:hover {
+            background: #fafbfc !important;
+            cursor: pointer;
+        }
+
+        ul#most-visited-pages li:hover {
+            background: #fafbfc !important;
+            cursor: pointer;
+        }
+
+    </style>
+
+    @*   09Oct2025  *@
+
+    <style>
+
+        .clear-icon {
+            position: absolute;
+            right: 166px;
+            top: 67%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            user-select: none;
+        }
+
+            .clear-icon:hover {
+                color: red;
+            }
+
+
+        .bookmarked-pages ul,
+        .visited-pages ul {
+            max-height: 515px; /* You can adjust this height */
+            overflow-y: auto; /* Enables vertical scrolling */
+            overflow-x: hidden; /* Prevents horizontal scrollbar */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #ccc transparent; /* Scrollbar color */
+        }
+
+            /* Optional: Better scrollbar style for Chrome, Edge, Safari */
+            .bookmarked-pages ul::-webkit-scrollbar,
+            .visited-pages ul::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .bookmarked-pages ul::-webkit-scrollbar-thumb,
+            .visited-pages ul::-webkit-scrollbar-thumb {
+                background-color: #ccc;
+                border-radius: 10px;
+            }
+
+                .bookmarked-pages ul::-webkit-scrollbar-thumb:hover,
+                .visited-pages ul::-webkit-scrollbar-thumb:hover {
+                    background-color: #999;
+                }
+    </style>
+
+    <div id="txtchatbot" style="display:none;" class="content-wrapper">
+        <div class="content">
+            <button id="close-btn" class="btn btn-danger btn-sm btncloser" style="position: absolute; top: 91px !important;">Close<span style="margin-left:5px">X</span></button>
+
+            <div class="row" style="padding-top:120px;">
+                <!-- Left Section: Search bar and suggestions -->
+                <div class="col-md-8">
+
+                    <div class="search-container">
+                        <h2>How can I help you today?</h2>
+
+                        <div class="search-bar-container">
+                            <input type="text" id="search-input" autocomplete="off" class="search-bar" placeholder="Type to Search & Click on below available options...">
+                            <span id="clear-search" class="clear-icon">Reset</span>
+                        </div>
+
+                        <div class="search-suggestions">
+                            <ul id="suggestions-list">
+                                <!-- The suggestions will be dynamically populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="cover-spin"></div>
+                <div class="loader" style="align-items:center" id="loader">
+                </div>
+
+                <div class="col-md-4">
+
+
+                    <div class="bookmarked-pages" style="margin-bottom: 21px;">
+                        <h3>Bookmarked Pages <button id="show-all-bookmarked" class="btn text-primary">Show More</button></h3>
+                        <ul id="bookmarked-pages">
+                        </ul>
+
+                    </div>
+
+                    @*<div class="visited-pages mt-4">
+                            <h3>Pages You Visted Most <button id="show-all-visited" class="btn text-primary">Show More</button></h3>
+                            <ul id="most-visited-pages">
+                            </ul>
+                        </div>*@
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function databindkeywords(searchText = '') {
+            $.ajax({
+                url: '/Home/GetSuggestions',
+                type: 'GET',
+                success: function (result) {
+                    var $ul = $('#suggestions-list');
+                    $ul.empty();
+
+                    $.each(result, function (index, item) {
+                        var $li = $('<li class="suggestion-item"></li>');
+
+                        var $spanText = $('<span class="text-item"></span>')
+                            .text(item.Key_Words)
+                            .click(function () {
+                                selectSuggestion(item.Path, item.Key_Id);
+                            });
+
+                        var $spanStar;
+                        if (item.BookMarked) {
+                            $spanStar = $('<span class="star-icon" style="color: #4999CC;" title="Edit Bookmark for this Keyword">&#9733;</span>')
+                                .click(function () {
+                                    toggleBookmark(this, item.Key_Id, item.BookMarked);
+                                });
+                        } else {
+                            $spanStar = $('<span class="star-icon" style="color: gray;" title="BookMark for this Keyword">&#9734;</span>')
+                                .click(function () {
+                                    toggleBookmark(this, item.Key_Id, item.BookMarked);
+                                });
+                        }
+
+                        $li.append($spanText).append($spanStar);
+                        $ul.append($li);
+                    });
+
+                    if (searchText.trim() !== '') {
+                        filterSuggestions(searchText);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading suggestions:', error);
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+
+        function loadUserKeywordsLogData(full) {
+            $('#cover-spin').show();
+            $.ajax({
+                url: '/home/GetAllVisitedUserKeywordsLog',
+                type: 'GET',
+                data: {
+                    full: full
+                },
+                dataType: 'json'
+            })
+                .done(function (response) {
+                    if (!response.success) {
+                        alert("Error: " + response.message);
+                        $('#cover-spin').hide();
+                        return;
+                    }
+
+                    const $ul = $('#bookmarked-pages').empty();
+                    const data = response.data || [];
+
+                    const bookmarked = data.filter(x => x.BookMarked);
+
+                    if (bookmarked.length === 0) {
+                        $ul.append('<li>No bookmarks yet</li>');
+                        $('#cover-spin').hide();
+                        return;
+                    }
+
+                    bookmarked.forEach(item => {
+
+                        //$ul.append(`<li href="javascript:void(0)" onclick="selectSuggestion('${item.Path}', ${item.Key_Id})">${item.Key_Words}</li>`);
+
+                        $ul.append(`
+                                                                              <li href="javascript:void(0)" style="display: flex; align-items: center; margin-bottom: 3px;">
+                                                                                <div class="text-container" onclick="selectSuggestion('${item.Path}', ${item.Key_Id},${item.BookMarked})" style="flex-grow: 1;">
+                                                                                  ${item.Key_Words}
+                                                                                </div>
+                                                                                <span class="star-icon" style="color: #4999CC; cursor: pointer;" title="Edit Bookmark for this Keyword" onclick="toggleBookmark(this, ${item.Key_Id},${item.BookMarked})">
+                                                                                  &#9733;
+                                                                                </span>
+                                                                              </li>
+`);
+
+                    });
+                    $('#cover-spin').hide();
+                })
+                .fail(function (xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("Failed to load data.");
+                    $('#cover-spin').hide();
+                });
+        }
+
+        function toggleBookmark(element, ID, BookMarked) {
+
+            var starStatus = (element.style.color === "#4999CC") ? "gray" : "#4999CC";
+
+            var starValue = (starStatus === "#4999CC") ? "&#9733;" : "&#9734;";
+
+            debugger;
+
+            element.style.color = starStatus;
+            element.innerHTML = starValue;
+
+            $('#cover-spin').show();
+
+            $.ajax({
+                url: '/Home/AddChatbotBookmarks',
+                type: 'POST',
+                data: {
+                    id: ID,
+                    starStatus: starStatus,
+                    BookMarked: BookMarked
+
+                },
+                success: function (response) {
+                    sleep(500);
+                    var currentSearch = $('.search-bar').val();
+                    loadUserKeywordsLogData(0);
+                    databindkeywords(currentSearch);
+                    loadMostVisitedPages(0);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error);
+                    $('#cover-spin').hide();  // Hide spinner on error
+                }
+            });
+        }
+
+        function selectSuggestion(path, keyid) {
+            debugger
+            $('#cover-spin').show();
+            var domain = window.location.origin;
+            var fullURL = domain + path;
+
+            //$.ajax({
+            //    url: '/Home/addvisitpagecount',
+            //    type: 'POST',
+            //    data: { id: keyid },
+            //    success: function (response) {
+            //        $('#cover-spin').hide();
+
+            //        loadMostVisitedPages(0);
+
+            //    },
+            //    error: function (xhr, status, error) {
+            //        $('#cover-spin').hide();
+            //        console.error("Error: " + error);
+            //    }
+            //});
+
+            $('#cover-spin').hide();
+            window.open(fullURL, '_blank');
+        }
+
+        function loadMostVisitedPages(full) {
+            $('#cover-spin').show();
+            $.ajax({
+                url: '/Home/GetMostVisitedPages',
+                type: 'GET',
+                data: { full: full },
+                success: function (response) {
+                    var list = $("#most-visited-pages");
+                    list.empty();
+
+                    if (response.success && response.data && response.data.length > 0) {
+                        response.data.forEach(function (page) {
+                            var listItem = `
+                                                                                                    <li>
+                                                                                                        <a href="javascript:void(0);"
+                                                                                                           onclick="selectSuggestion('${page.Path}', ${page.Id})">
+                                                                                                            ${page.Key_Words}
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                `;
+                            list.append(listItem);
+                        });
+                    } else {
+                        list.append('<li>No pages found.</li>');
+                    }
+
+                    $('#cover-spin').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error);
+                    $('#cover-spin').hide();
+                }
+            });
+        }
+
+
+        function filterSuggestions(searchInput) {
+            searchInput = searchInput.toLowerCase().trim();
+            $('.search-suggestions').show();
+
+            if (searchInput === "") {
+                $('.search-suggestions ul li').show();
+                return;
+            }
+
+            var searchWords = searchInput.split(/\s+/);
+
+            $('.search-suggestions ul li').each(function () {
+                var text = $(this).text().toLowerCase();
+                var match = searchWords.every(function (word) {
+                    return text.indexOf(word) !== -1;
+                });
+                $(this).toggle(match);
+            });
+        }
+
+
+        let bookmarkedToggle = 0;
+        let visitedToggle = 0;
+
+        $('#show-all-bookmarked').click(function () {
+            debugger
+            bookmarkedToggle = bookmarkedToggle === 0 ? 1 : 0;
+            loadUserKeywordsLogData(bookmarkedToggle);
+
+            if (bookmarkedToggle === 1) {
+                $(this).text('Show Less');
+            } else {
+                $(this).text('Show More');
+            }
+
+        });
+
+        $('#show-all-visited').click(function () {
+            visitedToggle = visitedToggle === 0 ? 1 : 0;
+            loadMostVisitedPages(visitedToggle);
+
+            if (visitedToggle === 1) {
+                $(this).text('Show Less');
+            } else {
+                $(this).text('Show More');
+            }
+
+        });
+
+
+        $(document).ready(function () {
+
+            //$('#cover-spin').show();
+
+
+
+            //$("#txtchatbot").hide();
+
+            $('.chatbotlisting').click(function (e) {
+                // Don't open chatbot if we were dragging
+                if (window.chatbotWasDragging === true) {
+                    window.chatbotWasDragging = false;
+                    return false;
+                }
+
+                $("#chatbotrealtions").slideUp(100, function () {
+                    //$("#txtchatbot").slideDown(100);
+
+                    $("#txtchatbot")
+                        .addClass("chatbot-open")
+                        .slideDown(100);
+
+                    $("#close-btn").show();
+
+                    $(".chatbotlisting").hide();
+
+                    var currentSearch = $('.search-bar').val();
+                    databindkeywords(currentSearch);
+                    loadUserKeywordsLogData(0);
+                    loadMostVisitedPages(0);
+                });
+            });
+
+
+            //$('.search-bar').on('input', function () {debugger
+            //    var searchInput = $(this).val().toLowerCase();
+            //    $('.search-suggestions').show();
+            //    $('.search-suggestions ul li').each(function () {
+            //        debugger
+            //        var text = $(this).text().toLowerCase();
+            //        $(this).toggle(text.indexOf(searchInput) !== -1);
+            //    });
+            //});
+
+
+            //$('.search-bar').on('input', function () {
+            //    var searchInput = $(this).val().toLowerCase().trim();
+            //    $('.search-suggestions').show();
+
+            //    // If input is empty, show all suggestions
+            //    if (searchInput === "") {
+            //        $('.search-suggestions ul li').show();
+            //        return;
+            //    }
+
+            //    // Split input into words (e.g. "port comp" → ["port", "comp"])
+            //    var searchWords = searchInput.split(/\s+/);
+
+            //    $('.search-suggestions ul li').each(function () {
+            //        var text = $(this).text().toLowerCase();
+            //        // Show item only if all search words are found somewhere in text
+            //        var match = searchWords.every(function (word) {
+            //            return text.indexOf(word) !== -1;
+            //        });
+            //        $(this).toggle(match);
+            //    });
+            //});
+
+
+            $('.search-bar').on('input', function () {
+                filterSuggestions($(this).val());
+            });
+
+
+            $(document).click(function (e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    $('.search-suggestions').hide();
+                }
+            });
+
+            $('#close-btn').click(function () {
+                // Remove the chatbot-open class first to prevent display: block !important from interfering
+                $("#txtchatbot").removeClass("chatbot-open");
+                $("#txtchatbot").slideUp(10, function () {
+                    // Ensure it's completely hidden
+                    $("#txtchatbot").hide();
+                    $("#chatbotrealtions").slideDown(10);
+
+                    $(".chatbotlisting").show();
+                    $("#chatbot").css({
+                        'left': 'auto',
+                        'top': 'auto',
+                        'right': '30px',
+                        'bottom': '30px'
+                    }).show();
+                    $("#close-btn").hide();
+
+                });
+            });
+
+
+            $(document).on('click', '.star-icon', function () {
+                loadUserKeywordsLogData(bookmarkedToggle);
+            });
+
+            $(document).on('click', '.suggestion-item', function () {
+                loadMostVisitedPages(visitedToggle);
+            });
+
+        });
+
+
+    </script>
+
+
+    <script>
+
+        // Show or hide clear icon based on input value
+        document.getElementById('search-input').addEventListener('input', function () {
+            const clearBtn = document.getElementById('clear-search');
+            clearBtn.style.display = this.value.trim() !== "" ? 'block' : 'none';
+        });
+
+        // Clear only input when clicking the clear icon
+        document.getElementById('clear-search').addEventListener('click', function () {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = '';
+            this.style.display = 'none';
+            searchInput.focus();
+            $('.search-suggestions ul li').show();
+        });
+
+    </script>
+
+
+    <!-- Styling for layout improvements -->
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var url = window.location;
+            var element = $('.main-nav li a').filter(function () {
+                return this.href == url || url.href.indexOf(this.href) == 0;
+            });
+            $(element).parentsUntil('.main-nav', 'li').addClass('active').find(".dropdown_menu").slideDown().next(".sub-indicator").addClass("sub-arrow-open");
+
+            var currentPath = window.location.pathname.toLowerCase();
+
+            // Remove all active classes first
+            $('.sidebar-menu li').removeClass('active');
+
+            // Loop through each link and match with current URL
+            $('.sidebar-menu li a').each(function () {
+                var href = $(this).attr('href');
+                if (!href) return;
+
+                var linkPath = href.toLowerCase();
+
+                if (currentPath === linkPath || currentPath.startsWith(linkPath)) {
+                    $(this).closest('li').addClass('active');
+
+                    // Expand parent dropdown
+                    $(this).closest('ul.dropdown-menu').css('display', 'block');
+                    $(this).parents('li.dropdown').addClass('active');
+                }
+            });
+
+            // Improve dropdown hover behavior to prevent wrong menu open
+            if ($(window).width() > 769) {
+                $('.wrapper .dropdown').hover(function () {
+                    // Close all dropdowns
+                    $('.wrapper .dropdown-menu').slideUp();
+                    $('.wrapper .dropdown').removeClass('open');
+
+                    // Open current one
+                    $(this).find('.dropdown-menu').first().stop(true, true).delay(10).slideDown();
+                    $(this).addClass('open');
+                }, function () {
+                    $(this).find('.dropdown-menu').first().stop(true, true).delay(10).slideUp();
+                    $(this).removeClass('open');
+                });
+
+                // Clicking a dropdown parent link navigates
+                $('.wrapper .dropdown > a').click(function () {
+                    location.href = this.href;
+                });
+            }
+
+        });
+    </script>
+
+    <script>
+        jQuery(function ($) {
+            if ($(window).width() > 769) {
+                $('.wrapper .dropdown').hover(function () {
+                    $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
+                }, function () {
+                    $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
+
+                });
+                $('.wrapper .dropdown > a').click(function () {
+                    location.href = this.href;
+                });
+            }
+        });
+    </script>
+
+
+
+    <script type="text/javascript">
+        //var interval = 10000;
+        //setInterval(function () { GetIPAdd(), Update() }, interval);
+
+        function Update() {
+
+            var Ip = $('#ipadd').val();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/Account/AutoLogout1',
+                data: { 'Ip': Ip },
+                success: function (response) {
+                    if (response.Result == true) {
+
+
+                        var check = response.lgn;
+                        if (check == 1) {
+                            //alert(response.AnotherLog);
+                        }
+                        if (check == 2) {
+                            // alert(response.AnotherLog);
+                            window.location.href = "/Account/Login/"
+                        }
+
+
+
+                    }
+                    else {
+                        //alert('An Error has occured. Please try again.');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    // alert('An Error has occured. Please try again.');
+                }
+            });
+        }
+    </script>
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            @*<b>AQUA 49 WEBSTREET TECHNOLOGIES</b>*@
+        </div>
+        <strong>
+            @DateTime.Now.Year SYNERGETIC SHIPPING SOLUTIONS
+        </strong>
+    </footer>
+
+
+    <!-- ./wrapper -->
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/TemplateFiles/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/TemplateFiles/bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/TemplateFiles/dist/js/adminlte.min.js"></script>
+    <!-- Sparkline -->
+    <script src="~/TemplateFiles/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- jvectormap  -->
+    <script src="~/TemplateFiles/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="~/TemplateFiles/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <!-- SlimScroll -->
+    <script src="~/TemplateFiles/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="~/js/bootstrap-multiselect.js"></script>
+
+    <!--<script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('/serviceworker.js')
+                    .then(function () { //console.log('Service Worker Registered'); });
+            }
+        </script>-->
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                for (let registration of registrations) {
+                    registration.unregister().then(function (boolean) {
+                        if (boolean) {
+                            //console.log('Service Worker Unregistered');
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
+
+</body>
+
+@Scripts.Render("~/bundles/dropzonescripts")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/jqueryui")
+@RenderSection("scripts", required: false)
+
+
+</html>
+
+
+<script>
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+    }
+</script>
+<script>
+    $(function () {
+        // Start state: expanded (as you requested in earlier messages)
+        $('#chatbot').removeClass('collapsed').addClass('expanded');
+
+        // Click ONLY on external minus => collapse visuals to compact FAB (no panel operations)
+        $('#chatbot').off('click', '.min-btn').on('click', '.min-btn', function (e) {
+            e.stopPropagation();
+            $('#chatbot').removeClass('expanded').addClass('collapsed');
+            // Reset chatbot position to default
+            $("#chatbot").css({
+                'left': 'auto',
+                'top': 'auto',
+                'right': '30px',
+                'bottom': '30px'
+            }).show();
+            // Also reset collapsed-circle-btn position to default (it has position: fixed)
+            $(".collapsed-circle-btn").css({
+                'left': 'auto',
+                'top': 'auto',
+                'right': '30px',
+                'bottom': '30px'
+            });
+        });
+
+        // Click ONLY on external plus (visible when collapsed) => expand visuals to pill (no panel ops)
+        $('#chatbot').off('click', '.max-btn').on('click', '.max-btn', function (e) {
+            e.stopPropagation();
+            $('#chatbot').removeClass('collapsed').addClass('expanded');
+        });
+
+        // Click on the collapsed-circle-btn to expand
+        $(document).on('click', '#chatbot.collapsed .collapsed-circle-btn', function (e) {
+            // Don't expand if we were dragging
+            if (window.chatbotWasDragging === true) {
+                window.chatbotWasDragging = false;
+                return false;
+            }
+            e.stopPropagation();
+            $('#chatbot').removeClass('collapsed').addClass('expanded');
+        });
+
+        // ========== DRAG AND DROP FUNCTIONALITY ==========
+        // Add drag functionality without affecting existing click handlers
+        var isDragging = false;
+        var hasMoved = false;
+        var startX, startY, initialLeft, initialTop;
+        var chatbot = $('#chatbot')[0];
+        var dragThreshold = 5; // Minimum pixels to move before considering it a drag
+        var dragStartTime = 0;
+
+        // Helper function to check if target is an interactive button
+        // Note: collapsed-circle-btn is NOT excluded - it should be draggable
+        function isInteractiveButton(target) {
+            return $(target).closest('.external-btn').length > 0 ||
+                $(target).is('.external-btn');
+        }
+
+        // Mouse down event - start drag (on chatbot container)
+        $(chatbot).on('mousedown', function (e) {
+            // Only exclude actual interactive buttons, not the main button area
+            if (isInteractiveButton(e.target)) {
+                return; // Let existing click handlers work for buttons
+            }
+
+            // If clicking on collapsed-circle-btn or its children, let the specific handler take over
+            if ($(e.target).closest('.collapsed-circle-btn').length > 0) {
+                return; // Let the collapsed-circle-btn handler handle it
+            }
+
+            hasMoved = false;
+            isDragging = false;
+            dragStartTime = Date.now();
+
+            // Get initial positions
+            startX = e.clientX;
+            startY = e.clientY;
+
+            var rect = chatbot.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            // If collapsed, also get the collapsed-circle-btn position
+            if ($('#chatbot').hasClass('collapsed')) {
+                var collapsedBtn = $('.collapsed-circle-btn')[0];
+                if (collapsedBtn) {
+                    var collapsedRect = collapsedBtn.getBoundingClientRect();
+                    window.collapsedInitialLeft = collapsedRect.left;
+                    window.collapsedInitialTop = collapsedRect.top;
+                }
+            }
+        });
+
+        // Also handle mousedown directly on collapsed-circle-btn and all its children to ensure drag works
+        $(document).on('mousedown', '.collapsed-circle-btn, .collapsed-circle-btn *', function (e) {
+            // Prevent default to avoid text selection and tooltip
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Remove any title attributes temporarily to prevent tooltip
+            var $target = $(this).closest('.collapsed-circle-btn');
+            if ($target.length > 0) {
+                $target.attr('data-original-title', $target.attr('title') || '');
+                $target.removeAttr('title');
+                $target.find('*').each(function () {
+                    $(this).attr('data-original-title', $(this).attr('title') || '');
+                    $(this).removeAttr('title');
+                });
+            }
+
+            // Initialize drag variables for collapsed circle button
+            hasMoved = false;
+            isDragging = false;
+            dragStartTime = Date.now();
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            var chatbot = $('#chatbot')[0];
+            if (!chatbot) return;
+
+            var rect = chatbot.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            // Get the collapsed-circle-btn element (might be this or parent)
+            var collapsedBtn = $(this).closest('.collapsed-circle-btn')[0] || $(this)[0];
+            if (collapsedBtn) {
+                var collapsedRect = collapsedBtn.getBoundingClientRect();
+                window.collapsedInitialLeft = collapsedRect.left;
+                window.collapsedInitialTop = collapsedRect.top;
+            }
+
+            // Add dragging class immediately to prevent tooltips
+            $('#chatbot').addClass('dragging');
+        });
+
+        // Mouse move event - perform drag
+        $(document).on('mousemove', function (e) {
+            if (startX === undefined || startY === undefined) return;
+
+            // Calculate distance moved
+            var deltaX = Math.abs(e.clientX - startX);
+            var deltaY = Math.abs(e.clientY - startY);
+
+            // Check if we're dragging from collapsed-circle-btn - start immediately
+            var isCollapsedDrag = $('#chatbot').hasClass('collapsed') && window.collapsedInitialLeft !== undefined;
+            var threshold = isCollapsedDrag ? 0 : dragThreshold; // Start immediately (0 threshold) for collapsed button
+
+            // If dragging class is already set (from collapsed button mousedown), start immediately
+            if ($('#chatbot').hasClass('dragging') && !isDragging) {
+                hasMoved = true;
+                isDragging = true;
+            }
+            // Only start dragging if moved more than threshold
+            else if (!hasMoved && (deltaX > threshold || deltaY > threshold)) {
+                hasMoved = true;
+                isDragging = true;
+                $('#chatbot').addClass('dragging');
+            }
+
+            if (!isDragging) return;
+
+            // Prevent default to avoid text selection and tooltip
+            e.preventDefault();
+
+            // Calculate new position
+            var moveX = e.clientX - startX;
+            var moveY = e.clientY - startY;
+
+            var newLeft = initialLeft + moveX;
+            var newTop = initialTop + moveY;
+
+            // Keep chatbot within viewport bounds
+            var maxLeft = window.innerWidth - chatbot.offsetWidth;
+            var maxTop = window.innerHeight - chatbot.offsetHeight;
+
+            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+            newTop = Math.max(0, Math.min(newTop, maxTop));
+
+            // Update position
+            $(chatbot).css({
+                'left': newLeft + 'px',
+                'top': newTop + 'px',
+                'right': 'auto',
+                'bottom': 'auto'
+            });
+
+            // If collapsed, also update collapsed-circle-btn position
+            if ($('#chatbot').hasClass('collapsed')) {
+                var collapsedBtn = $('.collapsed-circle-btn');
+                if (collapsedBtn.length > 0 && window.collapsedInitialLeft !== undefined) {
+                    var collapsedMoveX = e.clientX - startX;
+                    var collapsedMoveY = e.clientY - startY;
+                    var collapsedNewLeft = window.collapsedInitialLeft + collapsedMoveX;
+                    var collapsedNewTop = window.collapsedInitialTop + collapsedMoveY;
+
+                    // Keep within viewport
+                    var maxLeft = window.innerWidth - collapsedBtn[0].offsetWidth;
+                    var maxTop = window.innerHeight - collapsedBtn[0].offsetHeight;
+                    collapsedNewLeft = Math.max(0, Math.min(collapsedNewLeft, maxLeft));
+                    collapsedNewTop = Math.max(0, Math.min(collapsedNewTop, maxTop));
+
+                    collapsedBtn.css({
+                        'left': collapsedNewLeft + 'px',
+                        'top': collapsedNewTop + 'px',
+                        'right': 'auto',
+                        'bottom': 'auto'
+                    });
+                }
+            }
+
+            e.preventDefault();
+        });
+
+        // Mouse up event - end drag
+        $(document).on('mouseup', function (e) {
+            // If we were dragging, prevent click event
+            if (isDragging || hasMoved) {
+                window.chatbotWasDragging = true;
+                e.stopPropagation();
+                e.preventDefault();
+
+                // Reset flag after a short delay to allow click handler to check it
+                setTimeout(function () {
+                    window.chatbotWasDragging = false;
+                    isDragging = false;
+                }, 100);
+            }
+
+            // Reset drag state
+            if (isDragging || hasMoved) {
+                hasMoved = false;
+                $('#chatbot').removeClass('dragging');
+                startX = undefined;
+                startY = undefined;
+                window.collapsedInitialLeft = undefined;
+                window.collapsedInitialTop = undefined;
+
+                // Restore title attributes if they were removed
+                var $collapsedBtn = $('.collapsed-circle-btn');
+                if ($collapsedBtn.length > 0) {
+                    if ($collapsedBtn.attr('data-original-title')) {
+                        $collapsedBtn.attr('title', $collapsedBtn.attr('data-original-title'));
+                        $collapsedBtn.removeAttr('data-original-title');
+                    }
+                    $collapsedBtn.find('*').each(function () {
+                        if ($(this).attr('data-original-title')) {
+                            $(this).attr('title', $(this).attr('data-original-title'));
+                            $(this).removeAttr('data-original-title');
+                        }
+                    });
+                }
+            }
+        });
+
+        // Prevent click event if we were dragging
+        $(chatbot).on('click', function (e) {
+            // If this was a drag operation, prevent the click
+            if (window.chatbotWasDragging === true) {
+                e.stopPropagation();
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Touch events for mobile support
+        var touchStartX, touchStartY, touchInitialLeft, touchInitialTop;
+        var touchHasMoved = false;
+        var touchIsDragging = false;
+
+        $(chatbot).on('touchstart', function (e) {
+            var touch = e.originalEvent.touches[0];
+
+            // Only exclude actual interactive buttons
+            if (isInteractiveButton(e.target)) {
+                return;
+            }
+
+            touchHasMoved = false;
+            touchIsDragging = false;
+
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+
+            var rect = chatbot.getBoundingClientRect();
+            touchInitialLeft = rect.left;
+            touchInitialTop = rect.top;
+
+            // If collapsed, also get the collapsed-circle-btn position
+            if ($('#chatbot').hasClass('collapsed')) {
+                var collapsedBtn = $('.collapsed-circle-btn')[0];
+                if (collapsedBtn) {
+                    var collapsedRect = collapsedBtn.getBoundingClientRect();
+                    window.touchCollapsedInitialLeft = collapsedRect.left;
+                    window.touchCollapsedInitialTop = collapsedRect.top;
+                }
+            }
+        });
+
+        // Also handle touchstart directly on collapsed-circle-btn and all its children
+        $(document).on('touchstart', '.collapsed-circle-btn, .collapsed-circle-btn *', function (e) {
+            var touch = e.originalEvent.touches[0];
+
+            // Don't stop propagation - we need touchmove on document to work
+            e.preventDefault();
+
+            touchHasMoved = false;
+            touchIsDragging = false;
+
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+
+            var chatbot = $('#chatbot')[0];
+            if (!chatbot) return;
+
+            var rect = chatbot.getBoundingClientRect();
+            touchInitialLeft = rect.left;
+            touchInitialTop = rect.top;
+
+            // Get the collapsed-circle-btn element
+            var collapsedBtn = $(this).closest('.collapsed-circle-btn')[0] || $(this)[0];
+            if (collapsedBtn) {
+                var collapsedRect = collapsedBtn.getBoundingClientRect();
+                window.touchCollapsedInitialLeft = collapsedRect.left;
+                window.touchCollapsedInitialTop = collapsedRect.top;
+            }
+        });
+
+        $(document).on('touchmove', function (e) {
+            if (touchStartX === undefined || touchStartY === undefined) return;
+
+            var touch = e.originalEvent.touches[0];
+            var deltaX = Math.abs(touch.clientX - touchStartX);
+            var deltaY = Math.abs(touch.clientY - touchStartY);
+
+            // Only start dragging if moved more than threshold
+            if (!touchHasMoved && (deltaX > dragThreshold || deltaY > dragThreshold)) {
+                touchHasMoved = true;
+                touchIsDragging = true;
+                $('#chatbot').addClass('dragging');
+            }
+
+            if (!touchIsDragging) return;
+
+            var moveX = touch.clientX - touchStartX;
+            var moveY = touch.clientY - touchStartY;
+
+            var newLeft = touchInitialLeft + moveX;
+            var newTop = touchInitialTop + moveY;
+
+            var maxLeft = window.innerWidth - chatbot.offsetWidth;
+            var maxTop = window.innerHeight - chatbot.offsetHeight;
+
+            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+            newTop = Math.max(0, Math.min(newTop, maxTop));
+
+            $(chatbot).css({
+                'left': newLeft + 'px',
+                'top': newTop + 'px',
+                'right': 'auto',
+                'bottom': 'auto'
+            });
+
+            // If collapsed, also update collapsed-circle-btn position
+            if ($('#chatbot').hasClass('collapsed')) {
+                var collapsedBtn = $('.collapsed-circle-btn');
+                if (collapsedBtn.length > 0 && window.touchCollapsedInitialLeft !== undefined) {
+                    var collapsedMoveX = touch.clientX - touchStartX;
+                    var collapsedMoveY = touch.clientY - touchStartY;
+                    var collapsedNewLeft = window.touchCollapsedInitialLeft + collapsedMoveX;
+                    var collapsedNewTop = window.touchCollapsedInitialTop + collapsedMoveY;
+
+                    // Keep within viewport
+                    var maxLeft = window.innerWidth - collapsedBtn[0].offsetWidth;
+                    var maxTop = window.innerHeight - collapsedBtn[0].offsetHeight;
+                    collapsedNewLeft = Math.max(0, Math.min(collapsedNewLeft, maxLeft));
+                    collapsedNewTop = Math.max(0, Math.min(collapsedNewTop, maxTop));
+
+                    collapsedBtn.css({
+                        'left': collapsedNewLeft + 'px',
+                        'top': collapsedNewTop + 'px',
+                        'right': 'auto',
+                        'bottom': 'auto'
+                    });
+                }
+            }
+
+            e.preventDefault();
+        });
+
+        $(document).on('touchend', function (e) {
+            if (touchIsDragging || touchHasMoved) {
+                window.chatbotWasDragging = true;
+                e.stopPropagation();
+                e.preventDefault();
+
+                // Reset flag after a short delay
+                setTimeout(function () {
+                    window.chatbotWasDragging = false;
+                }, 100);
+            }
+
+            if (touchIsDragging || touchHasMoved) {
+                touchIsDragging = false;
+                touchHasMoved = false;
+                $('#chatbot').removeClass('dragging');
+                touchStartX = undefined;
+                touchStartY = undefined;
+                window.touchCollapsedInitialLeft = undefined;
+                window.touchCollapsedInitialTop = undefined;
+            }
+        });
+        // ========== END DRAG AND DROP FUNCTIONALITY ==========
+
+        // ========== TOOLTIP POSITIONING ==========
+        // Position tooltip dynamically - ABOVE and to the LEFT of the icon
+        function positionTooltip() {
+            var $collapsedBtn = $('.collapsed-circle-btn');
+            var $tooltip = $('.plus-icon-tooltip');
+
+            if ($collapsedBtn.length === 0 || $tooltip.length === 0) return;
+
+            // Get the position of the collapsed button
+            var btnRect = $collapsedBtn[0].getBoundingClientRect();
+
+            // Calculate tooltip dimensions
+            var tooltipWidth = $tooltip.outerWidth() || 240; // fallback to min-width
+            var tooltipHeight = $tooltip.outerHeight() || 45;
+            var spacing = 15; // space between button and tooltip
+            var margin = 15; // margin from screen edges
+
+            // Position ABOVE and to the LEFT of the icon
+            // Align tooltip right edge with button right edge, then shift left
+            var left = btnRect.right - tooltipWidth; // Start from right edge of button
+            var top = btnRect.top - tooltipHeight - spacing; // Above the button
+
+            // Ensure tooltip stays within viewport
+            var viewportWidth = window.innerWidth;
+            var viewportHeight = window.innerHeight;
+
+            // Adjust if tooltip goes off left edge
+            if (left < margin) {
+                left = margin;
+            }
+
+            // Adjust if tooltip goes off right edge
+            if (left + tooltipWidth > viewportWidth - margin) {
+                left = viewportWidth - tooltipWidth - margin;
+            }
+
+            // Adjust if tooltip goes off top edge - show below instead
+            if (top < margin) {
+                top = btnRect.bottom + spacing;
+                // Change arrow position when tooltip is below
+                $tooltip.addClass('tooltip-below');
+            } else {
+                $tooltip.removeClass('tooltip-below');
+            }
+
+            // Adjust if tooltip goes off bottom edge
+            if (top + tooltipHeight > viewportHeight - margin) {
+                top = viewportHeight - tooltipHeight - margin;
+            }
+
+            // Calculate arrow position to point to the center of the button
+            // Arrow should be at the bottom of tooltip, pointing down to button center
+            var buttonCenterX = btnRect.left + (btnRect.width / 2);
+            var arrowOffset = buttonCenterX - left; // Distance from left edge of tooltip to button center
+
+            // Ensure arrow stays within tooltip bounds (with some margin from edges)
+            var arrowMargin = 20; // Minimum distance from tooltip edges
+            arrowOffset = Math.max(arrowMargin, Math.min(arrowOffset, tooltipWidth - arrowMargin));
+
+            // Apply position
+            $tooltip.css({
+                'left': left + 'px',
+                'top': top + 'px',
+                'bottom': 'auto',
+                'right': 'auto',
+                '--arrow-left': arrowOffset + 'px'
+            });
+        }
+
+        // Update tooltip position on hover with proper timing
+        $(document).on('mouseenter', '.collapsed-circle-btn, .collapsed-circle-btn .plus-icon, .collapsed-circle-btn .plus-container', function () {
+            // Small delay to ensure tooltip is visible and measured
+            setTimeout(function () {
+                positionTooltip();
+                // Update again after a short delay to ensure accurate positioning
+                setTimeout(function () {
+                    positionTooltip();
+                }, 50);
+            }, 10);
+        });
+
+        // Also update on mouse move for smooth following (optional)
+        $(document).on('mousemove', '.collapsed-circle-btn, .collapsed-circle-btn .plus-icon, .collapsed-circle-btn .plus-container', function () {
+            if ($('.plus-icon-tooltip').is(':visible')) {
+                positionTooltip();
+            }
+        });
+
+        // Update tooltip position when chatbot is moved
+        $(document).on('mouseup', function () {
+            if ($('.plus-icon-tooltip').is(':visible')) {
+                positionTooltip();
+            }
+        });
+
+        // Update tooltip position on window resize
+        $(window).on('resize', function () {
+            if ($('.plus-icon-tooltip').is(':visible')) {
+                positionTooltip();
+            }
+        });
+        // ========== END TOOLTIP POSITIONING ==========
+
+    });
+
+
+</script>
+<style>
+    input#DateInstalledTo {
+        position: relative !important;
+    }
+	@@media (max-width: 769px) {
+    .sidebar-menu .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: 100% !important;
+        border: none !important;
+        background-color: #ffffff !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        display: none;
+        border-radius: 10px !important;
+        margin: 6px 8px !important;
+        width: calc(100% - 16px) !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .sidebar-menu li.dropdown.open > .dropdown-menu {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .sidebar-menu .dropdown-menu > li > a {
+        color: #444444 !important;
+        padding: 7px 8px !important;
+        white-space: normal !important;
+        font-size: 13px !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
+    }
+
+    .sidebar-menu .dropdown-menu > li > a:hover,
+    .sidebar-menu .dropdown-menu > li > a:focus {
+        background-color: #f5f7fa !important;
+        color: #1e3352 !important;
+        border-radius: 6px !important;
+    }
+
+    .sidebar-menu .dropdown-menu > li > a .fa {
+        color: #aaaaaa !important;
+        font-size: 8px !important;
+    }
+
+    /* Remove any dividers between items */
+    .sidebar-menu .dropdown-menu > li {
+        border-bottom: none !important;
+    }
+	.sidebar-menu li.dropdown.open > .dropdown-menu {
+        max-height: 300px !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+        scrollbar-width: thin !important;
+        scrollbar-color: #eaeef3 !important;
+    }
+
+    /* Chrome, Edge, Safari scrollbar */
+    .sidebar-menu li.dropdown.open > .dropdown-menu::-webkit-scrollbar {
+        width: 4px !important;
+    }
+
+    .sidebar-menu li.dropdown.open > .dropdown-menu::-webkit-scrollbar-track {
+        background: #eaeef3 !important;
+        border-radius: 10px !important;
+    }
+
+    .sidebar-menu li.dropdown.open > .dropdown-menu::-webkit-scrollbar-thumb {
+        background-color: #eaeef3 !important;
+        border-radius: 10px !important;
+    }
+}
+</style>
+<script>
+    $(document).ready(function () {
+        if ($(window).width() <= 769) {
+
+            // Fix dropdown positioning - make them inline, not floating
+            $('.sidebar-menu .dropdown-menu').css({
+                'position': 'static',
+                'float': 'none',
+                'width': '100%',
+                'box-shadow': 'none',
+                'border': 'none',
+                'background-color': '#1a2a3a',
+                'padding-left': '15px'
+            });
+
+            // Remove any existing click handlers on dropdown links to avoid conflicts
+            $(document).off('click', '.sidebar-menu li.dropdown > a');
+
+            // Handle sidebar dropdown toggle on mobile
+            $(document).on('click', '.sidebar-menu li.dropdown > a', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation(); // Stop AdminLTE from interfering
+
+                var $parentLi = $(this).closest('li.dropdown');
+                var $dropdownMenu = $parentLi.find('> .dropdown-menu'); // Direct child only
+                var isOpen = $parentLi.hasClass('open');
+
+                // Close all other open dropdowns first
+                $('.sidebar-menu li.dropdown').not($parentLi).find('> .dropdown-menu').slideUp(200);
+                $('.sidebar-menu li.dropdown').not($parentLi).removeClass('open');
+
+                // Toggle current one based on state
+                if (isOpen) {
+                    $dropdownMenu.slideUp(200);
+                    $parentLi.removeClass('open');
+                } else {
+                    $dropdownMenu.slideDown(200);
+                    $parentLi.addClass('open');
+                }
+            });
+
+            // Close dropdown if clicking outside sidebar
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.main-sidebar').length) {
+                    $('.sidebar-menu li.dropdown .dropdown-menu').slideUp(200);
+                    $('.sidebar-menu li.dropdown').removeClass('open');
+                }
+            });
+        }
+    });
+</script>
